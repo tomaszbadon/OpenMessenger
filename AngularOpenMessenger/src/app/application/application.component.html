@@ -1,0 +1,23 @@
+
+<div class="grid-container">
+    <div class="top-1">
+        To: {{selected.fullName}}
+    </div>
+
+    <div class="top-2">
+        To: {{selected.fullName}}
+    </div>
+
+    <div class="left">
+        <app-contact 
+            *ngFor="let contact of contacts" 
+            [contact]="contact" 
+            [selected] = "selected === contact" 
+            (click) = "changeSelectionOnClick(contact)">
+        </app-contact>
+    </div>
+
+    <div class="right">
+        <app-message-box [contact] = "selected"></app-message-box>
+    </div>
+</div>

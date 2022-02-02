@@ -1,0 +1,19 @@
+<div class="contact" [ngClass]="{ 'selected' : selected }">
+
+    <div class="avatar-div">
+        <img src="/assets/avatars/{{contact.avatar}}" alt="Avatar" class="avatar-img">
+    </div>
+
+    <div class="full-name">
+        {{contact.fullName}}
+    </div>
+
+    <div class="status">
+        {{contact.status}}
+    </div>
+
+    <div class="notification-panel">
+        <span *ngIf="contact.unreadMessages > 0" class="badge">{{contact.unreadMessages }}</span>
+    </div>
+
+</div>
