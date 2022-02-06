@@ -12,6 +12,11 @@ export class MessageBoxComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit(): void { }
+  ngOnInit(): void { 
+
+    //var element = document.getElementById('cont')!;
+    //element.scrollTop = element.scrollHeight;
+
+  }
 
 }

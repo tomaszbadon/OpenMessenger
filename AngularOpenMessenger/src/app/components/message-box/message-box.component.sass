@@ -1,77 +1,58 @@
+$radius: 10px
 $font: 'Ubuntu', sans-serif
 $font-color: #2c3e50
 
 .container
-    font-family: $font
+    overflow-y: scroll
+    display: table
+    width: 100%
+    font: 15px $font
+    font-weight: 300
+    color: $font-color
+
+.message-group-left
     display: grid
-    grid-template-columns: auto
-    grid-template-rows: auto 50px
-    height: 100%
+    grid-template-columns: 50px auto
+    margin-bottom: 25px
 
-.conversation
-    grid-column-start: 1
-    grid-column-end: 2
-    grid-row-start: 1
-    grid-row-end: 2
-    overflow: scroll
-    height: 100%
-
-.input
-    grid-column-start: 1
-    grid-column-end: 2
-    grid-row-start: 2
-    grid-row-end: 3
-    height: 50px
+.message-group-right
     display: grid
     grid-template-columns: auto 50px
-    grid-template-rows: auto
+    margin-bottom: 25px
 
-.message
-    font-size: 12px
-    margin: 10px
-    border-radius: 5px
-    vertical-align: middle
-    line-height: 12px
-    height: 20px
+.img-container
     display: flex
+    justify-content: center
     align-items: center
 
-.outcoming-message
-    text-align: right
+.message-wrapper
+    display: table-row
+    width: 100%
 
-.incoming-message
+.message
+    padding: 10px
+    margin-bottom: 5px
+    max-width: 80%
+
+.message-left
+    float: left
     background-color: #bdc3c7
-    color: #fff
-    text-align: left
+    border-top-right-radius: $radius
+    border-bottom-right-radius: $radius
+
+.message-right
+    float: right
+    background-color: #3498db
+    color: #ecf0f1
+    border-top-left-radius: $radius
+    border-bottom-left-radius: $radius
 
 .avatar-img
     vertical-align: middle
-    width: 12px
-    height: 12px
+    width: 30px
+    height: 30px
+    margin-left: 5px
     border-radius: 50%
-    margin: 0px 5px 0px 5px
-
-.input-div
-    width: 100%
-    height: 100%
-    grid-column-start: 1
-    grid-column-end: 2
-    grid-row-start: 1
-    grid-row-end: 2
-    display: flex
-    align-items: center
-
-.input-div input
-    width: 100%
-    height: 80%
-    margin: 10px
-
-.button-div
-    width: 100%
-    height: 100%
-    grid-column-start: 2
-    grid-column-end: 3
-    grid-row-start: 1
-    grid-row-end: 2
-    display: flex
-    align-items: center
+    float: left
+    margin-left: auto
+    margin-right: auto

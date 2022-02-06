@@ -1,7 +1,7 @@
 .grid-container
     display: grid
     grid-template-columns: 300px auto
-    grid-template-rows: 50px auto
+    grid-template-rows: 50px auto 150px
     height: 100%
 
 .top-1
@@ -17,9 +17,16 @@
 .left
     grid-column-start: 1
     grid-column-end: 2
+    grid-row-start: 2
+    grid-row-end: 4
     height: 100%
     overflow: scroll
 
 .right
+    grid-column-start: 2
+    grid-column-end: 3
+    overflow: scroll
+
+.bottom
     grid-column-start: 2
     grid-column-end: 3
