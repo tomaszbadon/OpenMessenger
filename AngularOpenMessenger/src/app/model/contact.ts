@@ -1,7 +1,9 @@
 
 export interface Contact {
-    id: string,
-    fullName: string,
+    id: number,
+    firstName: string,
+    lastName: string,
+    userName: string,
     status: string,
     avatar: string,
     unreadMessages: number

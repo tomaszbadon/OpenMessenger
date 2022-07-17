@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Renderer2 } from '@angular/core';
 import { Contact } from 'src/app/model/contact';
 
 @Component({
@@ -10,13 +10,18 @@ export class MessageBoxComponent implements OnInit {
 
   @Input() contact: Contact | null = null
 
-  constructor() { }
+  constructor(private renderer2: Renderer2) { }
 
   ngOnInit(): void { 
 
-    //var element = document.getElementById('cont')!;
-    //element.scrollTop = element.scrollHeight;
+    this.renderer2.listen('container', 'scroll', (e) => {
+      console.log(this.getYPosition(e));
+    });
 
+  }
+
+  getYPosition(e: Event): number {
+    return (e.target as Element).scrollTop;
   }
 
 }

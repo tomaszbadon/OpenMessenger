@@ -1,4 +1,7 @@
+import { useAnimation } from '@angular/animations';
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { AuthService } from '../service/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -7,9 +10,23 @@ import { Component, OnInit } from '@angular/core';
 })
 export class LoginComponent implements OnInit {
 
-  constructor() { }
+  isAuthenticated :string = '';
 
-  ngOnInit(): void {
+  constructor(private authService: AuthService, private router: Router) { }
+
+  ngOnInit(): void { 
+    this.isAuthenticated = "isAuthenticated : " + this.authService.isAuthenticated();
+  }
+
+  login() {
+    this.authService.login('dominica.rosatti', 'my_password').subscribe(output => {
+      if(output) {
+        this.router.navigate(['/application']);
+      } else {
+        alert("Error occured");
+      }
+      this.isAuthenticated = "isAuthenticated : " + output;
+    });
   }
 
 }

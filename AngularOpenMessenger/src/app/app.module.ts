@@ -7,6 +7,9 @@ import { ApplicationComponent } from './application/application.component';
 import { LoginComponent } from './login/login.component';
 import { ContactComponent } from './components/contact/contact.component';
 import { MessageBoxComponent } from './components/message-box/message-box.component';
+import { SearchBarComponent } from './components/search-bar/search-bar.component';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthHttpInterceptor } from './interceptor/auth-http.interceptor';
 
 @NgModule({
   declarations: [
@@ -14,13 +17,16 @@ import { MessageBoxComponent } from './components/message-box/message-box.compon
     ApplicationComponent,
     LoginComponent,
     ContactComponent,
-    MessageBoxComponent
+    MessageBoxComponent,
+    SearchBarComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    HttpClientModule
   ],
-  providers: [],
+  providers: [{ provide: HTTP_INTERCEPTORS, useClass: AuthHttpInterceptor, multi: true } ],
+
   bootstrap: [AppComponent]
 })
 export class AppModule { }
