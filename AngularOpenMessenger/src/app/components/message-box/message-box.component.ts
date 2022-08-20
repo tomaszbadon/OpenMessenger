@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, ElementRef, HostListener, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { Contact } from 'src/app/model/contact';
 import { Message } from 'src/app/model/message';
 import { MessagesGroup } from 'src/app/model/messages-group';
@@ -15,14 +15,14 @@ export class MessageBoxComponent implements OnChanges {
 
   groupedMessages: MessagesGroup[] = [];
 
-  @Input() contact: Contact | any;
+  @Input() recipient: Contact | any;
 
-  @Input() user: User | any;
+  @Input() sender: User | any;
 
-  constructor(private conversationService: ConversationService) { }
+  constructor(private conversationService: ConversationService, private element: ElementRef) { }
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.conversationService.getConversation(this.contact.id).subscribe(messages => { 
+    this.conversationService.getConversation(this.recipient.id).subscribe(messages => { 
       this.groupedMessages = GroupedMessagesUtil.toMessageGroup(messages);
     });
   }

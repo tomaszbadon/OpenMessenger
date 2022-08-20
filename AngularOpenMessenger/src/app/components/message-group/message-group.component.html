@@ -5,7 +5,7 @@
 
     <div>
         <div *ngFor="let m of messages?.messages" class="message-wrapper">
-            <div [ngClass]="messages?.recipient != sender ? 'message message-left' : 'message message-right'">{{ m.message }}</div>
+            <div [ngClass]="messages?.recipient != sender ? 'message message-left' : 'message message-right'">{{ m.message }} - {{ m.sentAt }}</div>
         </div>
     </div>
 

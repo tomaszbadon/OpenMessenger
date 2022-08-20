@@ -1,12 +1,11 @@
-package net.bean.java.spring.boot.demo.springbootapidemo.security;
+package net.bean.java.open.messenger.security;
 
 import lombok.extern.slf4j.Slf4j;
-import net.bean.java.spring.boot.demo.springbootapidemo.filter.CustomAuthenticationFilter;
-import net.bean.java.spring.boot.demo.springbootapidemo.filter.CustomAuthorizationFilter;
+import net.bean.java.open.messenger.filter.CustomAuthenticationFilter;
+import net.bean.java.open.messenger.filter.CustomAuthorizationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -14,7 +13,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 

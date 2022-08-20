@@ -1,4 +1,4 @@
-package net.bean.java.spring.boot.demo.springbootapidemo.filter;
+package net.bean.java.open.messenger.filter;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;

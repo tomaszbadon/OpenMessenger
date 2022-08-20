@@ -18,8 +18,8 @@
         </app-contact>
     </div>
 
-    <div class="right">
-        <app-message-box *ngIf="user != null && selected != null" [contact] = "selected" [user] = "user"></app-message-box>
+    <div class="right" id="right">
+        <app-message-box *ngIf="user != null && selected != null" [recipient] = "selected" [sender] = "user"></app-message-box>
     </div>
 
     <div class="bottom">

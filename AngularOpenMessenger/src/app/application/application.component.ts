@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { ContactService } from 'src/app/service/contact.service';
 import { Contact } from 'src/app/model/contact';
@@ -6,7 +6,7 @@ import { AuthService } from '../service/auth.service';
 import { UserService } from '../service/user.service';
 import { User } from '../model/user';
 import { ActivatedRoute } from '@angular/router';
-import { ChangeDetectorRef } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-application',
@@ -25,6 +25,23 @@ export class ApplicationComponent implements OnInit {
 
   ngOnInit(): void {
 
+    setTimeout(() => {
+      let div = document.getElementById('right');
+      if(div != null) {
+        div.scrollTop = div.scrollHeight;
+      }
+
+      div?.addEventListener('scroll', (e: Event) => {
+        console.log('Scroll Event');
+        if(e.target != null && e.target instanceof HTMLElement) {
+          if(e.target.scrollTop == 0) {
+            alert("I am on the top");
+          }
+        }
+      });
+    }, 1000);
+
+
     const id = Number(this.route.snapshot.paramMap.get('id'));
 
     this.userService.getCurrentUser().subscribe(u => { 
@@ -35,6 +52,7 @@ export class ApplicationComponent implements OnInit {
       this.contacts = contacts 
       this.selected = this.getSelected(id);
     });
+
   }
 
   getSelected(id: number) {

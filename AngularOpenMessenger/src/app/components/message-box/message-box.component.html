@@ -1,18 +1,28 @@
-
 <div id="messages-container" class="container">
 
-    <div *ngFor="let group of groupedMessages" class="message-group-left" [ngClass]="group.sender == 6 ? 'message-group-left' : 'message-group-right'">
-        <div *ngIf="group.sender == 6" class="img-container">
-            <img src="/assets/avatars/avatar_1.png" alt="Avatar" class="avatar-img">
-        </div>
-        <div>
-            <div *ngFor="let m of group.messages" class="message-wrapper" [ngClass]="group.sender != 6 ? 'message-wrapper-right' : ''">
-                <div [ngClass]="group.sender == 6 ? 'message message-left' : 'message message-right'">{{m.message}}</div>
-            </div>
-        </div>
-        <div *ngIf="group.sender != 6" class="img-container">
-            <img src="/assets/avatars/avatar_2.png" alt="Avatar" class="avatar-img">
+    <div *ngFor="let group of groupedMessages; let i = index">
+
+        <div *ngIf="i > 1 && group.date != groupedMessages[i -1].date" class="date-separator"> {{ group.date }}</div>
+
+        <div *ngIf="i == 0" class="date-separator"> {{ group.date }}</div>
+
+
+        <div class="message-group-left"
+            [ngClass]="group.sender == recipient.id ? 'message-group-left' : 'message-group-right'">   
+                <div *ngIf="group.sender == recipient.id" class="img-container">
+                    <img src="/assets/avatars/avatar_1.png" alt="Avatar" class="avatar-img">
+                </div>
+                <div>
+                    <div *ngFor="let m of group.messages" class="message-wrapper"
+                        [ngClass]="group.sender != recipient.id ? 'message-wrapper-right' : ''">
+                        <div [ngClass]="group.sender == recipient.id ? 'message message-left' : 'message message-right'">
+                            {{m.message}}</div>
+                      
+                    </div>
+                </div>
+                <div *ngIf="group.sender != recipient.id" class="img-container">
+                    <img src="/assets/avatars/avatar_2.png" alt="Avatar" class="avatar-img">
+                </div>
         </div>
     </div>
-
 </div>

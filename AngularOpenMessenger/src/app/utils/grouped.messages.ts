@@ -3,27 +3,32 @@ import { Message } from '../model/message';
 
 export class GroupedMessagesUtil {
 
-    public static toMessageGroup(messages: Message[]): MessagesGroup[] {
-        let groupedMessages: MessagesGroup[] = [];
-        for(let message of messages) {
-            if(groupedMessages.length == 0) {
-              let messagesTempArray: Message[] = [];
-              messagesTempArray.push(message);
-              var newGroup = new MessagesGroup(message.recipient, message.sender, messagesTempArray);
-              groupedMessages.push(newGroup);
-            } else {
-              let last = groupedMessages[groupedMessages.length - 1];
-              if(last.recipient === message.recipient && last.sender === message.sender) {
-                last.messages.push(message);
-              } else {
-                let messagesTempArray: Message[] = [];
-                messagesTempArray.push(message);
-                var newGroup = new MessagesGroup(message.recipient, message.sender, messagesTempArray);
-                groupedMessages.push(newGroup);
-              }
-            }
-          }
-          return groupedMessages;
+  public static toMessageGroup(messages: Message[]): MessagesGroup[] {
+    let groupedMessages: MessagesGroup[] = [];
+    for (let message of messages) {
+      let date: string | any;
+      let match = message.sentAt.match("^(\\d{2}-\\d{2}-\\d{4}).+$");
+      if (match) {
+        date = match[1];
+      }
+
+      if (groupedMessages.length == 0) {
+        let messagesTempArray: Message[] = [];
+        messagesTempArray.push(message);
+        groupedMessages.push(new MessagesGroup(message.recipient, message.sender, date, messagesTempArray));
+      } else {
+        let last = groupedMessages[groupedMessages.length - 1];
+        if (last.recipient === message.recipient && last.sender === message.sender && last.date == date) {
+          last.messages.push(message);
+        } else {
+          let messagesTempArray: Message[] = [];
+          messagesTempArray.push(message);
+          var newGroup = new MessagesGroup(message.recipient, message.sender, date, messagesTempArray);
+          groupedMessages.push(newGroup);
+        }
+      }
     }
+    return groupedMessages;
+  }
 
 }
