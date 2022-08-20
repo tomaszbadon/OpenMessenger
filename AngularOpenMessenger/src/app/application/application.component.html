@@ -13,13 +13,13 @@
         <app-contact 
             *ngFor="let contact of contacts" 
             [contact]="contact" 
-            [selected] = "selected === contact" 
-            (click) = "changeSelectionOnClick(contact)">
+            [selected] = "selected === contact"
+            (click)="changeSelectionOnClick(contact);">
         </app-contact>
     </div>
 
     <div class="right">
-        <app-message-box [contact] = "selected"></app-message-box>
+        <app-message-box *ngIf="user != null && selected != null" [contact] = "selected" [user] = "user"></app-message-box>
     </div>
 
     <div class="bottom">

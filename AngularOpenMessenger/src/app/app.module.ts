@@ -10,6 +10,7 @@ import { MessageBoxComponent } from './components/message-box/message-box.compon
 import { SearchBarComponent } from './components/search-bar/search-bar.component';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthHttpInterceptor } from './interceptor/auth-http.interceptor';
+import { MessageGroupComponent } from './components/message-group/message-group.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { AuthHttpInterceptor } from './interceptor/auth-http.interceptor';
     LoginComponent,
     ContactComponent,
     MessageBoxComponent,
-    SearchBarComponent
+    SearchBarComponent,
+    MessageGroupComponent
   ],
   imports: [
     BrowserModule,

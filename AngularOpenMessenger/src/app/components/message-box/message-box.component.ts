@@ -1,27 +1,30 @@
-import { Component, Input, OnInit, Renderer2 } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { Contact } from 'src/app/model/contact';
+import { Message } from 'src/app/model/message';
+import { MessagesGroup } from 'src/app/model/messages-group';
+import { User } from 'src/app/model/user';
+import { ConversationService } from 'src/app/service/conversation.service';
+import { GroupedMessagesUtil } from 'src/app/utils/grouped.messages';
 
 @Component({
   selector: 'app-message-box',
   templateUrl: './message-box.component.html',
   styleUrls: ['./message-box.component.sass']
 })
-export class MessageBoxComponent implements OnInit {
+export class MessageBoxComponent implements OnChanges {
 
-  @Input() contact: Contact | null = null
+  groupedMessages: MessagesGroup[] = [];
 
-  constructor(private renderer2: Renderer2) { }
+  @Input() contact: Contact | any;
 
-  ngOnInit(): void { 
+  @Input() user: User | any;
 
-    this.renderer2.listen('container', 'scroll', (e) => {
-      console.log(this.getYPosition(e));
+  constructor(private conversationService: ConversationService) { }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    this.conversationService.getConversation(this.contact.id).subscribe(messages => { 
+      this.groupedMessages = GroupedMessagesUtil.toMessageGroup(messages);
     });
-
-  }
-
-  getYPosition(e: Event): number {
-    return (e.target as Element).scrollTop;
   }
 
 }

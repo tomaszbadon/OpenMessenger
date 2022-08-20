@@ -3,6 +3,10 @@ import { Router } from '@angular/router';
 import { ContactService } from 'src/app/service/contact.service';
 import { Contact } from 'src/app/model/contact';
 import { AuthService } from '../service/auth.service';
+import { UserService } from '../service/user.service';
+import { User } from '../model/user';
+import { ActivatedRoute } from '@angular/router';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-application',
@@ -15,23 +19,41 @@ export class ApplicationComponent implements OnInit {
 
   selected: Contact | any
 
-  constructor(private contactService: ContactService, private authService: AuthService, private router: Router) { }
+  user: User | any;
+
+  constructor(private route: ActivatedRoute, private userService: UserService, private contactService: ContactService, private authService: AuthService, private router: Router) { }
 
   ngOnInit(): void {
+
+    const id = Number(this.route.snapshot.paramMap.get('id'));
+
+    this.userService.getCurrentUser().subscribe(u => { 
+      this.user = u 
+    });
+
     this.contactService.getContacts().subscribe(contacts => { 
       this.contacts = contacts 
-      this.selected = this.contacts.length > 2 ? this.contacts[1] : null;
+      this.selected = this.getSelected(id);
     });
+  }
+
+  getSelected(id: number) {
+    for(let m of this.contacts) {
+      if(m.id === id) {
+        return m;
+      }
+    }
+    return null;
   }
 
   changeSelectionOnClick(contact: Contact) {
     this.selected = contact;
+    this.router.navigate(['/application/' + contact.id]);
   }
 
   logOut() {
     this.authService.logout();
     this.router.navigate(['/login']);
-
   }
 
 }

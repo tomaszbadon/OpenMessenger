@@ -1,0 +1,12 @@
+<div class="message-group-left" [ngClass]="messages?.recipient != sender ? 'message-group-left' : 'message-group-right'">
+    <div class="img-container">
+        <img src="/assets/avatars/avatar_1.png" alt="Avatar" class="avatar-img">
+    </div>
+
+    <div>
+        <div *ngFor="let m of messages?.messages" class="message-wrapper">
+            <div [ngClass]="messages?.recipient != sender ? 'message message-left' : 'message message-right'">{{ m.message }}</div>
+        </div>
+    </div>
+
+</div>
