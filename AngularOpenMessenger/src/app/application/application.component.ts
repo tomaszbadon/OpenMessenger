@@ -7,6 +7,9 @@ import { UserService } from '../service/user.service';
 import { User } from '../model/user';
 import { ActivatedRoute } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
+import { EventQueueService } from '../service/event-queue.service';
+import { AppEvent } from '../utils/app-event';
+import { AppEventType } from '../utils/app-event-type';
 
 @Component({
   selector: 'app-application',
@@ -15,61 +18,25 @@ import { firstValueFrom } from 'rxjs';
 })
 export class ApplicationComponent implements OnInit {
 
-  contacts: Contact[] = []
-
   selected: Contact | any
 
   user: User | any;
 
-  constructor(private route: ActivatedRoute, private userService: UserService, private contactService: ContactService, private authService: AuthService, private router: Router) { }
+  constructor(private eventQueue: EventQueueService, private route: ActivatedRoute, private userService: UserService, private authService: AuthService, private router: Router) { }
 
   ngOnInit(): void {
-
-    setTimeout(() => {
-      let div = document.getElementById('right');
-      if(div != null) {
-        div.scrollTop = div.scrollHeight;
-      }
-
-      div?.addEventListener('scroll', (e: Event) => {
-        console.log('Scroll Event');
-        if(e.target != null && e.target instanceof HTMLElement) {
-          if(e.target.scrollTop == 0) {
-            alert("I am on the top");
-          }
-        }
-      });
-    }, 1000);
-
-
-    const id = Number(this.route.snapshot.paramMap.get('id'));
-
     this.userService.getCurrentUser().subscribe(u => { 
       this.user = u 
     });
-
-    this.contactService.getContacts().subscribe(contacts => { 
-      this.contacts = contacts 
-      this.selected = this.getSelected(id);
-    });
-
   }
 
-  getSelected(id: number) {
-    for(let m of this.contacts) {
-      if(m.id === id) {
-        return m;
-      }
-    }
-    return null;
-  }
-
-  changeSelectionOnClick(contact: Contact) {
+  contactWasSelected(contact: Contact) {
     this.selected = contact;
     this.router.navigate(['/application/' + contact.id]);
   }
 
   logOut() {
+    this.eventQueue.dispatch(new AppEvent(AppEventType.LogOut, null))
     this.authService.logout();
     this.router.navigate(['/login']);
   }

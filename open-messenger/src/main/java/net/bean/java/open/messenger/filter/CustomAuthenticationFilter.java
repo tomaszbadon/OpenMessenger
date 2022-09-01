@@ -5,6 +5,8 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.bean.java.open.messenger.entity.LoginInfo;
+import net.bean.java.open.messenger.service.UserService;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -29,11 +31,12 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 
     private final AuthenticationManager authenticationManager;
 
+    private final UserService userService;
+
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         String userName = request.getParameter("username");
         String password = request.getParameter("password");
-        log.info("Username is: {} and password is {}", userName, password);
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(userName, password);
         return authenticationManager.authenticate(token);
     }
@@ -42,20 +45,21 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException, ServletException {
         User user = (User) authentication.getPrincipal();
         Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
-        String accessTocken = JWT.create().withSubject(user.getUsername())
+        String accessToken = JWT.create().withSubject(user.getUsername())
                 .withExpiresAt(new Date(System.currentTimeMillis() + (100 * 60 * 1000)))
                 .withIssuer(request.getRequestURL().toString())
                 .withClaim("roles", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
                 .sign(algorithm);
-        String refreshTocken = JWT.create().withSubject(user.getUsername())
+        String refreshToken = JWT.create().withSubject(user.getUsername())
                 .withExpiresAt(new Date(System.currentTimeMillis() + (300 * 60 * 1000)))
                 .withIssuer(request.getRequestURL().toString())
                 .withClaim("roles", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
                 .sign(algorithm);
-        Map<String, String> tokens = new HashMap<>();
-        tokens.put("access_token", accessTocken);
-        tokens.put("refresh_token", refreshTocken);
+
+        net.bean.java.open.messenger.data.jpa.model.User loggedUser = userService.getUser(user.getUsername()).orElseThrow();
+        LoginInfo loginInfo = new LoginInfo(accessToken, refreshToken, loggedUser.getId());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        new ObjectMapper().writeValue(response.getOutputStream(), tokens);
+        new ObjectMapper().writeValue(response.getOutputStream(), loginInfo);
     }
+
 }

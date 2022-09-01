@@ -10,6 +10,11 @@ import java.util.List;
 public interface MessageRepository extends PagingAndSortingRepository<Message, Long> {
 
     @Query("SELECT m FROM Message m WHERE (m.recipient.id = ?1 AND m.sender.id = ?2) OR (m.sender.id = ?1 AND m.recipient.id = ?2)")
-    List<Message> getConversationBetweenUsers(long user1, long user2, Pageable pageable);
+    List<Message> getMessages(long user1, long user2, Pageable pageable);
+
+    @Query("SELECT m FROM Message m WHERE ((m.recipient.id = ?1 AND m.sender.id = ?2) OR (m.sender.id = ?1 AND m.recipient.id = ?2)) AND m.id < ?3")
+    List<Message> getMessagesWithLowerIdThan(long user1, long user2, Pageable pageable, long lowerIdThan);
+
+    Message getMessageById(long messageId);
 
 }

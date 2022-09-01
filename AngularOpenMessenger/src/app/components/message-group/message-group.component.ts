@@ -1,5 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { Contact } from 'src/app/model/contact';
 import { MessagesGroup } from 'src/app/model/messages-group';
+import { User } from 'src/app/model/user';
 
 @Component({
   selector: 'app-message-group',
@@ -8,9 +10,9 @@ import { MessagesGroup } from 'src/app/model/messages-group';
 })
 export class MessageGroupComponent implements OnInit {
 
-  @Input() messages: MessagesGroup | null = null;
-
-  sender = 6;
+  @Input() group: MessagesGroup | any = null;
+  @Input() recipient: Contact | any;
+  @Input() sender: User | any;
 
   constructor() { }
 

@@ -3,7 +3,7 @@ package net.bean.java.open.messenger.data.dto;
 import lombok.Data;
 
 @Data
-public class MessageDTO {
+public class OutputMessageDTO {
 
     private long id;
     private String message;

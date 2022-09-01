@@ -2,24 +2,27 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of, catchError } from 'rxjs';
 import { User } from '../model/user';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
 
-  private url = "http://localhost:8080/user";
+  private url = "http://localhost:8080/api/users/";
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private authService: AuthService) { }
 
   getCurrentUser() : Observable<User> {
+
+    let userId = this.authService.getLoginInfo().userId;
 
     const opt = {
       headers: new HttpHeaders({
         'Content-Type':  'application/json'
       }),
     };
-    return this.http.get<User>(this.url, opt)
+    return this.http.get<User>(this.url + userId, opt)
     .pipe(
       //catchError(this.handleError<User>('getContacts', [User]))
     );

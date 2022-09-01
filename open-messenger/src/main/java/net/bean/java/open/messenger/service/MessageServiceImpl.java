@@ -2,7 +2,7 @@ package net.bean.java.open.messenger.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.bean.java.open.messenger.data.dto.MessageDTO;
+import net.bean.java.open.messenger.data.dto.InputMessageDTO;
 import net.bean.java.open.messenger.data.jpa.model.Message;
 import net.bean.java.open.messenger.repository.MessageRepository;
 import org.springframework.data.domain.PageRequest;
@@ -30,31 +30,42 @@ public class MessageServiceImpl implements MessageService {
     public final MessageRepository messageRepository;
 
     @Override
-    public Message saveMessage(MessageDTO messageDto) {
+    public Message saveMessage(InputMessageDTO messageDto, long senderId) {
         Message message = new Message();
         message.setContent(messageDto.getMessage());
         message.setSentAt(new Date());
         message.setAcknowledged(false);
         userService.getUser(messageDto.getRecipient()).ifPresent((recipient) -> message.setRecipient(recipient));
-        userService.getUser(messageDto.getSender()).ifPresent((sender) -> message.setSender(sender));
+        userService.getUser(senderId).ifPresent((sender) -> message.setSender(sender));
         Message savedMessage = messageRepository.save(message);
         log.debug("Message between: {} and {} was created", savedMessage.getRecipient().getId(), savedMessage.getSender().getId());
         return savedMessage;
     }
 
     @Override
-    public Message saveMessageWithSpecificDate(MessageDTO messageDto) throws ParseException {
-        Message message = saveMessage(messageDto);
+    public Message saveMessageWithSpecificDate(InputMessageDTO messageDto, long senderId, String sentAt) throws ParseException {
+        Message message = saveMessage(messageDto, senderId);
         SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-        message.setSentAt(format.parse(messageDto.getSentAt()));
+        message.setSentAt(format.parse(sentAt));
         messageRepository.save(message);
         return message;
     }
 
     @Override
-    public List<Message> getConversationBetweenUsers(long userId1, long userId2, Optional<Integer> page) {
-        Pageable pageable = PageRequest.of(page.orElse(0), DEFAULT_PAGE_SIZE, Sort.by("id").ascending());
-        return messageRepository.getConversationBetweenUsers(userId1, userId2, pageable);
+    public List<Message> getMessages(long userId1, long userId2, Optional<Integer> page) {
+        Pageable pageable = PageRequest.of(page.orElse(0), DEFAULT_PAGE_SIZE, Sort.by("id").descending());
+        return messageRepository.getMessages(userId1, userId2, pageable);
+    }
+
+    @Override
+    public List<Message> getMessagesWithLowerIdThan(long userId1, long userId2, Optional<Integer> page, long lowerIdThan) {
+        Pageable pageable = PageRequest.of(page.orElse(0), DEFAULT_PAGE_SIZE, Sort.by("id").descending());
+        return messageRepository.getMessagesWithLowerIdThan(userId1, userId2, pageable, lowerIdThan);
+    }
+
+    @Override
+    public Message getMessageById(long id) {
+        return messageRepository.getMessageById(id);
     }
 
 }

@@ -2,20 +2,19 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { catchError, map, mapTo, Observable, of, pipe, tap } from 'rxjs';
-import { Token } from '../utils/token';
-
+import { LoginInfo } from '../model/login-info';
 
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService {
+export class AuthService {;
 
   jwtHelperService = new JwtHelperService();
 
   constructor(private http: HttpClient) { }
 
   public isAuthenticated(): boolean {
-    const token = localStorage.getItem('JWT_TOKEN');
+    const token = this.getLoginInfo().accessToken;
     if(token != null) {
       return !this.jwtHelperService.isTokenExpired(token);
     } else {
@@ -23,34 +22,35 @@ export class AuthService {
     }
   }
 
-  login(username: string, password: string): Observable<boolean> {
+  login(username: string, password: string): Observable<LoginInfo> {
     const body = new HttpParams()
     .set('username', username)
     .set('password', password);
     const headers = { headers: new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded') } ;
-    return this.http.post<Token>('http://localhost:8080/login', body.toString(), headers).pipe(
-      tap(token => this.storeToken(token)),
-      mapTo(true),
-      catchError(e => { console.error(e); return of(false) })
+    return this.http.post<LoginInfo>('http://localhost:8080/login', body.toString(), headers).pipe(
+      tap(loginInfo =>  {
+          this.storeLoginInfo(loginInfo);
+          console.log(JSON.stringify(loginInfo));
+        }
+      ),
     );
   }
 
   logout() {
-    this.removeToken();
+    this.removeLoginInfo();
   }
 
-  getToken() {
-    return localStorage.getItem('JWT_TOKEN');
+  getLoginInfo() {
+    return JSON.parse(localStorage.getItem('JWT_TOKEN')!);
   }
 
-  private storeToken(token: Token) {
-    localStorage.setItem('JWT_TOKEN', token.access_token);
-    localStorage.setItem('REFRESH_TOKEN', token.refresh_token);
+  private storeLoginInfo(loginInfo: LoginInfo) {
+    localStorage.setItem('JWT_TOKEN', JSON.stringify(loginInfo));
   }
 
-  private removeToken() {
+  private removeLoginInfo() {
     localStorage.removeItem('JWT_TOKEN',);
-    localStorage.removeItem('REFRESH_TOKEN');
+
   }
 
 }

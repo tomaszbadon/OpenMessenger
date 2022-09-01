@@ -4,6 +4,13 @@ import { Message } from '../model/message';
 export class GroupedMessagesUtil {
 
   public static toMessageGroup(messages: Message[]): MessagesGroup[] {
+
+    messages.sort((a1: Message, a2: Message) => {
+      if(a1.id < a2.id) return -1;
+      if(a1.id > a2.id) return 1;
+      return 0;
+    });
+
     let groupedMessages: MessagesGroup[] = [];
     for (let message of messages) {
       let date: string | any;
@@ -11,7 +18,6 @@ export class GroupedMessagesUtil {
       if (match) {
         date = match[1];
       }
-
       if (groupedMessages.length == 0) {
         let messagesTempArray: Message[] = [];
         messagesTempArray.push(message);

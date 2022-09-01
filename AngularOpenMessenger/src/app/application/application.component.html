@@ -1,4 +1,3 @@
-
 <div class="grid-container">
     <div class="top-1">
         <button (click)="logOut()">Logout</button>
@@ -9,21 +8,14 @@
         top
     </div>
 
-    <div class="left">
-        <app-contact 
-            *ngFor="let contact of contacts" 
-            [contact]="contact" 
-            [selected] = "selected === contact"
-            (click)="changeSelectionOnClick(contact);">
-        </app-contact>
+    <app-contact-list (onContactSelectedEmitter)="contactWasSelected($event)" class="left"></app-contact-list> 
+    
+    <app-message-box *ngIf="user != null && selected != null" [recipient] = "selected" [sender] = "user" class="right"></app-message-box>
+
+    <div *ngIf="user == null || selected == null" class="right">
+        Please select 
     </div>
 
-    <div class="right" id="right">
-        <app-message-box *ngIf="user != null && selected != null" [recipient] = "selected" [sender] = "user"></app-message-box>
-    </div>
-
-    <div class="bottom">
-        Ble Ble Ble
-    </div>
+    <app-message-input *ngIf="user != null && selected != null" class="bottom" [recipient]="selected"></app-message-input>
 
 </div>

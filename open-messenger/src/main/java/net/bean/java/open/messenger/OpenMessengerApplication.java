@@ -1,10 +1,10 @@
 package net.bean.java.open.messenger;
 
 import lombok.extern.slf4j.Slf4j;
-import net.bean.java.open.messenger.data.dto.MessageDTO;
-import net.bean.java.open.messenger.data.mapper.MessageMapper;
+import net.bean.java.open.messenger.data.dto.InputMessageDTO;
 import net.bean.java.open.messenger.data.jpa.model.Role;
 import net.bean.java.open.messenger.data.jpa.model.User;
+import net.bean.java.open.messenger.data.mapper.MessageMapper;
 import net.bean.java.open.messenger.service.MessageService;
 import net.bean.java.open.messenger.service.UserService;
 import org.springframework.boot.CommandLineRunner;
@@ -53,26 +53,24 @@ public class OpenMessengerApplication {
 			createConversation(messageService, "21-08-2022 17:33:34", chris, dominica, "Today at 6pm?");
 			createConversation(messageService, "21-08-2022 17:35:34", dominica, chris, "Sure, Let's meet next to the lobby.");
 
-			createConversation(messageService, "23-08-2022 09:32:34", chris, dominica, "Hi Dominica, How are you?");
-			createConversation(messageService, "23-08-2022 09:34:23", dominica, chris, "Hi");
-			createConversation(messageService, "23-08-2022 09:34:53", dominica, chris, "Everything is fine. Thank you.");
-			createConversation(messageService, "23-08-2022 09:35:34", chris, dominica, "I want to ask about the revenue report for Q1");
-			createConversation(messageService, "23-08-2022 09:35:45", chris, dominica, "Where can I find it?");
-			createConversation(messageService, "24-08-2022 11:08:05", dominica, chris, "Let me check this.");
-			createConversation(messageService, "24-08-2022 11:09:17", dominica, chris, "It seems that I haven't uploaded it yet to the server?");
-			createConversation(messageService, "25-08-2022 14:12:54", dominica, chris, "Could you give me some minutes to check finish it?");
-			createConversation(messageService, "25-08-2022 15:34:34", chris, dominica, "Sure");
-			createConversation(messageService, "25-08-2022 08:04:55", dominica, chris, "I will make it in 10 minutes.");
+			createConversation(messageService, "23-08-2021 09:32:34", chris, dominica, "Hi Dominica, How are you?");
+			createConversation(messageService, "23-08-2021 09:34:23", dominica, chris, "Hi");
+			createConversation(messageService, "23-08-2021 09:34:53", dominica, chris, "Everything is fine. Thank you.");
+			createConversation(messageService, "23-08-2021 09:35:34", chris, dominica, "I want to ask about the revenue report for Q1");
+			createConversation(messageService, "23-08-2021 09:35:45", chris, dominica, "Where can I find it?");
+			createConversation(messageService, "24-08-2021 11:08:05", dominica, chris, "Let me check this.");
+			createConversation(messageService, "24-08-2021 11:09:17", dominica, chris, "It seems that I haven't uploaded it yet to the server?");
+			createConversation(messageService, "25-08-2021 14:12:54", dominica, chris, "Could you give me some minutes to check finish it?");
+			createConversation(messageService, "25-08-2021 15:34:34", chris, dominica, "Sure");
+			createConversation(messageService, "25-08-2021 08:04:55", dominica, chris, "I will make it in 10 minutes.");
 		};
 	}
 
 	private void createConversation(MessageService messageService, String sentAt, User from, User to, String message) throws ParseException {
-		MessageDTO messageDTO = new MessageDTO();
+		InputMessageDTO messageDTO = new InputMessageDTO();
 		messageDTO.setMessage(message);
-		messageDTO.setSender(from.getId());
 		messageDTO.setRecipient(to.getId());
-		messageDTO.setSentAt(sentAt);
-		messageService.saveMessageWithSpecificDate(messageDTO);
+		messageService.saveMessageWithSpecificDate(messageDTO, from.getId(), sentAt);
 	}
 
 	private User createUser(UserService userService, String firstName, String lastName, String password, String avatar, String status) {

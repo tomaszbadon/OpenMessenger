@@ -3,6 +3,7 @@ package net.bean.java.open.messenger.security;
 import lombok.extern.slf4j.Slf4j;
 import net.bean.java.open.messenger.filter.CustomAuthenticationFilter;
 import net.bean.java.open.messenger.filter.CustomAuthorizationFilter;
+import net.bean.java.open.messenger.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,11 +27,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsService userDetailsService;
     private final PasswordEncoder passwordEncoder;
+    private final UserService userService;
 
     @Autowired
-    public SecurityConfiguration(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
+    public SecurityConfiguration(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder, UserService userService) {
         this.userDetailsService = userDetailsService;
         this.passwordEncoder = passwordEncoder;
+        this.userService = userService;
     }
 
     @Override
@@ -53,7 +56,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.authorizeHttpRequests().antMatchers(POST, "/api/user/save/**").hasAnyAuthority("ROLE_ADMIN");
 
         http.authorizeHttpRequests().anyRequest().authenticated();
-        http.addFilter(new CustomAuthenticationFilter(this.authenticationManagerBean()));
+        http.addFilter(new CustomAuthenticationFilter(this.authenticationManagerBean(),userService));
         http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
 
         //http.authorizeHttpRequests().anyRequest().permitAll();
