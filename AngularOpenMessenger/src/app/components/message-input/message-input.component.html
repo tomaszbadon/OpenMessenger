@@ -1,0 +1,10 @@
+<div class="message-wrapper">
+    <div class="input-div">
+        <input #message name="message" value="" placeholder="Start typing for a reply..." (keydown.enter)="onKeydown(message)"/>
+    </div>
+    <div class="button-div">
+        <button (click)="onClick(message)">
+            <img src="/assets/send_48.png" width="32px">
+        </button>
+    </div>
+</div>

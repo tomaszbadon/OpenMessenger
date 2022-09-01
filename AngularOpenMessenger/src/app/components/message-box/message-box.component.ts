@@ -17,26 +17,26 @@ import { Message } from 'src/app/model/message';
 export class MessageBoxComponent implements OnChanges, OnInit {
 
   private readonly default_timeout = 0;
-
   private isReady = false;
-
   groupedMessages: MessagesGroup[] = [];
+  messages: Message[] = [];
 
   @Input() recipient: Contact | any;
-
   @Input() sender: User | any;
 
   constructor(private conversationService: ConversationService, private eventQueue: EventQueueService, private element: ElementRef) { }
 
   ngOnInit(): void { 
-    this.eventQueue.on(AppEventType.NewMessageSent).subscribe(event => this.handleNewMessageEvent(event.payload));
-    this.eventQueue.on(AppEventType.LogOut).subscribe(event => this.handleLogOutEvent(event.payload));
+    this.eventQueue.on(AppEventType.NewMessageSent).subscribe(event => this.handleNewMessageEvent(event));
+    this.eventQueue.on(AppEventType.LogOut).subscribe(event => this.handleLogOutEvent(event));
 
     let div2 = this.element.nativeElement;
     div2.addEventListener('scroll', (e: Event) => {
       if(div2.scrollTop == 0 && this.isReady) { 
-        this.conversationService.getPrevioustMessages(this.recipient.id, this.sender.id).subscribe(messages => { 
-          this.groupedMessages = GroupedMessagesUtil.toMessageGroup(messages);
+        let minId = this.findTheLowestMessageId();
+        this.conversationService.getPrevioustMessages(this.recipient.id, this.sender.id, minId).subscribe(messages => { 
+          this.messages = this.messages.concat(messages);
+          this.groupedMessages = GroupedMessagesUtil.toMessageGroup(this.messages);
         });
       }
 
@@ -44,25 +44,26 @@ export class MessageBoxComponent implements OnChanges, OnInit {
         this.isReady = true;
       }
     });
-
-
   }
 
   handleLogOutEvent(event: AppEvent<any>) {
-    this.conversationService.clearCachedMessages();
+    this.messages = [];
+    this.groupedMessages = [];
+    this.isReady = false;
   }
 
   handleNewMessageEvent(event: AppEvent<Message>) {
-    this.conversationService.getMessages(this.recipient.id, this.sender.id).subscribe(messages => { 
-      this.groupedMessages = GroupedMessagesUtil.toMessageGroup(messages);
-      this.scrollToBottomAfterLoad();
-    });
+    this.messages.push(event.payload);
+    this.groupedMessages = GroupedMessagesUtil.toMessageGroup(this.messages);
+    this.scrollToBottomAfterLoad();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     this.conversationService.getMessages(this.recipient.id, this.sender.id).subscribe(messages => { 
+      this.messages = messages;
       this.groupedMessages = GroupedMessagesUtil.toMessageGroup(messages);
       this.scrollToBottomAfterLoad();
+      this.isReady = false;
     });
   } 
 
@@ -72,5 +73,10 @@ export class MessageBoxComponent implements OnChanges, OnInit {
           div.scrollTop = div.scrollHeight;
       }, this.default_timeout);
   }
+
+  private findTheLowestMessageId() {
+    return this.messages[0].id;
+  }
+
 
 }

@@ -14,9 +14,8 @@ export class AuthService {;
   constructor(private http: HttpClient) { }
 
   public isAuthenticated(): boolean {
-    const token = this.getLoginInfo().accessToken;
-    if(token != null) {
-      return !this.jwtHelperService.isTokenExpired(token);
+    if(this.getLoginInfo() != null && this.getLoginInfo().accessToken != null) {
+      return !this.jwtHelperService.isTokenExpired(this.getLoginInfo().accessToken);
     } else {
       return false;
     }
@@ -30,7 +29,6 @@ export class AuthService {;
     return this.http.post<LoginInfo>('http://localhost:8080/login', body.toString(), headers).pipe(
       tap(loginInfo =>  {
           this.storeLoginInfo(loginInfo);
-          console.log(JSON.stringify(loginInfo));
         }
       ),
     );
