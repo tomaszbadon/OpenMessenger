@@ -15,6 +15,9 @@ public interface MessageRepository extends PagingAndSortingRepository<Message, L
     @Query("SELECT m FROM Message m WHERE ((m.recipient.id = ?1 AND m.sender.id = ?2) OR (m.sender.id = ?1 AND m.recipient.id = ?2)) AND m.id < ?3")
     List<Message> getMessagesWithLowerIdThan(long user1, long user2, Pageable pageable, long lowerIdThan);
 
+    @Query("SELECT COUNT(m) FROM Message m WHERE (m.recipient.id = ?1 AND m.sender.id = ?2) OR (m.sender.id = ?1 AND m.recipient.id = ?2)")
+    Long getNumberOfMessages(long user1, long user);
+
     Message getMessageById(long messageId);
 
 }

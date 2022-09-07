@@ -13,6 +13,7 @@ import { AuthHttpInterceptor } from './interceptor/auth-http.interceptor';
 import { MessageGroupComponent } from './components/message-group/message-group.component';
 import { ContactListComponent } from './contact-list/contact-list.component';
 import { MessageInputComponent } from './components/message-input/message-input.component';
+import { ApiHttpInterceptor } from './interceptor/api-http.interceptor';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,10 @@ import { MessageInputComponent } from './components/message-input/message-input.
     AppRoutingModule,
     HttpClientModule,
   ],
-  providers: [{ provide: HTTP_INTERCEPTORS, useClass: AuthHttpInterceptor, multi: true } ],
+  providers: [{ provide: HTTP_INTERCEPTORS, useClass: AuthHttpInterceptor, multi: true }, {provide: HTTP_INTERCEPTORS,
+    useClass: ApiHttpInterceptor,
+    multi: true,
+  } ],
 
   bootstrap: [AppComponent]
 })

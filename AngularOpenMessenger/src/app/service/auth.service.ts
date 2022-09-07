@@ -26,7 +26,7 @@ export class AuthService {;
     .set('username', username)
     .set('password', password);
     const headers = { headers: new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded') } ;
-    return this.http.post<LoginInfo>('http://localhost:8080/login', body.toString(), headers).pipe(
+    return this.http.post<LoginInfo>('/login', body.toString(), headers).pipe(
       tap(loginInfo =>  {
           this.storeLoginInfo(loginInfo);
         }

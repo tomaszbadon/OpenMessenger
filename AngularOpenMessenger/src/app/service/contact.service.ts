@@ -9,8 +9,6 @@ import { AuthService } from './auth.service';
 })
 export class ContactService {
 
-  private url = 'http://localhost:8080/api/users/{userId}/contacts';
-
   constructor(private http: HttpClient, private authService: AuthService) { }
 
   getContacts() : Observable<Contact[]> {
@@ -22,7 +20,7 @@ export class ContactService {
         'Content-Type':  'application/json'
       }),
     };
-    return this.http.get<Contact[]>(this.url.replace('{userId}', userId), opt)
+    return this.http.get<Contact[]>('/api/users/{userId}/contacts'.replace('{userId}', userId), opt)
     .pipe(
       catchError(this.handleError<Contact[]>('getContacts', []))
     );
@@ -30,7 +28,7 @@ export class ContactService {
 
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
-      console.error(error); // log to console instead
+      console.error(error);
       return of(result as T);
     };
   }

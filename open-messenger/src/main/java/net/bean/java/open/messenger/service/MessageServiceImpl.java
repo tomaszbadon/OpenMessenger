@@ -53,14 +53,19 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public List<Message> getMessages(long userId1, long userId2, Optional<Integer> page) {
-        Pageable pageable = PageRequest.of(page.orElse(0), DEFAULT_PAGE_SIZE, Sort.by("id").descending());
+        Sort sort = Sort.by("id").ascending();
+        Pageable pageable = PageRequest.of(page.orElse(0), DEFAULT_PAGE_SIZE, sort);
         return messageRepository.getMessages(userId1, userId2, pageable);
     }
 
     @Override
-    public List<Message> getMessagesWithLowerIdThan(long userId1, long userId2, Optional<Integer> page, long lowerIdThan) {
-        Pageable pageable = PageRequest.of(page.orElse(0), DEFAULT_PAGE_SIZE, Sort.by("id").descending());
-        return messageRepository.getMessagesWithLowerIdThan(userId1, userId2, pageable, lowerIdThan);
+    public int getLastPage(long userId1, long userId2) {
+        long totalNumberOfMessages = messageRepository.getNumberOfMessages(userId1, userId2);
+        int page = (int) totalNumberOfMessages / DEFAULT_PAGE_SIZE;
+        if(page > 0 && totalNumberOfMessages % DEFAULT_PAGE_SIZE == 0) {
+            page--;
+        }
+        return page;
     }
 
     @Override

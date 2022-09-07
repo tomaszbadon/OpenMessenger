@@ -2,6 +2,7 @@ package net.bean.java.open.messenger.service;
 
 import net.bean.java.open.messenger.data.dto.InputMessageDTO;
 import net.bean.java.open.messenger.data.jpa.model.Message;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
 import java.text.ParseException;
@@ -17,7 +18,7 @@ public interface MessageService {
 
     List<Message> getMessages(long userId1, long userId2, Optional<Integer> page);
 
-    List<Message> getMessagesWithLowerIdThan(long userId1, long userId2, Optional<Integer> page, long lowerIdThan);
+    int getLastPage(long user1, long user2);
 
     Message getMessageById(long id);
 

@@ -1,59 +1,68 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, of, map, catchError, tap, merge } from 'rxjs';
+import { Observable, of, map, catchError, tap, merge, from } from 'rxjs';
 import { Message } from '../model/message';
-import { MessageCache } from '../model/message-cache';
+import { MessagesPage } from '../model/messages-page';
+import { Service } from './service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ConversationService {
+export class ConversationService extends Service {
 
-  private headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+  private page = 0;
 
-  private url = 'http://localhost:8080/api/messages';
+  constructor(private http: HttpClient) { super(); }
 
-  constructor(private http: HttpClient) { }
+  getLatestMessages(userId1: number, userId2: number): Observable<Message[]> {
 
-  getMessages(userId1: number, userId2: number): Observable<Message[]> {
     const params = new HttpParams()
-      .set('page', 0)
       .set('user1', userId1)
       .set('user2', userId2)
 
     const opt = {
-      headers: this.headers,
+      headers: this.defaultJsonHeaders,
       params: params
     };
 
-    return this.http.get<Message[]>(this.url, opt)
+    return this.http.get<MessagesPage>('/api/messages/latest', opt)
       .pipe(
+        tap(response => this.page = response.page),
+        map(response => response.messages),
         catchError(this.handleError<Message[]>('getConversation', []))
       );
   }
 
-  getPrevioustMessages(userId1: number, userId2: number, lowerIdThen: number): Observable<Message[]> {
+  getMessages(userId1: number, userId2: number): Observable<Message[]> {
+
+    if(this.page === 0) {
+      return of(new Array<Message>());
+    }
+
+    this.page--;
+
     const params = new HttpParams()
-      .set('page', 0)
+      .set('page', this.page)
       .set('user1', userId1)
       .set('user2', userId2)
-      .set('lowerIdThan', lowerIdThen)
 
     const opt = {
-      headers: this.headers,
+      headers: this.defaultJsonHeaders,
       params: params
     };
 
-    return this.http.get<Message[]>(this.url, opt)
+    return this.http.get<MessagesPage>('/api/messages', opt)
       .pipe(
+        map(response => response.messages),
         catchError(this.handleError<Message[]>('getConversation', []))
       );
   }
 
   postMessage(message: string, recipient: number): Observable<Message> {
-    const opt = { headers: this.headers };
+    const opt = { headers: this.defaultJsonHeaders };
     let body = { "message": message, "recipient": recipient };
-    return this.http.post<Message>(this.url, body, opt).pipe(
+
+    return this.http.post<Message>('/api/messages', body).pipe(
       catchError(this.handleError<Message>('sendMessage'))
     );
   }

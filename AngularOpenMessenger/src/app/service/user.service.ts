@@ -9,8 +9,6 @@ import { AuthService } from './auth.service';
 })
 export class UserService {
 
-  private url = "http://localhost:8080/api/users/";
-
   constructor(private http: HttpClient, private authService: AuthService) { }
 
   getCurrentUser() : Observable<User> {
@@ -22,7 +20,7 @@ export class UserService {
         'Content-Type':  'application/json'
       }),
     };
-    return this.http.get<User>(this.url + userId, opt)
+    return this.http.get<User>("/api/users/" + userId, opt)
     .pipe(
       //catchError(this.handleError<User>('getContacts', [User]))
     );
