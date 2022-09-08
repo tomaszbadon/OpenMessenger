@@ -67,6 +67,7 @@ public class MessagesResource {
         User curentUser = userService.getUser(UserRequestUtil.getUserFromHttpServletRequest(request)).get();
         Message message = messageService.saveMessage(messageDTO, curentUser.getId());
         return ResponseEntity.ok().body(mapper.mapEntityToDto(message));
+        //TODO: Created instead of ok();
     }
 
 
