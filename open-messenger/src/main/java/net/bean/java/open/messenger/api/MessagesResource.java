@@ -9,7 +9,9 @@ import net.bean.java.open.messenger.data.jpa.model.User;
 import net.bean.java.open.messenger.data.mapper.MessageMapper;
 import net.bean.java.open.messenger.entity.MessagesPage;
 import net.bean.java.open.messenger.service.MessageService;
+import net.bean.java.open.messenger.service.NotificationSerivce;
 import net.bean.java.open.messenger.service.UserService;
+import net.bean.java.open.messenger.util.Pause;
 import net.bean.java.open.messenger.util.UserRequestUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +29,7 @@ public class MessagesResource {
     private final MessageService messageService;
     private final UserService userService;
     private final MessageMapper mapper;
+    public final NotificationSerivce notificationSerivce;
 
     @GetMapping("/api/messages")
     public ResponseEntity<MessagesPage> getMessages(HttpServletRequest request, @RequestParam long user1, @RequestParam long user2, @RequestParam Optional<Integer> page) {
@@ -37,6 +40,7 @@ public class MessagesResource {
                 .stream()
                 .map(mapper::mapEntityToDto)
                 .collect(Collectors.toList());
+        Pause._for(1000);
         return ResponseEntity.ok().body(new MessagesPage(messages, page.orElseGet(() -> 0)));
     }
 
@@ -66,9 +70,9 @@ public class MessagesResource {
     public ResponseEntity<OutputMessageDTO> newMessage(HttpServletRequest request, @RequestBody InputMessageDTO messageDTO) {
         User curentUser = userService.getUser(UserRequestUtil.getUserFromHttpServletRequest(request)).get();
         Message message = messageService.saveMessage(messageDTO, curentUser.getId());
+        notificationSerivce.notifyUser(message);
         return ResponseEntity.ok().body(mapper.mapEntityToDto(message));
         //TODO: Created instead of ok();
     }
-
 
 }

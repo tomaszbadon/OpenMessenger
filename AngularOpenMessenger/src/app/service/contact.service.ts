@@ -20,7 +20,7 @@ export class ContactService {
         'Content-Type':  'application/json'
       }),
     };
-    return this.http.get<Contact[]>('/api/users/{userId}/contacts'.replace('{userId}', userId), opt)
+    return this.http.get<Contact[]>('/api/users/' + userId + '/contacts', opt)
     .pipe(
       catchError(this.handleError<Contact[]>('getContacts', []))
     );

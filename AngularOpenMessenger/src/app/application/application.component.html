@@ -1,16 +1,21 @@
+
+
+<app-notification-container *ngIf="contacts.length > 0 && user != null" [user]="user" [contacts]="contacts"></app-notification-container>
+
 <div class="grid-container">
     <div class="top-1">
         <button (click)="logOut()">Logout</button>
-        <app-search-bar></app-search-bar>
+
+        <!-- <app-search-bar></app-search-bar> -->
     </div>
 
     <div class="top-2">
         top
     </div>
 
-    <app-contact-list (onContactSelectedEmitter)="contactWasSelected($event)" class="left"></app-contact-list> 
+    <app-contact-list (onContactSelectedEmitter)="contactWasSelected($event)" [contacts]="contacts" class="left"></app-contact-list> 
     
-    <app-message-box *ngIf="user != null && selected != null" [recipient] = "selected" [sender] = "user" class="right"></app-message-box>
+    <app-message-box *ngIf="user != null && selected != null" [sender] = "selected" [recipient] = "user" class="right"></app-message-box>
 
     <div *ngIf="user == null || selected == null" class="right">
         Please select 

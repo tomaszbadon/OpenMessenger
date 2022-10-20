@@ -1,11 +1,12 @@
 package net.bean.java.open.messenger.service;
 
 import net.bean.java.open.messenger.data.dto.InputMessageDTO;
+import net.bean.java.open.messenger.data.dto.Notification;
 import net.bean.java.open.messenger.data.jpa.model.Message;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
 import java.text.ParseException;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,5 +22,9 @@ public interface MessageService {
     int getLastPage(long user1, long user2);
 
     Message getMessageById(long id);
+
+    List<Message> getUnacknowledgedMessages(long userId);
+
+    void acknowledgedMessages(long userId, Collection<Notification> messages);
 
 }

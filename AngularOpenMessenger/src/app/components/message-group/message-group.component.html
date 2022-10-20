@@ -6,7 +6,7 @@
     <div>
         <div *ngFor="let m of group.messages" class="message-wrapper"
             [ngClass]="group.sender != recipient.id ? 'message-wrapper-right' : ''">
-            <div [ngClass]="group.sender == recipient.id ? 'message message-left' : 'message message-right'">
+            <div id="message_{{m.id}}" [ngClass]="group.sender == recipient.id ? 'message message-left' : 'message message-right'">
                 {{m.message}}
             </div>
         </div>

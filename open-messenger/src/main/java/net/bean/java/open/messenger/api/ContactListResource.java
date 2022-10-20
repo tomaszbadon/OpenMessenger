@@ -2,6 +2,7 @@ package net.bean.java.open.messenger.api;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.bean.java.open.messenger.annotation.Owner;
 import net.bean.java.open.messenger.data.jpa.model.User;
 import net.bean.java.open.messenger.entity.Contact;
 import net.bean.java.open.messenger.service.UserService;
@@ -24,7 +25,7 @@ public class ContactListResource {
     private final UserService userService;
 
     @GetMapping("/api/users/{userId}/contacts")
-    public ResponseEntity getContacts(HttpServletRequest request, @PathVariable("userId") long userId) {
+    public ResponseEntity getContacts(HttpServletRequest request, @Owner @PathVariable("userId") long userId) {
         User user = userService.getUser(UserRequestUtil.getUserFromHttpServletRequest(request)).get();
         if(userId == user.getId()) {
             List<Contact> contactList = userService.getUsers().stream()

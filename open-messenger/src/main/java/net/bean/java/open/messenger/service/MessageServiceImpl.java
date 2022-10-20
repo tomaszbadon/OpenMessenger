@@ -3,6 +3,7 @@ package net.bean.java.open.messenger.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.bean.java.open.messenger.data.dto.InputMessageDTO;
+import net.bean.java.open.messenger.data.dto.Notification;
 import net.bean.java.open.messenger.data.jpa.model.Message;
 import net.bean.java.open.messenger.repository.MessageRepository;
 import org.springframework.data.domain.PageRequest;
@@ -13,9 +14,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -38,7 +41,6 @@ public class MessageServiceImpl implements MessageService {
         userService.getUser(messageDto.getRecipient()).ifPresent((recipient) -> message.setRecipient(recipient));
         userService.getUser(senderId).ifPresent((sender) -> message.setSender(sender));
         Message savedMessage = messageRepository.save(message);
-        log.debug("Message between: {} and {} was created", savedMessage.getRecipient().getId(), savedMessage.getSender().getId());
         return savedMessage;
     }
 
@@ -73,4 +75,14 @@ public class MessageServiceImpl implements MessageService {
         return messageRepository.getMessageById(id);
     }
 
+    @Override
+    public List<Message> getUnacknowledgedMessages(long userId) {
+        return messageRepository.getUnacknownledgedMessages(userId);
+    }
+
+    @Override
+    public void acknowledgedMessages(long userId, Collection<Notification> messages) {
+        List<Long> messageIds = messages.stream().map(m -> m.getMessageId()).collect(Collectors.toList());
+        messageRepository.acknownledgedMessages(userId, messageIds);
+    }
 }

@@ -1,7 +1,17 @@
 <div class="container">
+
+    <div *ngIf="showLoadingBar" class="loading-container">   
+        <img width="24px" height="24px" src="/assets/loading.gif" />
+    </div>
+
+    <div *ngIf="thereAreNoMessagesLeft" class="no-messages-container">
+        <p>(There are no messages left)</p>
+    </div>
+
     <div *ngFor="let group of groupedMessages; let i = index">
         <div *ngIf="i > 1 && group.date != groupedMessages[i -1].date" class="date-separator"> {{ group.date }}</div>
         <div *ngIf="i == 0" class="date-separator"> {{ group.date }}</div>
         <app-message-group [group]="group" [sender]="sender" [recipient]="recipient"></app-message-group>
     </div>
+
 </div>

@@ -1,7 +1,8 @@
-import { useAnimation } from '@angular/animations';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../service/auth.service';
+import * as SockJS from 'sockjs-client';
+import * as Stomp from 'stompjs';
 
 @Component({
   selector: 'app-login',
@@ -10,7 +11,7 @@ import { AuthService } from '../service/auth.service';
 })
 export class LoginComponent implements OnInit {
 
-  isAuthenticated :string = '';
+  isAuthenticated: string = '';
 
   constructor(private authService: AuthService, private router: Router) { }
 

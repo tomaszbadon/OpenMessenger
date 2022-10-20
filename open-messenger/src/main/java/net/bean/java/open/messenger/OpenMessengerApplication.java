@@ -11,6 +11,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.cors.CorsConfiguration;
@@ -22,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 @SpringBootApplication
+@EnableScheduling
 @Slf4j
 public class OpenMessengerApplication {
 
@@ -47,9 +49,49 @@ public class OpenMessengerApplication {
 			User claudia = createUser(userService, "Claudia", "Wiliams", "my_password", "avatar_4.png", "Sleep Eat Work Repeat");
 			User monica = createUser(userService, "Monica", "Rosatti", "my_password", "avatar_5.png", "I love you <3");
 
+			createConversation(messageService, "13-02-2021 17:32:56", chris, dominica, "However, this bright idea to just replace one tired snowmobile with a brand new snowmobile, you know, to free up the snowmobile parking lot for other vehicles, never worked.");
+			createConversation(messageService, "13-02-2021 17:32:43", chris, dominica, "It was not a huge issue until the warm up started last week.");
+			createConversation(messageService, "13-02-2021 17:33:11", dominica, chris, "On Friday, we had four big inches of snow.");
+			createConversation(messageService, "13-02-2021 17:33:39", dominica, chris, "Sunday was dry.");
+			createConversation(messageService, "14-03-2021 08:32:34", chris, dominica, "By Monday, snow began to fall again.");
+			createConversation(messageService, "14-03-2021 08:34:34", dominica, chris, "The snowmobile parking lot was now incredibly busy.");
+			createConversation(messageService, "14-03-2021 08:34:44", dominica, chris, "When I went to pick up my snowmobile from the shop, it was bumper to bumper and six people deep at the front.");
+			createConversation(messageService, "14-03-2022 08:35:34", chris, dominica, "The back lot was even worse.");
+			createConversation(messageService, "14-03-2021 08:36:34", chris, dominica, "I was now even more thankful for the snowmobile that had been at my house.");
+			createConversation(messageService, "14-03-2021 08:37:34", chris, dominica, "Wednesday morning, at 10: 30, I started having a hard time driving to work.");
+			createConversation(messageService, "14-03-2021 17:38:34", chris, dominica, "I had to slow down to 35 mph to inch my way along the road.");
+			createConversation(messageService, "18-03-2021 19:12:34", dominica, chris, "Even the northbound side was backed up and cars were passing me going the opposite way.");
+			createConversation(messageService, "18-03-2021 19:12:55", chris, dominica, "The highway patrol had set up a rope barrier, opening two lanes at a time, to allow traffic to move north.");
+			createConversation(messageService, "18-03-2021 19:13:19", dominica, chris, "I had never seen anything like it.");
+			createConversation(messageService, "18-03-2021 19:13:21", chris, dominica, "I later found out that they were expecting a quarter of an inch of snow an hour until noon.");
+			createConversation(messageService, "18-03-2021 19:14:34", chris, dominica, "It was not until 1: 00 when I got to the shop that I saw anything other than a four wheel drive SUV.");
+
+
+			createConversation(messageService, "13-02-2022 17:32:56", chris, dominica, "However, this bright idea to just replace one tired snowmobile with a brand new snowmobile, you know, to free up the snowmobile parking lot for other vehicles, never worked.");
+			createConversation(messageService, "13-02-2022 17:32:43", chris, dominica, "It was not a huge issue until the warm up started last week.");
+			createConversation(messageService, "13-02-2022 17:33:11", dominica, chris, "On Friday, we had four big inches of snow.");
+			createConversation(messageService, "13-02-2022 17:33:39", dominica, chris, "Sunday was dry.");
+			createConversation(messageService, "14-03-2022 08:32:34", chris, dominica, "By Monday, snow began to fall again.");
+			createConversation(messageService, "14-03-2022 08:34:34", dominica, chris, "The snowmobile parking lot was now incredibly busy.");
+			createConversation(messageService, "14-03-2022 08:34:44", dominica, chris, "When I went to pick up my snowmobile from the shop, it was bumper to bumper and six people deep at the front.");
+			createConversation(messageService, "14-03-2022 08:35:34", chris, dominica, "The back lot was even worse.");
+			createConversation(messageService, "14-03-2022 08:36:34", chris, dominica, "I was now even more thankful for the snowmobile that had been at my house.");
+			createConversation(messageService, "14-03-2022 08:37:34", chris, dominica, "Wednesday morning, at 10: 30, I started having a hard time driving to work.");
+			createConversation(messageService, "14-03-2022 17:38:34", chris, dominica, "I had to slow down to 35 mph to inch my way along the road.");
+			createConversation(messageService, "18-03-2022 19:12:34", dominica, chris, "Even the northbound side was backed up and cars were passing me going the opposite way.");
+			createConversation(messageService, "18-03-2022 19:12:55", chris, dominica, "The highway patrol had set up a rope barrier, opening two lanes at a time, to allow traffic to move north.");
+			createConversation(messageService, "18-03-2022 19:13:19", dominica, chris, "I had never seen anything like it.");
+			createConversation(messageService, "18-03-2022 19:13:21", chris, dominica, "I later found out that they were expecting a quarter of an inch of snow an hour until noon.");
+			createConversation(messageService, "18-03-2022 19:14:34", chris, dominica, "It was not until 1: 00 when I got to the shop that I saw anything other than a four wheel drive SUV.");
+
+			createConversation(messageService, "20-03-2021 19:13:19", dominica, chris, "I had never seen anything like it.");
+			createConversation(messageService, "20-03-2021 19:13:21", chris, dominica, "I later found out that they were expecting a quarter of an inch of snow an hour until noon.");
+			createConversation(messageService, "20-03-2021 19:14:34", chris, dominica, "It was not until 1: 00 when I got to the shop that I saw anything other than a four wheel drive SUV.");
+
+
 			createConversation(messageService, "21-08-2022 17:32:34", chris, dominica, "Hi there");
 			createConversation(messageService, "21-08-2022 17:32:50", chris, dominica, "Do you want to go for a coffee with me?");
-			createConversation(messageService, "21-08-2022 17:34:34", dominica, dominica, "When?");
+			createConversation(messageService, "21-08-2022 17:34:34", dominica, chris, "When?");
 			createConversation(messageService, "21-08-2022 17:33:34", chris, dominica, "Today at 6pm?");
 			createConversation(messageService, "21-08-2022 17:35:34", dominica, chris, "Sure, Let's meet next to the lobby.");
 

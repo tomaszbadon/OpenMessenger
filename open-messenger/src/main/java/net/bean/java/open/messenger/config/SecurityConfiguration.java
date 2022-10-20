@@ -1,4 +1,4 @@
-package net.bean.java.open.messenger.security;
+package net.bean.java.open.messenger.config;
 
 import lombok.extern.slf4j.Slf4j;
 import net.bean.java.open.messenger.filter.CustomAuthenticationFilter;
@@ -43,23 +43,16 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-
         http.csrf().disable();
         http.cors();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http.authorizeHttpRequests().antMatchers("/token/refresh?**").permitAll();
         http.authorizeHttpRequests().antMatchers("/stomp-endpoint/**").permitAll();
-        //http.authorizeHttpRequests().antMatchers("/stomp-endpoint").permitAll();
+        http.authorizeHttpRequests().antMatchers(GET, "/api/**").hasRole("USER");
+        http.authorizeHttpRequests().antMatchers(POST, "/api/**").hasRole("USER");
+        http.authorizeHttpRequests().anyRequest().denyAll();
 
-        http.authorizeHttpRequests().antMatchers(GET, "/api/user/**").hasAnyAuthority("ROLE_USER");
-        http.authorizeHttpRequests().antMatchers(GET, "/hero-api/hero/**").hasAnyAuthority("ROLE_USER");
-        http.authorizeHttpRequests().antMatchers(POST, "/api/user/save/**").hasAnyAuthority("ROLE_ADMIN");
-
-        http.authorizeHttpRequests().anyRequest().authenticated();
         http.addFilter(new CustomAuthenticationFilter(this.authenticationManagerBean(),userService));
         http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
-
-        //http.authorizeHttpRequests().anyRequest().permitAll();
     }
 
     @Bean

@@ -58,6 +58,16 @@ export class ConversationService extends Service {
       );
   }
 
+  getMessage(messageId: number): Observable<Message> {
+    const opt = {
+      headers: this.defaultJsonHeaders,
+    };
+    return this.http.get<Message>('/api/messages/' + messageId , opt)
+      .pipe(
+        //catchError(this.handleError<Message>('getConversation', any))
+      );
+  }
+
   postMessage(message: string, recipient: number): Observable<Message> {
     const opt = { headers: this.defaultJsonHeaders };
     let body = { "message": message, "recipient": recipient };

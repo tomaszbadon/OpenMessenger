@@ -2,9 +2,11 @@ package net.bean.java.open.messenger.repository;
 
 import net.bean.java.open.messenger.data.jpa.model.Message;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface MessageRepository extends PagingAndSortingRepository<Message, Long> {
@@ -20,4 +22,10 @@ public interface MessageRepository extends PagingAndSortingRepository<Message, L
 
     Message getMessageById(long messageId);
 
+    @Query("SELECT m FROM Message m WHERE m.isAcknowledged = false AND m.recipient.id = ?1")
+    List<Message> getUnacknownledgedMessages(long userId);
+
+    @Modifying
+    @Query("UPDATE Message m SET m.isAcknowledged = true WHERE m.isAcknowledged = false AND m.recipient.id = ?1 AND m.id IN (?2)")
+    void acknownledgedMessages(long userId, Collection<Long> messageIds);
 }

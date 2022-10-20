@@ -1,15 +1,14 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { ContactService } from 'src/app/service/contact.service';
 import { Contact } from 'src/app/model/contact';
 import { AuthService } from '../service/auth.service';
 import { UserService } from '../service/user.service';
 import { User } from '../model/user';
-import { ActivatedRoute } from '@angular/router';
-import { firstValueFrom } from 'rxjs';
 import { EventQueueService } from '../service/event-queue.service';
 import { AppEvent } from '../utils/app-event';
 import { AppEventType } from '../utils/app-event-type';
+import { ContactService } from '../service/contact.service';
+
 
 @Component({
   selector: 'app-application',
@@ -18,16 +17,19 @@ import { AppEventType } from '../utils/app-event-type';
 })
 export class ApplicationComponent implements OnInit {
 
-  selected: Contact | any
+  selected: Contact | null = null;
+  user: User | null = null;
+  contacts: Contact[] = []
 
-  user: User | any;
-
-  constructor(private eventQueue: EventQueueService, private route: ActivatedRoute, private userService: UserService, private authService: AuthService, private router: Router) { }
+  constructor(private eventQueue: EventQueueService,
+              private userService: UserService,
+              private contactService: ContactService,
+              private authService: AuthService, 
+              private router: Router) { }
 
   ngOnInit(): void {
-    this.userService.getCurrentUser().subscribe(u => { 
-      this.user = u 
-    });
+    this.userService.getCurrentUser().subscribe(u => this.user = u);
+    this.contactService.getContacts().subscribe(c => this.contacts = c);
   }
 
   contactWasSelected(contact: Contact) {

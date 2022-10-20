@@ -14,6 +14,11 @@ import { MessageGroupComponent } from './components/message-group/message-group.
 import { ContactListComponent } from './contact-list/contact-list.component';
 import { MessageInputComponent } from './components/message-input/message-input.component';
 import { ApiHttpInterceptor } from './interceptor/api-http.interceptor';
+import { AuthService } from './service/auth.service';
+import { NotificationContainerComponent } from './components/notification-container/notification-container.component';
+import { NotificationPanelComponent } from './components/notification-panel/notification-panel.component';
+import { WebSocketNotificationService } from './service/web-socket-notification.service';
+import { notificationServiceFactory } from './provider/notification-service-provider';
 
 @NgModule({
   declarations: [
@@ -25,17 +30,20 @@ import { ApiHttpInterceptor } from './interceptor/api-http.interceptor';
     SearchBarComponent,
     MessageGroupComponent,
     ContactListComponent,
-    MessageInputComponent
+    MessageInputComponent,
+    NotificationContainerComponent,
+    NotificationPanelComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
   ],
-  providers: [{ provide: HTTP_INTERCEPTORS, useClass: AuthHttpInterceptor, multi: true }, {provide: HTTP_INTERCEPTORS,
-    useClass: ApiHttpInterceptor,
-    multi: true,
-  } ],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: AuthHttpInterceptor, multi: true }, 
+    { provide: HTTP_INTERCEPTORS, useClass: ApiHttpInterceptor, multi: true },
+    { provide: WebSocketNotificationService, useFactory: notificationServiceFactory, deps: [AuthService] }
+],
 
   bootstrap: [AppComponent]
 })

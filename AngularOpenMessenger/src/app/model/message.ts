@@ -1,7 +1,7 @@
 export interface Message {
     id: number;
     message: string;
-    isAcknowledged: boolean;
+    acknowledged: boolean;
     sender: number;
     recipient: number;
     sentAt: string;

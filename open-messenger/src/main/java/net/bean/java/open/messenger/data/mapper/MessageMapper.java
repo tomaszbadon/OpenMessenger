@@ -2,7 +2,6 @@ package net.bean.java.open.messenger.data.mapper;
 
 import net.bean.java.open.messenger.data.dto.OutputMessageDTO;
 import net.bean.java.open.messenger.data.jpa.model.Message;
-import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
 

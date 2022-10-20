@@ -30,4 +30,6 @@ public class Message {
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date sentAt;
+
+
 }

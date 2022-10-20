@@ -38,7 +38,7 @@ export class AuthService {;
     this.removeLoginInfo();
   }
 
-  getLoginInfo() {
+  getLoginInfo(): LoginInfo {
     return JSON.parse(localStorage.getItem('JWT_TOKEN')!);
   }
 
