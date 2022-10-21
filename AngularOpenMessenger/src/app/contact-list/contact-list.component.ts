@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { ActivatedRoute, Route } from '@angular/router';
 import { Contact } from '../model/contact';
 import { EventQueueService } from '../service/event-queue.service';
@@ -50,14 +50,18 @@ export class ContactListComponent implements OnInit {
     let contact = this.contacts.find(c => c.id === sender);
     if(contact != null) {
       contact.unreadMessages = 0;
-
     }
   }
 
   private selectDefaultContact() {
     const id = Number(this.route.snapshot.paramMap.get('id'));
-    let contact = this.getSelected(id);
-    if(contact != null) {
+    let contact;
+    if(id === 0) {
+      contact = this.contacts.find(x=>x!==undefined);
+    } else {
+      contact = this.getSelected(id);
+    }
+    if(contact != undefined) {
       this.onContactSelected(contact);
     }
   }

@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { Contact } from 'src/app/model/contact';
 import { AuthService } from '../service/auth.service';
@@ -25,7 +25,8 @@ export class ApplicationComponent implements OnInit {
               private userService: UserService,
               private contactService: ContactService,
               private authService: AuthService, 
-              private router: Router) { }
+              private router: Router,
+              private changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit(): void {
     this.userService.getCurrentUser().subscribe(u => this.user = u);
@@ -34,6 +35,7 @@ export class ApplicationComponent implements OnInit {
 
   contactWasSelected(contact: Contact) {
     this.selected = contact;
+    this.changeDetectorRef.detectChanges();
     this.router.navigate(['/application/' + contact.id]);
   }
 
