@@ -49,6 +49,7 @@ public class OpenMessengerApplication {
 			User claudia = createUser(userService, "Claudia", "Wiliams", "my_password", "avatar_4.png", "Sleep Eat Work Repeat");
 			User monica = createUser(userService, "Monica", "Rosatti", "my_password", "avatar_5.png", "I love you <3");
 
+			/*
 			createConversation(messageService, "13-02-2021 17:32:56", chris, dominica, "However, this bright idea to just replace one tired snowmobile with a brand new snowmobile, you know, to free up the snowmobile parking lot for other vehicles, never worked.");
 			createConversation(messageService, "13-02-2021 17:32:43", chris, dominica, "It was not a huge issue until the warm up started last week.");
 			createConversation(messageService, "13-02-2021 17:33:11", dominica, chris, "On Friday, we had four big inches of snow.");
@@ -105,6 +106,7 @@ public class OpenMessengerApplication {
 			createConversation(messageService, "25-08-2021 14:12:54", dominica, chris, "Could you give me some minutes to check finish it?");
 			createConversation(messageService, "25-08-2021 15:34:34", chris, dominica, "Sure");
 			createConversation(messageService, "25-08-2021 08:04:55", dominica, chris, "I will make it in 10 minutes.");
+			*/
 		};
 	}
 

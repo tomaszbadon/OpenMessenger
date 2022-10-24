@@ -11,11 +11,18 @@ import { User } from 'src/app/model/user';
 export class MessageGroupComponent implements OnInit {
 
   @Input() group: MessagesGroup | any = null;
-  @Input() recipient: Contact | any;
-  @Input() sender: User | any;
+
+  @Input() sender: Contact | any;
+  @Input() recipient: User | any;
 
   constructor() { }
 
-  ngOnInit(): void { }
+  ngOnInit(): void { 
+
+    console.log(JSON.stringify(this.group));
+    console.log("R: " + JSON.stringify(this.recipient));
+    console.log("S: " + JSON.stringify(this.sender));
+
+  }
 
 }

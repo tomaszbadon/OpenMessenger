@@ -1,17 +1,17 @@
 <div class="message-group-left"
-[ngClass]="group.sender == recipient.id ? 'message-group-left' : 'message-group-right'">   
-    <div *ngIf="group.sender == recipient.id" class="img-container">
+[ngClass]="group.sender == sender.id ? 'message-group-left' : 'message-group-right'">   
+    <div *ngIf="group.sender == sender.id" class="img-container">
         <img src="/assets/avatars/avatar_1.png" alt="Avatar" class="avatar-img">
     </div>
     <div>
         <div *ngFor="let m of group.messages" class="message-wrapper"
-            [ngClass]="group.sender != recipient.id ? 'message-wrapper-right' : ''">
-            <div id="message_{{m.id}}" [ngClass]="group.sender == recipient.id ? 'message message-left' : 'message message-right'">
+            [ngClass]="group.sender != sender.id ? 'message-wrapper-right' : ''">
+            <div id="message_{{m.id}}" [ngClass]="group.sender == sender.id ? 'message message-left' : 'message message-right'">
                 {{m.message}}
             </div>
         </div>
     </div>
-    <div *ngIf="group.sender != recipient.id" class="img-container">
+    <div *ngIf="group.sender != sender.id" class="img-container">
         <img src="/assets/avatars/avatar_2.png" alt="Avatar" class="avatar-img">
     </div>
 </div>

@@ -11,7 +11,7 @@ import { SearchBarComponent } from './components/search-bar/search-bar.component
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthHttpInterceptor } from './interceptor/auth-http.interceptor';
 import { MessageGroupComponent } from './components/message-group/message-group.component';
-import { ContactListComponent } from './contact-list/contact-list.component';
+import { ContactListComponent } from './components/contact-list/contact-list.component';
 import { MessageInputComponent } from './components/message-input/message-input.component';
 import { ApiHttpInterceptor } from './interceptor/api-http.interceptor';
 import { AuthService } from './service/auth.service';

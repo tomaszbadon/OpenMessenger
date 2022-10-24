@@ -19,8 +19,8 @@ export class LoginComponent implements OnInit {
     this.isAuthenticated = "isAuthenticated : " + this.authService.isAuthenticated();
   }
 
-  login() {
-    this.authService.login('dominica.rosatti', 'my_password').subscribe(output => {
+  login(username: HTMLInputElement, password: HTMLInputElement) {
+    this.authService.login(username.value, password.value).subscribe(output => {
       if(output) {
         this.router.navigate(['/application']);
       } else {
@@ -28,6 +28,7 @@ export class LoginComponent implements OnInit {
       }
       this.isAuthenticated = "isAuthenticated : " + output;
     });
+      return false;
   }
 
 }

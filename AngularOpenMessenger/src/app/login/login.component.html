@@ -1,3 +1,21 @@
-<button (click)="login()"> Log me in! </button>
+<div class="login-container">
+    <form>
+        <div class="imgcontainer">
+            <h1>OpenMessenger</h1>
+        </div>
 
-{{ isAuthenticated }}
+        <div class="container">
+            <label for="uname"><b>Username</b></label>
+            <input #username type="text" placeholder="Enter Username" name="uname" required>
+
+            <label for="psw"><b>Password</b></label>
+            <input #password type="password" placeholder="Enter Password" name="psw" required>
+
+            <button type="submit" (click)="login(username, password)" >Login</button>
+            <label>
+                <input type="checkbox" checked="checked" name="remember"> Remember me
+            </label>
+
+        </div>
+    </form>
+</div>
