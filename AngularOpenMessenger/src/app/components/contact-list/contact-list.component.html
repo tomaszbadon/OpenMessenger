@@ -1,0 +1,5 @@
+
+<app-contact 
+*ngFor="let contact of contacts" 
+[contact]="contact" [selected] = "selected === contact" (click)="onContactSelected(contact)">
+</app-contact>
