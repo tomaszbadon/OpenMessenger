@@ -1,4 +1,4 @@
-package net.bean.java.open.messenger.data.jpa.model;
+package net.bean.java.open.messenger.model.jpa;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

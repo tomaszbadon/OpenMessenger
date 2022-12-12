@@ -1,6 +1,6 @@
 package net.bean.java.open.messenger.repository;
 
-import net.bean.java.open.messenger.data.jpa.model.User;
+import net.bean.java.open.messenger.model.jpa.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

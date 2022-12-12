@@ -1,12 +1,13 @@
-package net.bean.java.open.messenger.service;
+package net.bean.java.open.messenger.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import net.bean.java.open.messenger.data.jpa.model.User;
-import net.bean.java.open.messenger.data.jpa.model.Role;
+import net.bean.java.open.messenger.model.jpa.User;
+import net.bean.java.open.messenger.model.jpa.Role;
 import net.bean.java.open.messenger.repository.RoleRepository;
 import net.bean.java.open.messenger.repository.UserRepository;
+import net.bean.java.open.messenger.service.UserService;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -21,9 +22,8 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
 @Transactional
-@Slf4j
+@Slf4j @RequiredArgsConstructor
 public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final UserRepository userRepository;
@@ -32,22 +32,20 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUserName(username);
-        if (user == null) {
-            log.error("User not found in the database");
-            throw new UsernameNotFoundException("User not found in the database: " + username);
-        } else {
-            Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-            user.getRoles().forEach(role -> authorities.add(new SimpleGrantedAuthority(role.getName())));
-            return new org.springframework.security.core.userdetails.User(user.getUserName(), user.getPassword(), authorities);
-        }
+        User user = Optional.ofNullable(userRepository.findByUserName(username)).orElseThrow(() -> {
+            log.error("User '{}' not found in the database", username);
+            return new UsernameNotFoundException("User not found in the database: " + username);
+        });
+        Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        user.getRoles().forEach(role -> authorities.add(new SimpleGrantedAuthority(role.getName())));
+        return new org.springframework.security.core.userdetails.User(user.getUserName(), user.getPassword(), authorities);
     }
 
     @Override
     public User saveUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user = userRepository.save(user);
-        log.info("Save a User {} to the database with id: \"{}\"", user.getUserName(), user.getId());
+        log.info("Save a User {} to the database with id: '{}'", user.getUserName(), user.getId());
         return user;
     }
 

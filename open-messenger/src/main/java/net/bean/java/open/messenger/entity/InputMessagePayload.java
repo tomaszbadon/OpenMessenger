@@ -1,9 +1,9 @@
-package net.bean.java.open.messenger.data.dto;
+package net.bean.java.open.messenger.entity;
 
 import lombok.Data;
 
 @Data
-public class InputMessageDTO {
+public class InputMessagePayload {
     private String message;
     private Long recipient;
 }

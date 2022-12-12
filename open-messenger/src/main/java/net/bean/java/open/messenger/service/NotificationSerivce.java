@@ -1,7 +1,7 @@
 package net.bean.java.open.messenger.service;
 
-import net.bean.java.open.messenger.data.dto.Notification;
-import net.bean.java.open.messenger.data.jpa.model.Message;
+import net.bean.java.open.messenger.entity.Notification;
+import net.bean.java.open.messenger.model.jpa.Message;
 
 import java.util.List;
 

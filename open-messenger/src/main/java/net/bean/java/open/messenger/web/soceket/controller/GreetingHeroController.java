@@ -1,7 +1,7 @@
 package net.bean.java.open.messenger.web.soceket.controller;
 
-import net.bean.java.open.messenger.data.dto.InputMessageDTO;
-import net.bean.java.open.messenger.data.dto.OutputMessageDTO;
+import net.bean.java.open.messenger.entity.InputMessagePayload;
+import net.bean.java.open.messenger.entity.OutputMessagePayload;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -20,8 +20,8 @@ public class GreetingHeroController {
 
     @MessageMapping("/hello")
     @SendTo("/topic/greetings")
-    public OutputMessageDTO greet(@Header("simpSessionId") String sessionId, Principal user, @Payload InputMessageDTO message) {
-        OutputMessageDTO out = new OutputMessageDTO();
+    public OutputMessagePayload greet(@Header("simpSessionId") String sessionId, Principal user, @Payload InputMessagePayload message) {
+        OutputMessagePayload out = new OutputMessagePayload();
         out.setMessage(message.getMessage());
         out.setAcknowledged(false);
         //simpMessagingTemplate.convertAndSendToUser(user.getName(), "/queue/new", out);

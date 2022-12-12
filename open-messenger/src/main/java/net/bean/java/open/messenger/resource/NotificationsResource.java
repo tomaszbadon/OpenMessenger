@@ -1,8 +1,8 @@
-package net.bean.java.open.messenger.api;
+package net.bean.java.open.messenger.resource;
 
 import lombok.RequiredArgsConstructor;
-import net.bean.java.open.messenger.data.dto.Notification;
-import net.bean.java.open.messenger.data.jpa.model.User;
+import net.bean.java.open.messenger.entity.Notification;
+import net.bean.java.open.messenger.model.jpa.User;
 import net.bean.java.open.messenger.entity.MessageAcknownledge;
 import net.bean.java.open.messenger.service.MessageService;
 import net.bean.java.open.messenger.service.NotificationSerivce;

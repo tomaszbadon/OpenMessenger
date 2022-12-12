@@ -1,11 +1,13 @@
-package net.bean.java.open.messenger.service;
+package net.bean.java.open.messenger.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.bean.java.open.messenger.data.dto.InputMessageDTO;
-import net.bean.java.open.messenger.data.dto.Notification;
-import net.bean.java.open.messenger.data.jpa.model.Message;
+import net.bean.java.open.messenger.entity.InputMessagePayload;
+import net.bean.java.open.messenger.entity.Notification;
+import net.bean.java.open.messenger.model.jpa.Message;
 import net.bean.java.open.messenger.repository.MessageRepository;
+import net.bean.java.open.messenger.service.MessageService;
+import net.bean.java.open.messenger.service.UserService;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -33,7 +35,7 @@ public class MessageServiceImpl implements MessageService {
     public final MessageRepository messageRepository;
 
     @Override
-    public Message saveMessage(InputMessageDTO messageDto, long senderId) {
+    public Message saveMessage(InputMessagePayload messageDto, long senderId) {
         Message message = new Message();
         message.setContent(messageDto.getMessage());
         message.setSentAt(new Date());
@@ -45,7 +47,7 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public Message saveMessageWithSpecificDate(InputMessageDTO messageDto, long senderId, String sentAt) throws ParseException {
+    public Message saveMessageWithSpecificDate(InputMessagePayload messageDto, long senderId, String sentAt) throws ParseException {
         Message message = saveMessage(messageDto, senderId);
         SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
         message.setSentAt(format.parse(sentAt));

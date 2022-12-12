@@ -1,4 +1,4 @@
-package net.bean.java.open.messenger.data.dto;
+package net.bean.java.open.messenger.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,7 +8,6 @@ import lombok.Data;
 public class Notification {
 
     private long sender;
-
     private long messageId;
 
 }

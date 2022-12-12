@@ -2,13 +2,12 @@ package net.bean.java.open.messenger.generator;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.bean.java.open.messenger.data.dto.InputMessageDTO;
-import net.bean.java.open.messenger.data.jpa.model.Message;
-import net.bean.java.open.messenger.data.jpa.model.User;
+import net.bean.java.open.messenger.entity.InputMessagePayload;
+import net.bean.java.open.messenger.model.jpa.Message;
+import net.bean.java.open.messenger.model.jpa.User;
 import net.bean.java.open.messenger.service.MessageService;
 import net.bean.java.open.messenger.service.NotificationSerivce;
 import net.bean.java.open.messenger.service.UserService;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -42,17 +41,17 @@ public class LiveMessageGenerator {
         "Yo!"
     );
 
-    @Scheduled(fixedRate = 3000, initialDelayString = "5000")
+    //@Scheduled(fixedRate = 3000, initialDelayString = "5000")
     public void reportCurrentTime() {
         User recipient = userService.getUser("dominica.rosatti").get();
         List<User> users = userService.getUsers().stream().filter((u) -> u.getId() != recipient.getId()).collect(Collectors.toList());
         User sender = users.get(random.nextInt(users.size()));
         //User sender = userService.getUser("christopher.wolf").get();
         String message = greetings.get(random.nextInt(greetings.size()));
-        InputMessageDTO inputMessageDTO = new InputMessageDTO();
-        inputMessageDTO.setMessage(message);
-        inputMessageDTO.setRecipient(recipient.getId());
-        Message savedMessage = messageService.saveMessage(inputMessageDTO, sender.getId());
+        InputMessagePayload inputMessagePayload = new InputMessagePayload();
+        inputMessagePayload.setMessage(message);
+        inputMessagePayload.setRecipient(recipient.getId());
+        Message savedMessage = messageService.saveMessage(inputMessagePayload, sender.getId());
         savedMessage = messageService.getMessageById(savedMessage.getId());
         notificationSerivce.notifyUser(savedMessage);
         log.info("A message from user {} was sent", sender.getUserName());

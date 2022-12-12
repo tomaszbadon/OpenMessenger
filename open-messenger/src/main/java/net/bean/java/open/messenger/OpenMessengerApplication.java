@@ -1,10 +1,9 @@
 package net.bean.java.open.messenger;
 
 import lombok.extern.slf4j.Slf4j;
-import net.bean.java.open.messenger.data.dto.InputMessageDTO;
-import net.bean.java.open.messenger.data.jpa.model.Role;
-import net.bean.java.open.messenger.data.jpa.model.User;
-import net.bean.java.open.messenger.data.mapper.MessageMapper;
+import net.bean.java.open.messenger.entity.InputMessagePayload;
+import net.bean.java.open.messenger.model.jpa.Role;
+import net.bean.java.open.messenger.model.jpa.User;
 import net.bean.java.open.messenger.service.MessageService;
 import net.bean.java.open.messenger.service.UserService;
 import org.springframework.boot.CommandLineRunner;
@@ -111,7 +110,7 @@ public class OpenMessengerApplication {
 	}
 
 	private void createConversation(MessageService messageService, String sentAt, User from, User to, String message) throws ParseException {
-		InputMessageDTO messageDTO = new InputMessageDTO();
+		InputMessagePayload messageDTO = new InputMessagePayload();
 		messageDTO.setMessage(message);
 		messageDTO.setRecipient(to.getId());
 		messageService.saveMessageWithSpecificDate(messageDTO, from.getId(), sentAt);
@@ -140,11 +139,6 @@ public class OpenMessengerApplication {
 		UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource();
 		urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", corsConfiguration);
 		return new CorsFilter(urlBasedCorsConfigurationSource);
-	}
-
-	@Bean
-	public MessageMapper messageMapper() {
-		return new MessageMapper();
 	}
 
 }

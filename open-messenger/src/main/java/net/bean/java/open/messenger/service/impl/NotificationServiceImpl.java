@@ -1,8 +1,10 @@
-package net.bean.java.open.messenger.service;
+package net.bean.java.open.messenger.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import net.bean.java.open.messenger.data.dto.Notification;
-import net.bean.java.open.messenger.data.jpa.model.Message;
+import net.bean.java.open.messenger.entity.Notification;
+import net.bean.java.open.messenger.model.jpa.Message;
+import net.bean.java.open.messenger.service.MessageService;
+import net.bean.java.open.messenger.service.NotificationSerivce;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +13,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class NotificationServiceImpl implements  NotificationSerivce {
+public class NotificationServiceImpl implements NotificationSerivce {
 
     private final static String DESTINATION = "/queue/new";
 

@@ -1,6 +1,6 @@
 package net.bean.java.open.messenger.repository;
 
-import net.bean.java.open.messenger.data.jpa.model.Message;
+import net.bean.java.open.messenger.model.jpa.Message;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

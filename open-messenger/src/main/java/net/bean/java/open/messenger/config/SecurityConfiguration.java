@@ -1,8 +1,8 @@
 package net.bean.java.open.messenger.config;
 
-import lombok.extern.slf4j.Slf4j;
 import net.bean.java.open.messenger.filter.CustomAuthenticationFilter;
 import net.bean.java.open.messenger.filter.CustomAuthorizationFilter;
+import net.bean.java.open.messenger.service.JwtTokenService;
 import net.bean.java.open.messenger.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -22,18 +22,19 @@ import static org.springframework.http.HttpMethod.POST;
 
 @Configuration
 @EnableWebSecurity
-@Slf4j
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsService userDetailsService;
     private final PasswordEncoder passwordEncoder;
     private final UserService userService;
+    private final JwtTokenService jwtTokenService;
 
     @Autowired
-    public SecurityConfiguration(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder, UserService userService) {
+    public SecurityConfiguration(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder, UserService userService, JwtTokenService jwtTokenService) {
         this.userDetailsService = userDetailsService;
         this.passwordEncoder = passwordEncoder;
         this.userService = userService;
+        this.jwtTokenService = jwtTokenService;
     }
 
     @Override
@@ -51,8 +52,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.authorizeHttpRequests().antMatchers(POST, "/api/**").hasRole("USER");
         http.authorizeHttpRequests().anyRequest().denyAll();
 
-        http.addFilter(new CustomAuthenticationFilter(this.authenticationManagerBean(),userService));
-        http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilter(new CustomAuthenticationFilter(this.authenticationManagerBean(), jwtTokenService));
+        http.addFilterBefore(new CustomAuthorizationFilter(jwtTokenService), UsernamePasswordAuthenticationFilter.class);
     }
 
     @Bean
