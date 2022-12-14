@@ -3,7 +3,7 @@ package net.bean.java.open.messenger.filter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.bean.java.open.messenger.exception.InvalidTokenException;
+import net.bean.java.open.messenger.rest.exception.InvalidTokenException;
 import net.bean.java.open.messenger.service.JwtTokenService;
 import net.bean.java.open.messenger.util.HttpServletRequestUtil;
 import org.springframework.http.MediaType;

@@ -1,6 +1,6 @@
 package net.bean.java.open.messenger.service;
 
-import net.bean.java.open.messenger.entity.TokensInfo;
+import net.bean.java.open.messenger.rest.model.TokensInfo;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.User;
 

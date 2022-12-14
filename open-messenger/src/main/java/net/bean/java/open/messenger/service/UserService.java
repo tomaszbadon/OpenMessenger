@@ -1,7 +1,7 @@
 package net.bean.java.open.messenger.service;
 
-import net.bean.java.open.messenger.model.jpa.Role;
-import net.bean.java.open.messenger.model.jpa.User;
+import net.bean.java.open.messenger.model.entity.Role;
+import net.bean.java.open.messenger.model.entity.User;
 
 import java.util.List;
 import java.util.Optional;

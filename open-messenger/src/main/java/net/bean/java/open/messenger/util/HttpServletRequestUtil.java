@@ -1,6 +1,6 @@
 package net.bean.java.open.messenger.util;
 
-import net.bean.java.open.messenger.exception.InvalidTokenException;
+import net.bean.java.open.messenger.rest.exception.InvalidTokenException;
 
 import javax.servlet.http.HttpServletRequest;
 

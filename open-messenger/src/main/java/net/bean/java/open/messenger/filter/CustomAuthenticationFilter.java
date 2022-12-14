@@ -20,14 +20,18 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
+    public static final String USERNAME = "username";
+
+    public static final String PASSWORD = "password";
+
     private final AuthenticationManager authenticationManager;
 
     private final JwtTokenService jwtTokenService;
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-        String userName = request.getParameter("username");
-        String password = request.getParameter("password");
+        String userName = request.getParameter(USERNAME);
+        String password = request.getParameter(PASSWORD);
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(userName, password);
         return authenticationManager.authenticate(token);
     }

@@ -1,7 +1,7 @@
 package net.bean.java.open.messenger.web.soceket.controller;
 
-import net.bean.java.open.messenger.entity.InputMessagePayload;
-import net.bean.java.open.messenger.entity.OutputMessagePayload;
+import net.bean.java.open.messenger.rest.model.InputMessagePayload;
+import net.bean.java.open.messenger.rest.model.OutputMessagePayload;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageMapping;

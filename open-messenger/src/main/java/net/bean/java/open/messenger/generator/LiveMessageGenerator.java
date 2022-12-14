@@ -2,9 +2,9 @@ package net.bean.java.open.messenger.generator;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.bean.java.open.messenger.entity.InputMessagePayload;
-import net.bean.java.open.messenger.model.jpa.Message;
-import net.bean.java.open.messenger.model.jpa.User;
+import net.bean.java.open.messenger.rest.model.InputMessagePayload;
+import net.bean.java.open.messenger.model.entity.Message;
+import net.bean.java.open.messenger.model.entity.User;
 import net.bean.java.open.messenger.service.MessageService;
 import net.bean.java.open.messenger.service.NotificationSerivce;
 import net.bean.java.open.messenger.service.UserService;
