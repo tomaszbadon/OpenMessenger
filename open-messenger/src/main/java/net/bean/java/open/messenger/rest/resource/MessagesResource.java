@@ -1,11 +1,11 @@
 package net.bean.java.open.messenger.rest.resource;
 
 import lombok.RequiredArgsConstructor;
-import net.bean.java.open.messenger.rest.model.InputMessagePayload;
-import net.bean.java.open.messenger.rest.model.MessagePayload;
-import net.bean.java.open.messenger.rest.model.OutputMessagePayload;
 import net.bean.java.open.messenger.model.entity.Message;
 import net.bean.java.open.messenger.model.entity.User;
+import net.bean.java.open.messenger.rest.model.InputMessagePayload;
+import net.bean.java.open.messenger.rest.model.OutputMessagePayload;
+import net.bean.java.open.messenger.rest.model.OutputMessagePayloadWithPage;
 import net.bean.java.open.messenger.service.CurrentUserService;
 import net.bean.java.open.messenger.service.MessageService;
 import net.bean.java.open.messenger.service.NotificationSerivce;
@@ -30,7 +30,7 @@ public class MessagesResource {
     private final CurrentUserService currentUserService;
 
     @GetMapping("/api/messages")
-    public ResponseEntity<MessagePayload> getMessages(HttpServletRequest request, @RequestParam long user1, @RequestParam long user2, @RequestParam Optional<Integer> page) {
+    public ResponseEntity<OutputMessagePayloadWithPage> getMessages(HttpServletRequest request, @RequestParam long user1, @RequestParam long user2, @RequestParam Optional<Integer> page) {
         //TODO validation
         List<Message> returnedMessage = messageService.getMessages(user1, user2, page);
         List<OutputMessagePayload> messages = returnedMessage
@@ -38,16 +38,16 @@ public class MessagesResource {
                 .map(OutputMessagePayload::new)
                 .collect(Collectors.toList());
         Pause._for(1000);
-        return ResponseEntity.ok().body(new MessagePayload(messages, page.orElseGet(() -> 0)));
+        return ResponseEntity.ok().body(new OutputMessagePayloadWithPage(messages, page.orElseGet(() -> 0)));
     }
 
     @GetMapping("/api/messages/latest")
-    public ResponseEntity<MessagePayload> getLatestMessages(HttpServletRequest request, @RequestParam long user1, @RequestParam long user2) {
+    public ResponseEntity<OutputMessagePayloadWithPage> getLatestMessages(HttpServletRequest request, @RequestParam long user1, @RequestParam long user2) {
         Optional<Integer> page = Optional.of(messageService.getLastPage(user1, user2));
         List<OutputMessagePayload> messages = messageService.getMessages(user1, user2, page).stream()
                 .map(OutputMessagePayload::new)
                 .collect(Collectors.toList());
-        return ResponseEntity.ok(new MessagePayload(messages, page.get()));
+        return ResponseEntity.ok(new OutputMessagePayloadWithPage(messages, page.get()));
     }
 
     @GetMapping("/api/messages/{id}")

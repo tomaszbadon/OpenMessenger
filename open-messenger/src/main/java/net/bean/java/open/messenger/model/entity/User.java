@@ -4,10 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,12 +22,24 @@ public class User {
     @GeneratedValue(strategy = AUTO)
     private Long id;
 
+    @Column(unique=true)
+    @NotNull
     private String userName;
+
+    @NotNull
     private String firstName;
+
+    @NotNull
     private String lastName;
+
+    @NotNull
     private String password;
+
+    @NotNull
     private String email;
+
     private String avatar;
+
     private String status;
 
     @ManyToMany(fetch = EAGER)

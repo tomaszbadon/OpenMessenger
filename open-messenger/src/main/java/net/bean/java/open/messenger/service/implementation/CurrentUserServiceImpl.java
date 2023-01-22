@@ -1,15 +1,14 @@
 package net.bean.java.open.messenger.service.implementation;
 
 import lombok.RequiredArgsConstructor;
-import net.bean.java.open.messenger.rest.model.UserInfo;
+import net.bean.java.open.messenger.model.entity.User;
 import net.bean.java.open.messenger.rest.exception.ExceptionConstants;
 import net.bean.java.open.messenger.rest.exception.UserNotFoundException;
-import net.bean.java.open.messenger.model.entity.User;
+import net.bean.java.open.messenger.rest.model.UserInfo;
 import net.bean.java.open.messenger.service.CurrentUserService;
 import net.bean.java.open.messenger.service.JwtTokenService;
 import net.bean.java.open.messenger.service.UserService;
 import net.bean.java.open.messenger.util.HttpServletRequestUtil;
-import net.bean.java.open.messenger.util.LazyException;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -38,7 +37,7 @@ public class CurrentUserServiceImpl implements CurrentUserService {
     @Override
     public User getUserFromTokenOrElseThrowException(HttpServletRequest httpServletRequest) {
         return getUserFromToken(httpServletRequest)
-                .orElseThrow(LazyException.lazyRuntimeException(new UserNotFoundException(ExceptionConstants.CANNOT_GET_USER_FROM_TOKEN)));
+                .orElseThrow(() -> new UserNotFoundException(ExceptionConstants.CANNOT_GET_USER_FROM_TOKEN));
     }
 
     @Override

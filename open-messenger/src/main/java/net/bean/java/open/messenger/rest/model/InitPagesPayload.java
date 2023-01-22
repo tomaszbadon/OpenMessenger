@@ -1,6 +1,6 @@
 package net.bean.java.open.messenger.rest.model;
 
-public class PagesPayload {
+public class InitPagesPayload {
 
     
 
