@@ -18,6 +18,8 @@ public interface UserService {
 
     Optional<User> getUser(Long id);
 
+    User getUserOrElseThrowException(Long id);
+
     List<User> getUsers();
 
 }

@@ -7,6 +7,8 @@ import net.bean.java.open.messenger.model.entity.User;
 import net.bean.java.open.messenger.model.entity.Role;
 import net.bean.java.open.messenger.repository.RoleRepository;
 import net.bean.java.open.messenger.repository.UserRepository;
+import net.bean.java.open.messenger.rest.exception.ExceptionConstants;
+import net.bean.java.open.messenger.rest.exception.UserNotFoundException;
 import net.bean.java.open.messenger.service.UserService;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,10 +18,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+
+import static net.bean.java.open.messenger.rest.exception.ExceptionConstants.CANNOT_FIND_USER_IN_REPOSITORY;
 
 @Service
 @Transactional
@@ -34,7 +39,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = Optional.ofNullable(userRepository.findByUserName(username)).orElseThrow(() -> {
             log.error("User '{}' not found in the database", username);
-            return new UsernameNotFoundException("User not found in the database: " + username);
+            return new UsernameNotFoundException(MessageFormat.format(CANNOT_FIND_USER_IN_REPOSITORY, username));
         });
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
         user.getRoles().forEach(role -> authorities.add(new SimpleGrantedAuthority(role.getName())));
@@ -70,6 +75,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public Optional<User> getUser(Long id) {
         return Optional.ofNullable(userRepository.getById(id));
+    }
+
+    @Override
+    public User getUserOrElseThrowException(Long id) {
+        return getUser(id)
+                    .orElseThrow(() -> new UserNotFoundException(ExceptionConstants.RECIPIENT_DOES_NOT_EXIST));
     }
 
     @Override

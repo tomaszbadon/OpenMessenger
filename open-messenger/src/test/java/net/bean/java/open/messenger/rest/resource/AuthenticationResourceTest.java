@@ -1,4 +1,4 @@
-package net.bean.java.open.messenger.rest;
+package net.bean.java.open.messenger.rest.resource;
 
 import net.bean.java.open.messenger.filter.CustomAuthenticationFilter;
 import net.bean.java.open.messenger.model.entity.User;

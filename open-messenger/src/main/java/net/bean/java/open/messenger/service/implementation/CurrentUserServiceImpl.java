@@ -22,22 +22,29 @@ public class CurrentUserServiceImpl implements CurrentUserService {
 
     private final JwtTokenService jwtTokenService;
 
+
     @Override
-    public Optional<User> getUserFromToken(HttpServletRequest httpServletRequest) {
-        String token = HttpServletRequestUtil.getToken(httpServletRequest);
+    public Optional<User> getUserFromToken(String token) {
         String userName = jwtTokenService.getUserName(token);
         return userService.getUser(userName);
     }
 
     @Override
-    public Optional<UserInfo> getUserInfoFromToken(HttpServletRequest httpServletRequest) {
-        return getUserFromToken(httpServletRequest).map(user -> new UserInfo(user));
+    public Optional<User> getUserFromToken(HttpServletRequest httpServletRequest) {
+        String token = HttpServletRequestUtil.getToken(httpServletRequest);
+        return getUserFromToken(token);
+    }
+
+    @Override
+    public User getUserFromTokenOrElseThrowException(String token) {
+        return getUserFromToken(token)
+                        .orElseThrow(() -> new UserNotFoundException(ExceptionConstants.CANNOT_GET_USER_FROM_TOKEN));
     }
 
     @Override
     public User getUserFromTokenOrElseThrowException(HttpServletRequest httpServletRequest) {
         return getUserFromToken(httpServletRequest)
-                .orElseThrow(() -> new UserNotFoundException(ExceptionConstants.CANNOT_GET_USER_FROM_TOKEN));
+                        .orElseThrow(() -> new UserNotFoundException(ExceptionConstants.CANNOT_GET_USER_FROM_TOKEN));
     }
 
     @Override

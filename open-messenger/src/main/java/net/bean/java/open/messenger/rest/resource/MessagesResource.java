@@ -8,13 +8,16 @@ import net.bean.java.open.messenger.rest.model.OutputMessagePayload;
 import net.bean.java.open.messenger.rest.model.OutputMessagePayloadWithPage;
 import net.bean.java.open.messenger.service.CurrentUserService;
 import net.bean.java.open.messenger.service.MessageService;
+import net.bean.java.open.messenger.service.MessageServiceV2;
 import net.bean.java.open.messenger.service.NotificationSerivce;
+import net.bean.java.open.messenger.util.HttpServletRequestUtil;
 import net.bean.java.open.messenger.util.Pause;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -24,6 +27,8 @@ import java.util.stream.Collectors;
 public class MessagesResource {
 
     private final MessageService messageService;
+
+    private final MessageServiceV2 messageServiceV2;
 
     private final NotificationSerivce notificationSerivce;
 
@@ -67,11 +72,10 @@ public class MessagesResource {
 
     @PostMapping(value = "/api/messages")
     public ResponseEntity<OutputMessagePayload> newMessage(HttpServletRequest request, @RequestBody InputMessagePayload messageDTO) {
-        User currentUser = currentUserService.getUserFromTokenOrElseThrowException(request);
-        Message message = messageService.saveMessage(messageDTO, currentUser.getId());
-        notificationSerivce.notifyUser(message);
-        return ResponseEntity.ok().body(new OutputMessagePayload(message));
-        //TODO: Created instead of ok();
+        String token = HttpServletRequestUtil.getToken(request);
+        OutputMessagePayload outputMessagePayload = messageServiceV2.handleNewMessage(messageDTO, token);
+        URI uri = URI.create("/messages/" + outputMessagePayload.getId());
+        return ResponseEntity.created(uri).body(outputMessagePayload);
     }
 
 }

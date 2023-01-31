@@ -6,9 +6,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.GenerationType.AUTO;
@@ -43,5 +42,5 @@ public class User {
     private String status;
 
     @ManyToMany(fetch = EAGER)
-    private Collection<Role> roles = new ArrayList<>();
+    private List<Role> roles = new ArrayList<>();
 }

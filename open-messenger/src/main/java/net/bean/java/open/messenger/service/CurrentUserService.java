@@ -10,9 +10,11 @@ public interface CurrentUserService {
 
     Optional<User> getUserFromToken(HttpServletRequest httpServletRequest);
 
-    Optional<UserInfo> getUserInfoFromToken(HttpServletRequest httpServletRequest);
+    Optional<User> getUserFromToken(String token);
 
     User getUserFromTokenOrElseThrowException(HttpServletRequest httpServletRequest);
+
+    User getUserFromTokenOrElseThrowException(String token);
 
     UserInfo getUserInfoFromTokenOrElseThrowException(HttpServletRequest httpServletRequest);
 
