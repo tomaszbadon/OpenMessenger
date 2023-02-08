@@ -17,7 +17,7 @@ public class Message {
     private long senderId;
     private long recipientId;
     private String message;
-    private boolean isAcknowledged;
+    private boolean isRead;
     private Date sentAt;
 
     public static Message of(long senderId, long recipientId, String messageContent) {
@@ -26,7 +26,7 @@ public class Message {
         messages.recipientId = recipientId;
         messages.senderId = senderId;
         messages.message = messageContent;
-        messages.isAcknowledged = false;
+        messages.isRead = false;
         messages.sentAt = new Date();
         return messages;
     }

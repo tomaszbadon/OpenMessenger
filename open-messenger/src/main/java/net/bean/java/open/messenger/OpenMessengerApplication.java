@@ -1,14 +1,14 @@
 package net.bean.java.open.messenger;
 
 import lombok.extern.slf4j.Slf4j;
-import net.bean.java.open.messenger.model.entity.mongo.Message;
-import net.bean.java.open.messenger.repository.MessageMongoDbRepository;
-import net.bean.java.open.messenger.rest.model.InputMessagePayload;
 import net.bean.java.open.messenger.model.entity.Role;
 import net.bean.java.open.messenger.model.entity.User;
-import net.bean.java.open.messenger.service.MessageService;
+import net.bean.java.open.messenger.repository.MessageMongoDbRepository;
+import net.bean.java.open.messenger.rest.model.InputMessagePayload;
+import net.bean.java.open.messenger.rest.model.TokensInfo;
 import net.bean.java.open.messenger.service.MessageServiceV2;
 import net.bean.java.open.messenger.service.UserService;
+import net.bean.java.open.messenger.service.implementation.JwtTokenServiceImpl;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -41,7 +41,7 @@ public class OpenMessengerApplication {
 	}
 
 	@Bean
-	CommandLineRunner run(UserService userService, MessageServiceV2 messageService, MessageMongoDbRepository messageMongoDbRepository) throws ParseException {
+	CommandLineRunner run(UserService userService, MessageServiceV2 messageService, MessageMongoDbRepository messageMongoDbRepository, JwtTokenServiceImpl jwtTokenService) throws ParseException {
 		return args -> {
 			userService.saveRole(new Role(null, "ROLE_USER"));
 			userService.saveRole(new Role(null, "ROLE_MANAGER"));
@@ -111,6 +111,11 @@ public class OpenMessengerApplication {
 			createConversation(messageService, "25-08-2021 14:12:54", dominica, chris, "Could you give me some minutes to check finish it?");
 			createConversation(messageService, "25-08-2021 15:34:34", chris, dominica, "Sure");
 			createConversation(messageService, "25-08-2021 08:04:55", dominica, chris, "I will make it in 10 minutes.");
+
+
+			TokensInfo tokensInfo = jwtTokenService.createTokensInfo(new org.springframework.security.core.userdetails.User(dominica.getUserName(), dominica.getPassword(), List.of()), null);
+
+			messageService.getLatestPagesToLoad(tokensInfo.getTokens().stream().findFirst().get().getToken(), chris.getId());
 		};
 	}
 

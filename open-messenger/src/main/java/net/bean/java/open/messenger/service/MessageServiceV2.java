@@ -1,6 +1,7 @@
 package net.bean.java.open.messenger.service;
 
 import net.bean.java.open.messenger.model.entity.User;
+import net.bean.java.open.messenger.rest.model.InitPagesPayload;
 import net.bean.java.open.messenger.rest.model.InputMessagePayload;
 import net.bean.java.open.messenger.rest.model.OutputMessagePayload;
 
@@ -11,5 +12,7 @@ public interface MessageServiceV2 {
     OutputMessagePayload handleNewMessage(InputMessagePayload inputMessagePayload, String token);
 
     OutputMessagePayload handleNewMessage(InputMessagePayload inputMessagePayload, Date sendAt, User sender, User recipient);
+
+    InitPagesPayload getLatestPagesToLoad(String token, long userId);
 
 }

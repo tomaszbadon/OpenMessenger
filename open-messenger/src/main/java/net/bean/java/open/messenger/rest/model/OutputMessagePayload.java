@@ -32,7 +32,7 @@ public class OutputMessagePayload {
         message = m.getMessage();
         recipient = m.getRecipientId();
         sender = m.getSenderId();
-        isAcknowledged = m.isAcknowledged();
+        isAcknowledged = m.isRead();
         sentAt = format.format(m.getSentAt());
     }
 
