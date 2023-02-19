@@ -34,7 +34,7 @@ public class MessageServiceV2ImplTest {
     @Test
     @DisplayName("It tests getting the latest pages when there are no messages")
     protected void getLatestPagesToLoadWhenNoMessages() {
-        messageService.setNumberOfMessagesPerPage("20");
+        messageService.setNumberOfMessagesPerPage(20);
 
         User currentUser = new User();
         currentUser.setId(5L);
@@ -52,7 +52,7 @@ public class MessageServiceV2ImplTest {
     @Test
     @DisplayName("It tests getting the latest page when there are only a few messages")
     protected void getLatestPagesToLoadWhenThereAreFewMessages() {
-        messageService.setNumberOfMessagesPerPage("20");
+        messageService.setNumberOfMessagesPerPage(20);
 
         User currentUser = new User();
         currentUser.setId(5L);
@@ -74,7 +74,7 @@ public class MessageServiceV2ImplTest {
     @Test
     @DisplayName("It tests getting the latest pages when all messages are read")
     protected void getLatestPagesToLoadWhenAllIsRead() {
-        messageService.setNumberOfMessagesPerPage("20");
+        messageService.setNumberOfMessagesPerPage(20);
 
         User currentUser = new User();
         currentUser.setId(5L);
@@ -95,7 +95,7 @@ public class MessageServiceV2ImplTest {
     @Test
     @DisplayName("It tests getting the latest pages when there are a few unread messages ")
     protected void getLatestPagesToLoadWhenThereAreFewUnreadMessages() {
-        messageService.setNumberOfMessagesPerPage("20");
+        messageService.setNumberOfMessagesPerPage(20);
 
         User currentUser = new User();
         currentUser.setId(5L);
@@ -116,7 +116,7 @@ public class MessageServiceV2ImplTest {
     @Test
     @DisplayName("It tests getting the latest pages when there are many unread messages")
     protected void getLatestPagesToLoadWhenThereAreManyUnreadMessages() {
-        messageService.setNumberOfMessagesPerPage("20");
+        messageService.setNumberOfMessagesPerPage(20);
 
         User currentUser = new User();
         currentUser.setId(5L);
@@ -134,7 +134,6 @@ public class MessageServiceV2ImplTest {
         Assertions.assertTrue(initPagesPayload.getPagesToLoad().contains(5L));
         Assertions.assertTrue(initPagesPayload.getPagesToLoad().contains(4L));
         Assertions.assertTrue(initPagesPayload.getPagesToLoad().contains(3L));
-
     }
 
 }
