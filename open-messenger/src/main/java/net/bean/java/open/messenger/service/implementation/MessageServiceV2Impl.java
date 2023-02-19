@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -52,17 +51,18 @@ public class MessageServiceV2Impl extends MessageServiceV2ImplMixin implements M
         User user = userService.getUserOrElseThrowException(userId);
         String conversationId = Message.conversationId(currentuser.getId(), user.getId());
         long numberOfPages = getNumberOfPagesByConversationId(conversationId);
-        long unreadMessages = getNumberOfUnreadMessages(conversationId);
-
-        if (unreadMessages == 0) {
-            return new InitPagesPayload(List.of(numberOfPages - 1));
+        if(numberOfPages == 0) {
+            return new InitPagesPayload(List.of());
         } else {
-            long numberOfPagesForUnreadMessages = getNumberOfPages(unreadMessages);
-            List<Long> pages = new ArrayList<>();
-            for(long i = numberOfPages - numberOfPagesForUnreadMessages; i < numberOfPages ; i++) {
-                pages.add(i);
+            long unreadMessages = getNumberOfUnreadMessages(conversationId);
+            if (unreadMessages == 0) {
+                return new InitPagesPayload(List.of(numberOfPages - 1));
+            } else {
+                long numberOfPagesForUnreadMessages = getNumberOfPages(unreadMessages);
+                return new InitPagesPayload(getNumberOfPagesForUnreadMessages(numberOfPages, numberOfPagesForUnreadMessages));
             }
-            return new InitPagesPayload(pages);
         }
     }
+
+
 }

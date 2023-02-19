@@ -5,6 +5,9 @@ import lombok.Setter;
 import net.bean.java.open.messenger.repository.MessageMongoDbRepository;
 import org.springframework.beans.factory.annotation.Value;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @RequiredArgsConstructor
 public abstract class MessageServiceV2ImplMixin {
 
@@ -12,7 +15,7 @@ public abstract class MessageServiceV2ImplMixin {
     @Value("${application.message.page}")
     private String numberOfMessagesPerPage;
 
-    protected final MessageMongoDbRepository messageRepository;
+    final MessageMongoDbRepository messageRepository;
 
     final long getNumberOfMessagesPerPage() {
         return Long.parseLong(numberOfMessagesPerPage);
@@ -25,7 +28,9 @@ public abstract class MessageServiceV2ImplMixin {
     final long getNumberOfPages(long numberOfMessages) {
         long numberOfMessagesPerPage = getNumberOfMessagesPerPage();
         long numberOfPages = numberOfMessages / numberOfMessagesPerPage;
-        if(numberOfMessages % numberOfMessagesPerPage == 0) {
+        if(numberOfMessages == 0) {
+            return 0;
+        } else if(numberOfMessages % numberOfMessagesPerPage == 0) {
             return numberOfPages;
         } else {
             return ++numberOfPages;
@@ -34,6 +39,14 @@ public abstract class MessageServiceV2ImplMixin {
 
     final long getNumberOfUnreadMessages(String conversationId) {
         return messageRepository.countByIsReadAndConversationId(false, conversationId);
+    }
+
+    final List<Long> getNumberOfPagesForUnreadMessages(long numberOfPages, long numberOfPagesForUnreadMessages ) {
+        List<Long> pages = new ArrayList<>();
+        for(long i = numberOfPages - numberOfPagesForUnreadMessages; i < numberOfPages ; i++) {
+            pages.add(i);
+        }
+        return pages;
     }
 
 
