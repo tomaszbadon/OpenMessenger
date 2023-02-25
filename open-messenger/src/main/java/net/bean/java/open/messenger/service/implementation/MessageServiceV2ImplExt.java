@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
-public abstract class MessageServiceV2ImplMixin {
+public abstract class MessageServiceV2ImplExt {
 
     private int numberOfMessagesPerPage;
 
@@ -29,8 +29,8 @@ public abstract class MessageServiceV2ImplMixin {
         }
     }
 
-    final long getNumberOfUnreadMessages(String conversationId) {
-        return messageRepository.countByIsReadAndConversationId(false, conversationId);
+    final long getNumberOfUnreadMessagesForUser(String conversationId, long userId) {
+        return messageRepository.countByRecipientIdAndIsReadAndConversationId(userId,false, conversationId);
     }
 
     final List<Long> getNumberOfPagesForUnreadMessages(long numberOfPages, long numberOfPagesForUnreadMessages ) {

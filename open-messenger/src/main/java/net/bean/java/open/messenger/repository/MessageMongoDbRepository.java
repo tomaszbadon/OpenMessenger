@@ -7,6 +7,6 @@ public interface MessageMongoDbRepository extends MongoRepository<Message, Strin
 
     Long countByConversationId(String conversationId);
 
-    Long countByIsReadAndConversationId(boolean isAcknowledged, String conversationId);
+    Long countByRecipientIdAndIsReadAndConversationId(long recipientId, boolean isAcknowledged, String conversationId);
 
 }

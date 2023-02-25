@@ -9,7 +9,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class InitPagesPayload {
+public class InitialMessagePagesPayload {
 
     private List<Long> pagesToLoad;
 

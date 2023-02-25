@@ -15,15 +15,16 @@ public class OutputMessagePayload {
     private String message;
     private Long recipient;
     private Long sender;
-    private boolean isAcknowledged;
+    private boolean isRead;
     private String sentAt;
 
+    @Deprecated
     public OutputMessagePayload(net.bean.java.open.messenger.model.entity.Message m) {
         id = String.valueOf(m.getId());
         message = m.getContent();
         recipient = m.getRecipient().getId();
         sender = m.getSender().getId();
-        isAcknowledged = m.isAcknowledged();
+        isRead = m.isAcknowledged();
         sentAt = format.format(m.getSentAt());
     }
 
@@ -32,7 +33,7 @@ public class OutputMessagePayload {
         message = m.getMessage();
         recipient = m.getRecipientId();
         sender = m.getSenderId();
-        isAcknowledged = m.isRead();
+        isRead = m.isRead();
         sentAt = format.format(m.getSentAt());
     }
 

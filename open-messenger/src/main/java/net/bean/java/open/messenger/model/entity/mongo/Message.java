@@ -31,6 +31,28 @@ public class Message {
         return messages;
     }
 
+    public static Message of(long senderId, long recipientId, String messageContent, Date sentAt) {
+        Message messages = new Message();
+        messages.conversationId = conversationId(recipientId, senderId);
+        messages.recipientId = recipientId;
+        messages.senderId = senderId;
+        messages.message = messageContent;
+        messages.isRead = false;
+        messages.sentAt = sentAt;
+        return messages;
+    }
+
+    public static Message of(long senderId, long recipientId, String messageContent, Date sentAt, boolean isRead) {
+        Message messages = new Message();
+        messages.conversationId = conversationId(recipientId, senderId);
+        messages.recipientId = recipientId;
+        messages.senderId = senderId;
+        messages.message = messageContent;
+        messages.isRead = isRead;
+        messages.sentAt = sentAt;
+        return messages;
+    }
+
     public static String conversationId(long recipientId, long senderId) {
         if(recipientId < senderId) {
             return recipientId + "_" + senderId;

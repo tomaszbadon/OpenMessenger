@@ -124,7 +124,7 @@ public class OpenMessengerApplication {
 		InputMessagePayload messageDTO = new InputMessagePayload();
 		messageDTO.setMessage(message);
 		messageDTO.setRecipient(recipient.getId());
-		messageService.handleNewMessage(messageDTO, format.parse(sentAt), sender, recipient);
+		messageService.handleNewMessage(messageDTO, format.parse(sentAt), sender);
 	}
 
 	private User createUser(UserService userService, String firstName, String lastName, String password, String avatar, String status) {

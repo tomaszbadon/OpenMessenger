@@ -3,7 +3,7 @@ package net.bean.java.open.messenger.service.implementation;
 import net.bean.java.open.messenger.model.entity.User;
 import net.bean.java.open.messenger.model.entity.mongo.Message;
 import net.bean.java.open.messenger.repository.MessageMongoDbRepository;
-import net.bean.java.open.messenger.rest.model.InitPagesPayload;
+import net.bean.java.open.messenger.rest.model.InitialMessagePagesPayload;
 import net.bean.java.open.messenger.rest.model.InputMessagePayload;
 import net.bean.java.open.messenger.rest.model.OutputMessagePayload;
 import net.bean.java.open.messenger.service.CurrentUserService;
@@ -18,7 +18,7 @@ import java.util.List;
 
 @Transactional
 @Service
-public class MessageServiceV2Impl extends MessageServiceV2ImplMixin implements MessageServiceV2 {
+public class MessageServiceV2Impl extends MessageServiceV2ImplExt implements MessageServiceV2 {
 
     private final UserService userService;
 
@@ -40,26 +40,33 @@ public class MessageServiceV2Impl extends MessageServiceV2ImplMixin implements M
     }
 
     @Override
-    public OutputMessagePayload handleNewMessage(InputMessagePayload inputMessagePayload, Date sendAt, User sender, User recipient) {
-        Message message = Message.of(sender.getId(), recipient.getId(), inputMessagePayload.getMessage());
-        message.setSentAt(sendAt);
+    public OutputMessagePayload handleNewMessage(InputMessagePayload inputMessagePayload, Date sendAt, User sender) {
+        User recipient = userService.getUserOrElseThrowException(inputMessagePayload.getRecipient());
+        Message message = Message.of(sender.getId(), recipient.getId(), inputMessagePayload.getMessage(), sendAt);
         return new OutputMessagePayload(messageRepository.save(message));
     }
 
-    public InitPagesPayload getLatestPagesToLoad(String token, long userId) {
-        User currentuser = currentUserService.getUserFromTokenOrElseThrowException(token);
+    @Override
+    public OutputMessagePayload handleNewMessage(InputMessagePayload inputMessagePayload, Date sendAt, User sender, boolean isRead) {
+        User recipient = userService.getUserOrElseThrowException(inputMessagePayload.getRecipient());
+        Message message = Message.of(sender.getId(), recipient.getId(), inputMessagePayload.getMessage(), sendAt, isRead);
+        return new OutputMessagePayload(messageRepository.save(message));
+    }
+
+    public InitialMessagePagesPayload getLatestPagesToLoad(String token, long userId) {
+        User currentUser = currentUserService.getUserFromTokenOrElseThrowException(token);
         User user = userService.getUserOrElseThrowException(userId);
-        String conversationId = Message.conversationId(currentuser.getId(), user.getId());
+        String conversationId = Message.conversationId(currentUser.getId(), user.getId());
         long numberOfPages = getNumberOfPagesByConversationId(conversationId);
         if(numberOfPages == 0) {
-            return new InitPagesPayload(List.of());
+            return new InitialMessagePagesPayload(List.of());
         } else {
-            long unreadMessages = getNumberOfUnreadMessages(conversationId);
+            long unreadMessages = getNumberOfUnreadMessagesForUser(conversationId, currentUser.getId());
             if (unreadMessages == 0) {
-                return new InitPagesPayload(List.of(numberOfPages - 1));
+                return new InitialMessagePagesPayload(List.of(numberOfPages - 1));
             } else {
                 long numberOfPagesForUnreadMessages = getNumberOfPages(unreadMessages);
-                return new InitPagesPayload(getNumberOfPagesForUnreadMessages(numberOfPages, numberOfPagesForUnreadMessages));
+                return new InitialMessagePagesPayload(getNumberOfPagesForUnreadMessages(numberOfPages, numberOfPagesForUnreadMessages));
             }
         }
     }

@@ -7,6 +7,7 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import lombok.extern.slf4j.Slf4j;
+import net.bean.java.open.messenger.model.entity.Role;
 import net.bean.java.open.messenger.rest.model.Token;
 import net.bean.java.open.messenger.rest.model.TokenType;
 import net.bean.java.open.messenger.rest.model.TokensInfo;
@@ -48,7 +49,7 @@ public class JwtTokenServiceImpl implements JwtTokenService {
     @Autowired
     public JwtTokenServiceImpl(Environment environment) {
         String password = Optional.ofNullable(environment.getProperty(JWT_PASSWORD_PROPERTY))
-                                  .orElseThrow(() -> new RuntimeException(String.format("Cannot find property: '%s' in application.properties", JWT_PASSWORD_PROPERTY)));
+                .orElseThrow(() -> new RuntimeException(String.format("Cannot find property: '%s' in application.properties", JWT_PASSWORD_PROPERTY)));
         algorithm = Algorithm.HMAC256(password.getBytes());
         verifier = JWT.require(algorithm).build();
     }
@@ -56,8 +57,17 @@ public class JwtTokenServiceImpl implements JwtTokenService {
     @Override
     public TokensInfo createTokensInfo(User user, String requestUrl) {
         List<Token> tokens = List.of(createJwtToken(TokenType.ACCESS_TOKEN, user, requestUrl, Integer.parseInt(accessTokenDuration)),
-                                     createJwtToken(TokenType.REFRESH_TOKEN, user, requestUrl, Integer.parseInt(refreshTokenDuration)));
+                createJwtToken(TokenType.REFRESH_TOKEN, user, requestUrl, Integer.parseInt(refreshTokenDuration)));
         return new TokensInfo(tokens);
+    }
+
+    @Override
+    public TokensInfo createTokensInfo(net.bean.java.open.messenger.model.entity.User user, String requestUrl) {
+        Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        List<SimpleGrantedAuthority> roles = user.getRoles()
+                                                 .stream().map(role -> new SimpleGrantedAuthority(role.getName()))
+                                                 .collect(Collectors.toList());
+        return createTokensInfo(new User(user.getUserName(), user.getPassword(), roles), requestUrl);
     }
 
     @Override
@@ -83,20 +93,17 @@ public class JwtTokenServiceImpl implements JwtTokenService {
             });
             return new UsernamePasswordAuthenticationToken(user, null, authorities);
         } catch (TokenExpiredException e) {
-            throw InvalidTokenException.of(HttpStatus.FORBIDDEN ,e);
+            throw InvalidTokenException.of(HttpStatus.FORBIDDEN, e);
         }
     }
 
     private Token createJwtToken(TokenType tokenType, User user, String requestUrl, int duration) {
         String token = JWT.create().withSubject(user.getUsername())
-                  .withExpiresAt(new Date(System.currentTimeMillis() + (duration * 60 * 1000)))
-                  .withIssuer(requestUrl)
-                  .withClaim(ROLES, user.getAuthorities().stream().map(GrantedAuthority::getAuthority)
-                                                                  .collect(Collectors.toList()))
-                  .sign(algorithm);
+                .withExpiresAt(new Date(System.currentTimeMillis() + (duration * 60 * 1000)))
+                .withIssuer(requestUrl)
+                .withClaim(ROLES, user.getAuthorities().stream().map(GrantedAuthority::getAuthority)
+                        .collect(Collectors.toList()))
+                .sign(algorithm);
         return new Token(tokenType, token);
     }
-
-
-
 }

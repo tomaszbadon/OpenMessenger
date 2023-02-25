@@ -2,19 +2,20 @@ package net.bean.java.open.messenger.service.implementation;
 
 import net.bean.java.open.messenger.model.entity.User;
 import net.bean.java.open.messenger.repository.MessageMongoDbRepository;
-import net.bean.java.open.messenger.rest.model.InitPagesPayload;
+import net.bean.java.open.messenger.rest.model.InitialMessagePagesPayload;
 import net.bean.java.open.messenger.service.UserService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 public class MessageServiceV2ImplTest {
 
     private final String DUMMY_TOKEN = "TOKEN";
@@ -45,8 +46,8 @@ public class MessageServiceV2ImplTest {
         when(userService.getUserOrElseThrowException(anyLong())).thenReturn(user);
         when(messageRepository.countByConversationId(anyString())).thenReturn(0L);
 
-        InitPagesPayload initPagesPayload = messageService.getLatestPagesToLoad(DUMMY_TOKEN, 6L);
-        Assertions.assertEquals(0, initPagesPayload.getPagesToLoad().size());
+        InitialMessagePagesPayload initialMessagePagesPayload = messageService.getLatestPagesToLoad(DUMMY_TOKEN, 6L);
+        Assertions.assertEquals(0, initialMessagePagesPayload.getPagesToLoad().size());
     }
 
     @Test
@@ -63,11 +64,11 @@ public class MessageServiceV2ImplTest {
         when(userService.getUserOrElseThrowException(anyLong())).thenReturn(user);
 
         when(messageRepository.countByConversationId(anyString())).thenReturn(20L);
-        when(messageRepository.countByIsReadAndConversationId(anyBoolean(), anyString())).thenReturn(0L);
+        when(messageRepository.countByRecipientIdAndIsReadAndConversationId(anyLong(), anyBoolean(), anyString())).thenReturn(0L);
 
-        InitPagesPayload initPagesPayload = messageService.getLatestPagesToLoad(DUMMY_TOKEN, 6L);
-        Assertions.assertEquals(1, initPagesPayload.getPagesToLoad().size());
-        Assertions.assertEquals(0, initPagesPayload.getPagesToLoad().get(0));
+        InitialMessagePagesPayload initialMessagePagesPayload = messageService.getLatestPagesToLoad(DUMMY_TOKEN, 6L);
+        Assertions.assertEquals(1, initialMessagePagesPayload.getPagesToLoad().size());
+        Assertions.assertEquals(0, initialMessagePagesPayload.getPagesToLoad().get(0));
 
     }
 
@@ -85,11 +86,11 @@ public class MessageServiceV2ImplTest {
         when(userService.getUserOrElseThrowException(anyLong())).thenReturn(user);
 
         when(messageRepository.countByConversationId(anyString())).thenReturn(20L);
-        when(messageRepository.countByIsReadAndConversationId(anyBoolean(), anyString())).thenReturn(0L);
+        when(messageRepository.countByRecipientIdAndIsReadAndConversationId(anyLong(), anyBoolean(), anyString())).thenReturn(0L);
 
-        InitPagesPayload initPagesPayload = messageService.getLatestPagesToLoad(DUMMY_TOKEN, 6L);
-        Assertions.assertEquals(1, initPagesPayload.getPagesToLoad().size());
-        Assertions.assertEquals(0, initPagesPayload.getPagesToLoad().get(0));
+        InitialMessagePagesPayload initialMessagePagesPayload = messageService.getLatestPagesToLoad(DUMMY_TOKEN, 6L);
+        Assertions.assertEquals(1, initialMessagePagesPayload.getPagesToLoad().size());
+        Assertions.assertEquals(0, initialMessagePagesPayload.getPagesToLoad().get(0));
     }
 
     @Test
@@ -106,11 +107,11 @@ public class MessageServiceV2ImplTest {
         when(userService.getUserOrElseThrowException(anyLong())).thenReturn(user);
 
         when(messageRepository.countByConversationId(anyString())).thenReturn(50L);
-        when(messageRepository.countByIsReadAndConversationId(anyBoolean(), anyString())).thenReturn(5L);
+        when(messageRepository.countByRecipientIdAndIsReadAndConversationId(anyLong(), anyBoolean(), anyString())).thenReturn(5L);
 
-        InitPagesPayload initPagesPayload = messageService.getLatestPagesToLoad(DUMMY_TOKEN, 6L);
-        Assertions.assertEquals(1, initPagesPayload.getPagesToLoad().size());
-        Assertions.assertEquals(2, initPagesPayload.getPagesToLoad().get(0));
+        InitialMessagePagesPayload initialMessagePagesPayload = messageService.getLatestPagesToLoad(DUMMY_TOKEN, 6L);
+        Assertions.assertEquals(1, initialMessagePagesPayload.getPagesToLoad().size());
+        Assertions.assertEquals(2, initialMessagePagesPayload.getPagesToLoad().get(0));
     }
 
     @Test
@@ -127,13 +128,13 @@ public class MessageServiceV2ImplTest {
         when(userService.getUserOrElseThrowException(anyLong())).thenReturn(user);
 
         when(messageRepository.countByConversationId(anyString())).thenReturn(110L);
-        when(messageRepository.countByIsReadAndConversationId(anyBoolean(), anyString())).thenReturn(50L);
+        when(messageRepository.countByRecipientIdAndIsReadAndConversationId(anyLong(), anyBoolean(), anyString())).thenReturn(50L);
 
-        InitPagesPayload initPagesPayload = messageService.getLatestPagesToLoad(DUMMY_TOKEN, 6L);
-        Assertions.assertEquals(3, initPagesPayload.getPagesToLoad().size());
-        Assertions.assertTrue(initPagesPayload.getPagesToLoad().contains(5L));
-        Assertions.assertTrue(initPagesPayload.getPagesToLoad().contains(4L));
-        Assertions.assertTrue(initPagesPayload.getPagesToLoad().contains(3L));
+        InitialMessagePagesPayload initialMessagePagesPayload = messageService.getLatestPagesToLoad(DUMMY_TOKEN, 6L);
+        Assertions.assertEquals(3, initialMessagePagesPayload.getPagesToLoad().size());
+        Assertions.assertTrue(initialMessagePagesPayload.getPagesToLoad().contains(5L));
+        Assertions.assertTrue(initialMessagePagesPayload.getPagesToLoad().contains(4L));
+        Assertions.assertTrue(initialMessagePagesPayload.getPagesToLoad().contains(3L));
     }
 
 }

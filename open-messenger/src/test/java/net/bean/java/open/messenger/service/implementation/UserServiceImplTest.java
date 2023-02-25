@@ -1,10 +1,11 @@
-package net.bean.java.open.messenger.service;
+package net.bean.java.open.messenger.service.implementation;
 
 import net.bean.java.open.messenger.model.entity.Role;
 import net.bean.java.open.messenger.model.entity.User;
 import net.bean.java.open.messenger.repository.UserRepository;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import net.bean.java.open.messenger.service.implementation.UserServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -19,8 +20,8 @@ import static net.bean.java.open.messenger.rest.exception.ExceptionConstants.CAN
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest
-public class UserServiceTest {
+@ExtendWith(MockitoExtension.class)
+public class UserServiceImplTest {
 
     @Mock
     private UserRepository userRepository;
