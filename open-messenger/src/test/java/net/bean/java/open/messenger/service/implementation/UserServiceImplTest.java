@@ -3,15 +3,14 @@ package net.bean.java.open.messenger.service.implementation;
 import net.bean.java.open.messenger.model.entity.Role;
 import net.bean.java.open.messenger.model.entity.User;
 import net.bean.java.open.messenger.repository.UserRepository;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.text.MessageFormat;
 import java.util.List;

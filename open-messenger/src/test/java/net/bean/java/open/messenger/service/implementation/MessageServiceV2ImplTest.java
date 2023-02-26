@@ -1,5 +1,6 @@
 package net.bean.java.open.messenger.service.implementation;
 
+import io.vavr.control.Try;
 import net.bean.java.open.messenger.model.entity.User;
 import net.bean.java.open.messenger.repository.MessageMongoDbRepository;
 import net.bean.java.open.messenger.rest.model.InitialMessagePagesPayload;
@@ -39,7 +40,7 @@ public class MessageServiceV2ImplTest {
 
         User currentUser = new User();
         currentUser.setId(5L);
-        when(currentUserService.getUserFromTokenOrElseThrowException(anyString())).thenReturn(currentUser);
+        when(currentUserService.getUserFromToken(anyString())).thenReturn(Try.success(currentUser));
 
         User user = new User();
         user.setId(6L);
@@ -57,7 +58,7 @@ public class MessageServiceV2ImplTest {
 
         User currentUser = new User();
         currentUser.setId(5L);
-        when(currentUserService.getUserFromTokenOrElseThrowException(anyString())).thenReturn(currentUser);
+        when(currentUserService.getUserFromToken(anyString())).thenReturn(Try.success(currentUser));
 
         User user = new User();
         user.setId(6L);
@@ -79,7 +80,7 @@ public class MessageServiceV2ImplTest {
 
         User currentUser = new User();
         currentUser.setId(5L);
-        when(currentUserService.getUserFromTokenOrElseThrowException(anyString())).thenReturn(currentUser);
+        when(currentUserService.getUserFromToken(anyString())).thenReturn(Try.success(currentUser));
 
         User user = new User();
         user.setId(6L);
@@ -100,7 +101,7 @@ public class MessageServiceV2ImplTest {
 
         User currentUser = new User();
         currentUser.setId(5L);
-        when(currentUserService.getUserFromTokenOrElseThrowException(anyString())).thenReturn(currentUser);
+        when(currentUserService.getUserFromToken(anyString())).thenReturn(Try.success(currentUser));
 
         User user = new User();
         user.setId(6L);
@@ -121,7 +122,7 @@ public class MessageServiceV2ImplTest {
 
         User currentUser = new User();
         currentUser.setId(5L);
-        when(currentUserService.getUserFromTokenOrElseThrowException(anyString())).thenReturn(currentUser);
+        when(currentUserService.getUserFromToken(anyString())).thenReturn(Try.success(currentUser));
 
         User user = new User();
         user.setId(6L);

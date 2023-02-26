@@ -17,7 +17,7 @@ public class UserResource {
 
     @GetMapping("/api/users/current")
     public ResponseEntity getUser(HttpServletRequest request) {
-        UserInfo userInfo = currentUserService.getUserInfoFromTokenOrElseThrowException(request);
+        UserInfo userInfo = currentUserService.getUserInfoFromToken(request).get();
         return ResponseEntity.ok(userInfo);
     }
 }

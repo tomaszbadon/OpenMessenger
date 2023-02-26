@@ -22,7 +22,7 @@ public class ContactListResource {
 
     @GetMapping("/api/users/current/contacts")
     public ResponseEntity getContacts(HttpServletRequest request) {
-        User user = currentUserService.getUserFromTokenOrElseThrowException(request);
+        User user = currentUserService.getUserFromToken(request).get();
         List<ContactInfo> contactList = contactResource.getContacts(user);
         return ResponseEntity.ok().body(contactList);
     }

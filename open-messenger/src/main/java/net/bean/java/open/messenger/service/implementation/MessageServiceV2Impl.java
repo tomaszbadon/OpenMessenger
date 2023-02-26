@@ -33,7 +33,7 @@ public class MessageServiceV2Impl extends MessageServiceV2ImplExt implements Mes
 
     @Override
     public OutputMessagePayload handleNewMessage(InputMessagePayload inputMessagePayload, String token) {
-        User sender = currentUserService.getUserFromTokenOrElseThrowException(token);
+        User sender = currentUserService.getUserFromToken(token).get();
         User recipient = userService.getUserOrElseThrowException(inputMessagePayload.getRecipient());
         Message message = Message.of(sender.getId(), recipient.getId(), inputMessagePayload.getMessage());
         return new OutputMessagePayload(messageRepository.save(message));
@@ -54,7 +54,7 @@ public class MessageServiceV2Impl extends MessageServiceV2ImplExt implements Mes
     }
 
     public InitialMessagePagesPayload getLatestPagesToLoad(String token, long userId) {
-        User currentUser = currentUserService.getUserFromTokenOrElseThrowException(token);
+        User currentUser = currentUserService.getUserFromToken(token).get();
         User user = userService.getUserOrElseThrowException(userId);
         String conversationId = Message.conversationId(currentUser.getId(), user.getId());
         long numberOfPages = getNumberOfPagesByConversationId(conversationId);
