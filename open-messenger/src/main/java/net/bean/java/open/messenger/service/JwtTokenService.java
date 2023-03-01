@@ -13,6 +13,6 @@ public interface JwtTokenService {
 
     Try<String> getUserName(String token);
 
-    UsernamePasswordAuthenticationToken getUsernamePasswordAuthenticationToken(String token);
+    Try<UsernamePasswordAuthenticationToken> getUsernamePasswordAuthenticationToken(String token);
 
 }

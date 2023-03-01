@@ -77,16 +77,16 @@ public class JwtTokenServiceImpl implements JwtTokenService {
     }
 
     @Override
-    public UsernamePasswordAuthenticationToken getUsernamePasswordAuthenticationToken(String token) {
+    public Try<UsernamePasswordAuthenticationToken> getUsernamePasswordAuthenticationToken(String token) {
         try {
             DecodedJWT decodedJWT = verifier.verify(token);
             String user = decodedJWT.getSubject();
             String[] roles = decodedJWT.getClaim("roles").asArray(String.class);
             Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
             stream(roles).forEach(role -> authorities.add(new SimpleGrantedAuthority(role)));
-            return new UsernamePasswordAuthenticationToken(user, null, authorities);
+            return Try.success(new UsernamePasswordAuthenticationToken(user, null, authorities));
         } catch (TokenExpiredException e) {
-            throw InvalidTokenException.of(HttpStatus.FORBIDDEN, e);
+            return Try.failure(InvalidTokenException.of(HttpStatus.FORBIDDEN, e));
         }
     }
 

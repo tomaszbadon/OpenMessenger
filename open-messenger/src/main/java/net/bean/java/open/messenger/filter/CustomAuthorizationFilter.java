@@ -41,7 +41,7 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
         try {
             String token = HttpServletRequestUtil.getToken(request).get();
             if(StringUtils.hasText(token)) {
-                UsernamePasswordAuthenticationToken authenticationToken = jwtTokenService.getUsernamePasswordAuthenticationToken(token);
+                UsernamePasswordAuthenticationToken authenticationToken = jwtTokenService.getUsernamePasswordAuthenticationToken(token).get();
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
                 filterChain.doFilter(request, response);
             } else {
