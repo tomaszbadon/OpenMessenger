@@ -7,7 +7,7 @@ import java.util.List;
 
 @Data
 @AllArgsConstructor
-public class OutputMessagePayloadWithPage {
+public class OutputMessagesPayload {
 
     private List<OutputMessagePayload> messages;
 

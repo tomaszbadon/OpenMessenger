@@ -19,7 +19,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 public class MessageServiceV2ImplTest {
 
-    private final String DUMMY_TOKEN = "TOKEN";
+    private final Try<String> DUMMY_TOKEN = Try.success("TOKEN");
 
     @Mock
     private UserService userService;
@@ -44,7 +44,7 @@ public class MessageServiceV2ImplTest {
 
         User user = new User();
         user.setId(6L);
-        when(userService.getUserOrElseThrowException(anyLong())).thenReturn(user);
+        when(userService.tryToGetUser(anyLong())).thenReturn(Try.success(user));
         when(messageRepository.countByConversationId(anyString())).thenReturn(0L);
 
         InitialMessagePagesPayload initialMessagePagesPayload = messageService.getLatestPagesToLoad(DUMMY_TOKEN, 6L);
@@ -62,7 +62,7 @@ public class MessageServiceV2ImplTest {
 
         User user = new User();
         user.setId(6L);
-        when(userService.getUserOrElseThrowException(anyLong())).thenReturn(user);
+        when(userService.tryToGetUser(anyLong())).thenReturn(Try.success(user));
 
         when(messageRepository.countByConversationId(anyString())).thenReturn(20L);
         when(messageRepository.countByRecipientIdAndIsReadAndConversationId(anyLong(), anyBoolean(), anyString())).thenReturn(0L);
@@ -84,7 +84,7 @@ public class MessageServiceV2ImplTest {
 
         User user = new User();
         user.setId(6L);
-        when(userService.getUserOrElseThrowException(anyLong())).thenReturn(user);
+        when(userService.tryToGetUser(anyLong())).thenReturn(Try.success(user));
 
         when(messageRepository.countByConversationId(anyString())).thenReturn(20L);
         when(messageRepository.countByRecipientIdAndIsReadAndConversationId(anyLong(), anyBoolean(), anyString())).thenReturn(0L);
@@ -105,7 +105,7 @@ public class MessageServiceV2ImplTest {
 
         User user = new User();
         user.setId(6L);
-        when(userService.getUserOrElseThrowException(anyLong())).thenReturn(user);
+        when(userService.tryToGetUser(anyLong())).thenReturn(Try.success(user));
 
         when(messageRepository.countByConversationId(anyString())).thenReturn(50L);
         when(messageRepository.countByRecipientIdAndIsReadAndConversationId(anyLong(), anyBoolean(), anyString())).thenReturn(5L);
@@ -126,7 +126,7 @@ public class MessageServiceV2ImplTest {
 
         User user = new User();
         user.setId(6L);
-        when(userService.getUserOrElseThrowException(anyLong())).thenReturn(user);
+        when(userService.tryToGetUser(anyLong())).thenReturn(Try.success(user));
 
         when(messageRepository.countByConversationId(anyString())).thenReturn(110L);
         when(messageRepository.countByRecipientIdAndIsReadAndConversationId(anyLong(), anyBoolean(), anyString())).thenReturn(50L);

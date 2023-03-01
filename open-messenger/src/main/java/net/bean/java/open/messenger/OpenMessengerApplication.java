@@ -114,8 +114,6 @@ public class OpenMessengerApplication {
 
 
 			TokensInfo tokensInfo = jwtTokenService.createTokensInfo(new org.springframework.security.core.userdetails.User(dominica.getUserName(), dominica.getPassword(), List.of()), null);
-
-			messageService.getLatestPagesToLoad(tokensInfo.getTokens().stream().findFirst().get().getToken(), chris.getId());
 		};
 	}
 

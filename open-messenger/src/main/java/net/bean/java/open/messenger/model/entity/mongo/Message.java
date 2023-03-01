@@ -11,6 +11,8 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 public class Message {
+
+    public final static String ID = "id";
     @Id
     private String id;
     private String conversationId;

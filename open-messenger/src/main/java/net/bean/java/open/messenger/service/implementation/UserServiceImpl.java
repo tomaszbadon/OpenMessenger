@@ -1,5 +1,6 @@
 package net.bean.java.open.messenger.service.implementation;
 
+import io.vavr.control.Try;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -78,9 +79,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public User getUserOrElseThrowException(Long id) {
-        return getUser(id)
-                    .orElseThrow(() -> new UserNotFoundException(ExceptionConstants.RECIPIENT_DOES_NOT_EXIST));
+    public Try<User> tryToGetUser(Long id) {
+       return getUser(id).map(user -> Try.success(user))
+               .orElseGet(() -> Try.failure(new UserNotFoundException(id)));
     }
 
     @Override

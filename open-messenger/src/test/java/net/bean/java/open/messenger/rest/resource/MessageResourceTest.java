@@ -52,7 +52,7 @@ public class MessageResourceTest {
 
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.AUTHORIZATION, HttpServletRequestUtil.BEARER + tokensInfo.getTokens().stream().findFirst().orElseThrow().getToken());
-        ResponseEntity<Object> response = restTemplate.exchange("/api/messages/" + daniel.getId(), HttpMethod.GET, new HttpEntity<>(headers), Object.class);
+        ResponseEntity<Object> response = restTemplate.exchange("/api/messages/users/unread/" + daniel.getId(), HttpMethod.GET, new HttpEntity<>(headers), Object.class);
         response.getStatusCode();
     }
 

@@ -10,7 +10,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public abstract class MessageServiceV2ImplExt {
 
-    private int numberOfMessagesPerPage;
+    protected int numberOfMessagesPerPage;
 
     final MessageMongoDbRepository messageRepository;
 
