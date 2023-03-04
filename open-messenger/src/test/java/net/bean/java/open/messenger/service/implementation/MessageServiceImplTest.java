@@ -2,7 +2,7 @@ package net.bean.java.open.messenger.service.implementation;
 
 import io.vavr.control.Try;
 import net.bean.java.open.messenger.model.entity.User;
-import net.bean.java.open.messenger.repository.MessageMongoDbRepository;
+import net.bean.java.open.messenger.repository.MessageRepository;
 import net.bean.java.open.messenger.rest.model.InitialMessagePagesPayload;
 import net.bean.java.open.messenger.service.UserService;
 import org.junit.jupiter.api.Assertions;
@@ -17,7 +17,7 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class MessageServiceV2ImplTest {
+public class MessageServiceImplTest {
 
     private final Try<String> DUMMY_TOKEN = Try.success("TOKEN");
 
@@ -28,10 +28,10 @@ public class MessageServiceV2ImplTest {
     private CurrentUserServiceImpl currentUserService;
 
     @Mock
-    private MessageMongoDbRepository messageRepository;
+    private MessageRepository messageRepository;
 
     @InjectMocks
-    private MessageServiceV2Impl messageService;
+    private MessageServiceImpl messageService;
 
     @Test
     @DisplayName("It tests getting the latest pages when there are no messages")
@@ -133,9 +133,9 @@ public class MessageServiceV2ImplTest {
 
         InitialMessagePagesPayload initialMessagePagesPayload = messageService.getLatestPagesToLoad(DUMMY_TOKEN, 6L);
         Assertions.assertEquals(3, initialMessagePagesPayload.getPagesToLoad().size());
-        Assertions.assertTrue(initialMessagePagesPayload.getPagesToLoad().contains(5L));
-        Assertions.assertTrue(initialMessagePagesPayload.getPagesToLoad().contains(4L));
-        Assertions.assertTrue(initialMessagePagesPayload.getPagesToLoad().contains(3L));
+        Assertions.assertTrue(initialMessagePagesPayload.getPagesToLoad().contains(5));
+        Assertions.assertTrue(initialMessagePagesPayload.getPagesToLoad().contains(4));
+        Assertions.assertTrue(initialMessagePagesPayload.getPagesToLoad().contains(3));
     }
 
 }

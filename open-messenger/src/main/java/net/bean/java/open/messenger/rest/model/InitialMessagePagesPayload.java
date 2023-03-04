@@ -11,6 +11,6 @@ import java.util.List;
 @NoArgsConstructor
 public class InitialMessagePagesPayload {
 
-    private List<Long> pagesToLoad;
+    private List<Integer> pagesToLoad;
 
 }

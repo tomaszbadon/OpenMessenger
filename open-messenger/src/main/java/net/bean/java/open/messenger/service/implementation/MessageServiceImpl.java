@@ -1,90 +1,92 @@
 package net.bean.java.open.messenger.service.implementation;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import net.bean.java.open.messenger.rest.model.InputMessagePayload;
-import net.bean.java.open.messenger.rest.model.Notification;
-import net.bean.java.open.messenger.model.entity.Message;
+import io.vavr.control.Try;
+import net.bean.java.open.messenger.model.entity.User;
+import net.bean.java.open.messenger.model.entity.mongo.Message;
 import net.bean.java.open.messenger.repository.MessageRepository;
+import net.bean.java.open.messenger.rest.model.InitialMessagePagesPayload;
+import net.bean.java.open.messenger.rest.model.InputMessagePayload;
+import net.bean.java.open.messenger.rest.model.OutputMessagePayload;
+import net.bean.java.open.messenger.rest.model.OutputMessagesPayload;
+import net.bean.java.open.messenger.service.CurrentUserService;
 import net.bean.java.open.messenger.service.MessageService;
 import net.bean.java.open.messenger.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Service
-@Slf4j
-@RequiredArgsConstructor
 @Transactional
-public class MessageServiceImpl implements MessageService {
-
-    private final static int DEFAULT_PAGE_SIZE = 20;
+@Service
+public class MessageServiceImpl extends MessageServiceV2ImplExt implements MessageService {
 
     private final UserService userService;
 
-    public final MessageRepository messageRepository;
+    private final CurrentUserService currentUserService;
 
-    @Override
-    public Message saveMessage(InputMessagePayload messageDto, long senderId) {
-        Message message = new Message();
-        message.setContent(messageDto.getMessage());
-        message.setSentAt(new Date());
-        message.setAcknowledged(false);
-        userService.getUser(messageDto.getRecipient()).ifPresent((recipient) -> message.setRecipient(recipient));
-        userService.getUser(senderId).ifPresent((sender) -> message.setSender(sender));
-        Message savedMessage = messageRepository.save(message);
-        return savedMessage;
+    @Autowired
+    public MessageServiceImpl(MessageRepository messageRepository, UserService userService, CurrentUserService currentUserService) {
+        super(messageRepository);
+        this.userService = userService;
+        this.currentUserService = currentUserService;
     }
 
     @Override
-    public Message saveMessageWithSpecificDate(InputMessagePayload messageDto, long senderId, String sentAt) throws ParseException {
-        Message message = saveMessage(messageDto, senderId);
-        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-        message.setSentAt(format.parse(sentAt));
-        messageRepository.save(message);
-        return message;
+    public OutputMessagePayload handleNewMessage(InputMessagePayload inputMessagePayload, Try<String> token) {
+        User sender = token.flatMap(t -> currentUserService.getUserFromToken(t)).get();
+        User recipient = userService.tryToGetUser(inputMessagePayload.getRecipient()).get();
+        Message message = Message.of(sender.getId(), recipient.getId(), inputMessagePayload.getMessage());
+        return new OutputMessagePayload(messageRepository.save(message));
     }
 
     @Override
-    public List<Message> getMessages(long userId1, long userId2, Optional<Integer> page) {
-        Sort sort = Sort.by("id").ascending();
-        Pageable pageable = PageRequest.of(page.orElse(0), DEFAULT_PAGE_SIZE, sort);
-        return messageRepository.getMessages(userId1, userId2, pageable);
+    public OutputMessagePayload handleNewMessage(InputMessagePayload inputMessagePayload, Date sendAt, User sender) {
+        User recipient = userService.tryToGetUser(inputMessagePayload.getRecipient()).get();
+        Message message = Message.of(sender.getId(), recipient.getId(), inputMessagePayload.getMessage(), sendAt);
+        return new OutputMessagePayload(messageRepository.save(message));
     }
 
     @Override
-    public int getLastPage(long userId1, long userId2) {
-        long totalNumberOfMessages = messageRepository.getNumberOfMessages(userId1, userId2);
-        int page = (int) totalNumberOfMessages / DEFAULT_PAGE_SIZE;
-        if(page > 0 && totalNumberOfMessages % DEFAULT_PAGE_SIZE == 0) {
-            page--;
+    public OutputMessagePayload handleNewMessage(InputMessagePayload inputMessagePayload, Date sendAt, User sender, boolean isRead) {
+        User recipient = userService.tryToGetUser(inputMessagePayload.getRecipient()).get();
+        Message message = Message.of(sender.getId(), recipient.getId(), inputMessagePayload.getMessage(), sendAt, isRead);
+        return new OutputMessagePayload(messageRepository.save(message));
+    }
+
+    public InitialMessagePagesPayload getLatestPagesToLoad(Try<String> token, long userId) {
+        User currentUser = token.flatMap(t -> currentUserService.getUserFromToken(t)).get();
+        User user = userService.tryToGetUser(userId).get();
+        String conversationId = Message.conversationId(currentUser.getId(), user.getId());
+        long numberOfPages = getNumberOfPagesByConversationId(conversationId);
+        if(numberOfPages == 0) {
+            return new InitialMessagePagesPayload(List.of());
+        } else {
+            long unreadMessages = getNumberOfUnreadMessagesForUser(conversationId, currentUser.getId());
+            if (unreadMessages == 0) {
+                return new InitialMessagePagesPayload(List.of((int) numberOfPages - 1));
+            } else {
+                long numberOfPagesForUnreadMessages = getNumberOfPages(unreadMessages);
+                return new InitialMessagePagesPayload(getNumberOfPagesForUnreadMessages(numberOfPages, numberOfPagesForUnreadMessages));
+            }
         }
-        return page;
     }
 
     @Override
-    public Message getMessageById(long id) {
-        return messageRepository.getMessageById(id);
-    }
-
-    @Override
-    public List<Message> getUnacknowledgedMessages(long userId) {
-        return messageRepository.getUnacknownledgedMessages(userId);
-    }
-
-    @Override
-    public void acknowledgedMessages(long userId, Collection<Notification> messages) {
-        List<Long> messageIds = messages.stream().map(m -> m.getMessageId()).collect(Collectors.toList());
-        messageRepository.acknownledgedMessages(userId, messageIds);
+    public OutputMessagesPayload readMessages(Try<String> token, long userId, Optional<Integer> pageOptional) {
+        User currentUser = token.flatMap(t -> currentUserService.getUserFromToken(t)).get();
+        User user = userService.tryToGetUser(userId).get();
+        String conversationId = Message.conversationId(currentUser.getId(), user.getId());
+        Sort sort = Sort.by(Message.ID).ascending();
+        int page = pageOptional.orElse(0);
+        Pageable pageable = PageRequest.of(page, numberOfMessagesPerPage, sort);
+        List<Message> messages = messageRepository.findByConversationId(conversationId, pageable);
+        return new OutputMessagesPayload(messages.stream().map(OutputMessagePayload::new).collect(Collectors.toList()), page);
     }
 }

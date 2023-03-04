@@ -1,7 +1,7 @@
 package net.bean.java.open.messenger.service.implementation;
 
 import lombok.RequiredArgsConstructor;
-import net.bean.java.open.messenger.repository.MessageMongoDbRepository;
+import net.bean.java.open.messenger.repository.MessageRepository;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.util.ArrayList;
@@ -12,7 +12,7 @@ public abstract class MessageServiceV2ImplExt {
 
     protected int numberOfMessagesPerPage;
 
-    final MessageMongoDbRepository messageRepository;
+    final MessageRepository messageRepository;
 
     final long getNumberOfPagesByConversationId(String conversationId) {
         return getNumberOfPages(messageRepository.countByConversationId(conversationId));
@@ -33,10 +33,10 @@ public abstract class MessageServiceV2ImplExt {
         return messageRepository.countByRecipientIdAndIsReadAndConversationId(userId,false, conversationId);
     }
 
-    final List<Long> getNumberOfPagesForUnreadMessages(long numberOfPages, long numberOfPagesForUnreadMessages ) {
-        List<Long> pages = new ArrayList<>();
+    final List<Integer> getNumberOfPagesForUnreadMessages(long numberOfPages, long numberOfPagesForUnreadMessages ) {
+        List<Integer> pages = new ArrayList<>();
         for(long i = numberOfPages - numberOfPagesForUnreadMessages; i < numberOfPages ; i++) {
-            pages.add(i);
+            pages.add((int) i);
         }
         return pages;
     }

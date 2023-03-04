@@ -8,7 +8,6 @@ import net.bean.java.open.messenger.model.entity.User;
 import net.bean.java.open.messenger.model.entity.Role;
 import net.bean.java.open.messenger.repository.RoleRepository;
 import net.bean.java.open.messenger.repository.UserRepository;
-import net.bean.java.open.messenger.rest.exception.ExceptionConstants;
 import net.bean.java.open.messenger.rest.exception.UserNotFoundException;
 import net.bean.java.open.messenger.service.UserService;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

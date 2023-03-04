@@ -1,28 +1,25 @@
 package net.bean.java.open.messenger.service;
 
+import io.vavr.control.Try;
+import net.bean.java.open.messenger.model.entity.User;
+import net.bean.java.open.messenger.rest.model.InitialMessagePagesPayload;
 import net.bean.java.open.messenger.rest.model.InputMessagePayload;
-import net.bean.java.open.messenger.rest.model.Notification;
-import net.bean.java.open.messenger.model.entity.Message;
+import net.bean.java.open.messenger.rest.model.OutputMessagePayload;
+import net.bean.java.open.messenger.rest.model.OutputMessagesPayload;
 
-import java.text.ParseException;
-import java.util.Collection;
-import java.util.List;
+import java.util.Date;
 import java.util.Optional;
 
 public interface MessageService {
 
-    Message saveMessage(InputMessagePayload message, long senderId);
+    OutputMessagePayload handleNewMessage(InputMessagePayload inputMessagePayload, Try<String> token);
 
-    Message saveMessageWithSpecificDate(InputMessagePayload message, long senderId, String sentAt) throws ParseException;
+    OutputMessagePayload handleNewMessage(InputMessagePayload inputMessagePayload, Date sendAt, User sender);
 
-    List<Message> getMessages(long userId1, long userId2, Optional<Integer> page);
+    OutputMessagePayload handleNewMessage(InputMessagePayload inputMessagePayload, Date sendAt, User sender, boolean isRead);
 
-    int getLastPage(long user1, long user2);
+    InitialMessagePagesPayload getLatestPagesToLoad(Try<String>  token, long userId);
 
-    Message getMessageById(long id);
-
-    List<Message> getUnacknowledgedMessages(long userId);
-
-    void acknowledgedMessages(long userId, Collection<Notification> messages);
+    OutputMessagesPayload readMessages(Try<String>  token, long userId, Optional<Integer> page);
 
 }
