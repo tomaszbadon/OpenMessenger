@@ -1,7 +1,7 @@
 package net.bean.java.open.messenger.service.implementation;
 
 import lombok.RequiredArgsConstructor;
-import net.bean.java.open.messenger.model.entity.User;
+import net.bean.java.open.messenger.model.User;
 import net.bean.java.open.messenger.rest.model.ContactInfo;
 import net.bean.java.open.messenger.rest.model.ContactList;
 import net.bean.java.open.messenger.service.ContactResource;

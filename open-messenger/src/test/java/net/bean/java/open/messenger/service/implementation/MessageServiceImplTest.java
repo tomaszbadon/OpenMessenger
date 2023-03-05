@@ -1,7 +1,7 @@
 package net.bean.java.open.messenger.service.implementation;
 
 import io.vavr.control.Try;
-import net.bean.java.open.messenger.model.entity.User;
+import net.bean.java.open.messenger.model.User;
 import net.bean.java.open.messenger.repository.MessageRepository;
 import net.bean.java.open.messenger.rest.model.InitialMessagePagesPayload;
 import net.bean.java.open.messenger.service.UserService;

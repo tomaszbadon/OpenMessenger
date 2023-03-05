@@ -1,7 +1,7 @@
 package net.bean.java.open.messenger.service.implementation;
 
-import net.bean.java.open.messenger.model.entity.Role;
-import net.bean.java.open.messenger.model.entity.User;
+import net.bean.java.open.messenger.model.enums.Role;
+import net.bean.java.open.messenger.model.User;
 import net.bean.java.open.messenger.repository.UserRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

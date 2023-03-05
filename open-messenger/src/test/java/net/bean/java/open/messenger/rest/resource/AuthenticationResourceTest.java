@@ -2,7 +2,7 @@ package net.bean.java.open.messenger.rest.resource;
 
 import io.vavr.control.Try;
 import net.bean.java.open.messenger.filter.CustomAuthenticationFilter;
-import net.bean.java.open.messenger.model.entity.User;
+import net.bean.java.open.messenger.model.User;
 import net.bean.java.open.messenger.rest.model.TokensInfo;
 import net.bean.java.open.messenger.service.JwtTokenService;
 import net.bean.java.open.messenger.service.UserService;

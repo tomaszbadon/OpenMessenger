@@ -1,7 +1,7 @@
 package net.bean.java.open.messenger.service.implementation;
 
 import lombok.RequiredArgsConstructor;
-import net.bean.java.open.messenger.model.entity.Message;
+import net.bean.java.open.messenger.model.Message;
 import net.bean.java.open.messenger.rest.model.Notification;
 import net.bean.java.open.messenger.service.NotificationSerivce;
 import org.springframework.messaging.simp.SimpMessagingTemplate;

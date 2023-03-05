@@ -1,4 +1,4 @@
-package net.bean.java.open.messenger.model.entity;
+package net.bean.java.open.messenger.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

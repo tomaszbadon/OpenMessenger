@@ -1,8 +1,9 @@
-package net.bean.java.open.messenger.model.entity;
+package net.bean.java.open.messenger.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import net.bean.java.open.messenger.model.enums.Role;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;

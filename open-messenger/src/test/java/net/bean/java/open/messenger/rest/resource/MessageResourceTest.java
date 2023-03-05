@@ -1,6 +1,6 @@
 package net.bean.java.open.messenger.rest.resource;
 
-import net.bean.java.open.messenger.model.entity.User;
+import net.bean.java.open.messenger.model.User;
 import net.bean.java.open.messenger.rest.model.InitialMessagePagesPayload;
 import net.bean.java.open.messenger.rest.model.OutputMessagesPayload;
 import net.bean.java.open.messenger.rest.model.TokensInfo;

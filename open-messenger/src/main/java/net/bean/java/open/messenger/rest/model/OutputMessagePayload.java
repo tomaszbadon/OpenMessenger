@@ -2,7 +2,7 @@ package net.bean.java.open.messenger.rest.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import net.bean.java.open.messenger.model.entity.Message;
+import net.bean.java.open.messenger.model.Message;
 
 import java.text.SimpleDateFormat;
 

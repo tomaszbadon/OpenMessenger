@@ -2,7 +2,7 @@ package net.bean.java.open.messenger.rest.model;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import net.bean.java.open.messenger.model.entity.User;
+import net.bean.java.open.messenger.model.User;
 
 @RequiredArgsConstructor
 @Data

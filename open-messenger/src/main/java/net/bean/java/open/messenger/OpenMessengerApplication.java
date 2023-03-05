@@ -1,8 +1,8 @@
 package net.bean.java.open.messenger;
 
 import lombok.extern.slf4j.Slf4j;
-import net.bean.java.open.messenger.model.entity.Role;
-import net.bean.java.open.messenger.model.entity.User;
+import net.bean.java.open.messenger.model.enums.Role;
+import net.bean.java.open.messenger.model.User;
 import net.bean.java.open.messenger.repository.MessageRepository;
 import net.bean.java.open.messenger.repository.UserRepository;
 import net.bean.java.open.messenger.rest.model.InputMessagePayload;
@@ -125,7 +125,7 @@ public class OpenMessengerApplication {
 	}
 
 	private User createUser(UserService userService, String firstName, String lastName, String password, String avatar, String status) {
-		List<Role> roles = List.of(new Role("ROLE_USER"), new Role("ROLE_ADMIN"));
+		List<Role> roles = List.of(Role.ROLE_USER, Role.ROLE_ADMIN);
 		String userName = firstName.toLowerCase() + "." + lastName.toLowerCase();
 		User user = userService.saveUser(new User(null, userName, firstName, lastName, password, userName+"@company.com", avatar, status, roles));
 		return user;

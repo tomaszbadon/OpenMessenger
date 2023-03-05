@@ -3,7 +3,7 @@ package net.bean.java.open.messenger.service.implementation;
 import io.vavr.control.Try;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.bean.java.open.messenger.model.entity.User;
+import net.bean.java.open.messenger.model.User;
 import net.bean.java.open.messenger.repository.UserRepository;
 import net.bean.java.open.messenger.rest.exception.UserNotFoundException;
 import net.bean.java.open.messenger.service.UserService;
@@ -38,7 +38,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             return new UsernameNotFoundException(MessageFormat.format(CANNOT_FIND_USER_IN_REPOSITORY, username));
         });
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        user.getRoles().forEach(role -> authorities.add(new SimpleGrantedAuthority(role.getName())));
+        user.getRoles().forEach(role -> authorities.add(new SimpleGrantedAuthority(role.name())));
         return new org.springframework.security.core.userdetails.User(user.getUserName(), user.getPassword(), authorities);
     }
 

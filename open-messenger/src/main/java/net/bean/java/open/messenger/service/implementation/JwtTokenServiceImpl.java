@@ -61,9 +61,9 @@ public class JwtTokenServiceImpl implements JwtTokenService {
     }
 
     @Override
-    public TokensInfo createTokensInfo(net.bean.java.open.messenger.model.entity.User user, String requestUrl) {
+    public TokensInfo createTokensInfo(net.bean.java.open.messenger.model.User user, String requestUrl) {
         List<SimpleGrantedAuthority> roles = user.getRoles()
-                                                 .stream().map(role -> new SimpleGrantedAuthority(role.getName()))
+                                                 .stream().map(role -> new SimpleGrantedAuthority(role.name()))
                                                  .collect(Collectors.toList());
         return createTokensInfo(new User(user.getUserName(), user.getPassword(), roles), requestUrl);
     }
