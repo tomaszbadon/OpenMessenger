@@ -2,7 +2,7 @@ package net.bean.java.open.messenger.service.implementation;
 
 import io.vavr.control.Try;
 import net.bean.java.open.messenger.model.entity.User;
-import net.bean.java.open.messenger.model.entity.mongo.Message;
+import net.bean.java.open.messenger.model.entity.Message;
 import net.bean.java.open.messenger.repository.MessageRepository;
 import net.bean.java.open.messenger.rest.model.InitialMessagePagesPayload;
 import net.bean.java.open.messenger.rest.model.InputMessagePayload;
@@ -60,7 +60,7 @@ public class MessageServiceImpl extends MessageServiceV2ImplExt implements Messa
         return new OutputMessagePayload(messageRepository.save(message));
     }
 
-    public InitialMessagePagesPayload getLatestPagesToLoad(Try<String> token, long userId) {
+    public InitialMessagePagesPayload getLatestPagesToLoad(Try<String> token, String userId) {
         User currentUser = token.flatMap(t -> currentUserService.getUserFromToken(t)).get();
         User user = userService.tryToGetUser(userId).get();
         String conversationId = Message.conversationId(currentUser.getId(), user.getId());
@@ -79,7 +79,7 @@ public class MessageServiceImpl extends MessageServiceV2ImplExt implements Messa
     }
 
     @Override
-    public OutputMessagesPayload readMessages(Try<String> token, long userId, Optional<Integer> pageOptional) {
+    public OutputMessagesPayload readMessages(Try<String> token, String userId, Optional<Integer> pageOptional) {
         User currentUser = token.flatMap(t -> currentUserService.getUserFromToken(t)).get();
         User user = userService.tryToGetUser(userId).get();
         String conversationId = Message.conversationId(currentUser.getId(), user.getId());

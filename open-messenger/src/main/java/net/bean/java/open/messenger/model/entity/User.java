@@ -3,26 +3,23 @@ package net.bean.java.open.messenger.model.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
 import java.util.List;
 
-import static javax.persistence.FetchType.EAGER;
-import static javax.persistence.GenerationType.AUTO;
-
-@Entity
+@Document
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
     @Id
-    @GeneratedValue(strategy = AUTO)
-    private Long id;
+    private String id;
 
-    @Column(unique=true)
     @NotNull
+    @Indexed(unique = true)
     private String userName;
 
     @NotNull
@@ -35,12 +32,12 @@ public class User {
     private String password;
 
     @NotNull
+    @Indexed(unique = true)
     private String email;
 
     private String avatar;
 
     private String status;
 
-    @ManyToMany(fetch = EAGER)
-    private List<Role> roles = new ArrayList<>();
+    private List<Role> roles;
 }

@@ -1,14 +1,13 @@
 package net.bean.java.open.messenger.service.implementation;
 
 import lombok.RequiredArgsConstructor;
-import net.bean.java.open.messenger.rest.model.Notification;
 import net.bean.java.open.messenger.model.entity.Message;
+import net.bean.java.open.messenger.rest.model.Notification;
 import net.bean.java.open.messenger.service.NotificationSerivce;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor

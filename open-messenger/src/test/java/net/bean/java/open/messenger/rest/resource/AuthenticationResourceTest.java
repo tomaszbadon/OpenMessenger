@@ -43,6 +43,7 @@ public class AuthenticationResourceTest {
         user.setLastName("Doe");
         user.setPassword(password);
         user.setEmail("j.doe@acke.com");
+        user.setRoles(List.of());
         userService.saveUser(user);
     }
 

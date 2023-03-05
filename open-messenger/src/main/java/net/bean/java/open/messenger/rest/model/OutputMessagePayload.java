@@ -2,6 +2,7 @@ package net.bean.java.open.messenger.rest.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import net.bean.java.open.messenger.model.entity.Message;
 
 import java.text.SimpleDateFormat;
 
@@ -13,22 +14,12 @@ public class OutputMessagePayload {
 
     private String id;
     private String message;
-    private Long recipient;
-    private Long sender;
+    private String recipient;
+    private String sender;
     private boolean isRead;
     private String sentAt;
 
-    @Deprecated
-    public OutputMessagePayload(net.bean.java.open.messenger.model.entity.Message m) {
-        id = String.valueOf(m.getId());
-        message = m.getContent();
-        recipient = m.getRecipient().getId();
-        sender = m.getSender().getId();
-        isRead = m.isAcknowledged();
-        sentAt = format.format(m.getSentAt());
-    }
-
-    public OutputMessagePayload(net.bean.java.open.messenger.model.entity.mongo.Message m) {
+    public OutputMessagePayload(Message m) {
         id = m.getId();
         message = m.getMessage();
         recipient = m.getRecipientId();

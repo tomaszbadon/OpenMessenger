@@ -29,7 +29,7 @@ public abstract class MessageServiceV2ImplExt {
         }
     }
 
-    final long getNumberOfUnreadMessagesForUser(String conversationId, long userId) {
+    final long getNumberOfUnreadMessagesForUser(String conversationId, String userId) {
         return messageRepository.countByRecipientIdAndIsReadAndConversationId(userId,false, conversationId);
     }
 

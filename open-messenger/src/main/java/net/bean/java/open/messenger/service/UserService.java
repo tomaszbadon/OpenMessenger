@@ -1,7 +1,6 @@
 package net.bean.java.open.messenger.service;
 
 import io.vavr.control.Try;
-import net.bean.java.open.messenger.model.entity.Role;
 import net.bean.java.open.messenger.model.entity.User;
 
 import java.util.List;
@@ -11,15 +10,11 @@ public interface UserService {
 
     User saveUser(User save);
 
-    Role saveRole(Role save);
-
-    void addRoleToUser(String userName, String roleName);
-
     Optional<User> getUser(String userName);
 
-    Optional<User> getUser(Long id);
+    Optional<User> getUserById(String id);
 
-    Try<User> tryToGetUser(Long id);
+    Try<User> tryToGetUser(String id);
 
     List<User> getUsers();
 

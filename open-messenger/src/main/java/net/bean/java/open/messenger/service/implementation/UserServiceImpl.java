@@ -3,10 +3,7 @@ package net.bean.java.open.messenger.service.implementation;
 import io.vavr.control.Try;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 import net.bean.java.open.messenger.model.entity.User;
-import net.bean.java.open.messenger.model.entity.Role;
-import net.bean.java.open.messenger.repository.RoleRepository;
 import net.bean.java.open.messenger.repository.UserRepository;
 import net.bean.java.open.messenger.rest.exception.UserNotFoundException;
 import net.bean.java.open.messenger.service.UserService;
@@ -32,12 +29,11 @@ import static net.bean.java.open.messenger.rest.exception.ExceptionConstants.CAN
 public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = Optional.ofNullable(userRepository.findByUserName(username)).orElseThrow(() -> {
+        User user = userRepository.findByUserName(username).stream().findFirst().orElseThrow(() -> {
             log.error("User '{}' not found in the database", username);
             return new UsernameNotFoundException(MessageFormat.format(CANNOT_FIND_USER_IN_REPOSITORY, username));
         });
@@ -55,32 +51,19 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public Role saveRole(Role role) {
-        log.info("Save a Role to the database", role.getName());
-        return roleRepository.save(role);
-    }
-
-    @Override
-    public void addRoleToUser(String userName, String roleName) {
-        User user = userRepository.findByUserName(userName);
-        Role role = roleRepository.findByName(roleName);
-        user.getRoles().add(role);
-    }
-
-    @Override
     public Optional<User> getUser(String userName) {
-        return Optional.ofNullable(userRepository.findByUserName(userName));
+        return userRepository.findByUserName(userName).stream().findFirst();
     }
 
     @Override
-    public Optional<User> getUser(Long id) {
-        return Optional.ofNullable(userRepository.getById(id));
+    public Optional<User> getUserById(String id) {
+        return userRepository.findById(id);
     }
 
     @Override
-    public Try<User> tryToGetUser(Long id) {
-       return getUser(id).map(user -> Try.success(user))
-               .orElseGet(() -> Try.failure(new UserNotFoundException(id)));
+    public Try<User> tryToGetUser(String id) {
+       return getUserById(id).map(Try::success)
+               .orElseGet(() -> Try.failure(UserNotFoundException.withUserId(id)));
     }
 
     @Override

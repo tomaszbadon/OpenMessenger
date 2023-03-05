@@ -8,7 +8,7 @@ import net.bean.java.open.messenger.model.entity.User;
 @RequiredArgsConstructor
 public class UserInfo {
 
-    private final Long id;
+    private final String id;
     private final String userName;
     private final String firstName;
     private final String lastName;

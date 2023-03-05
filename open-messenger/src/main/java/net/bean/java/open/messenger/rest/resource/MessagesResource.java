@@ -21,13 +21,13 @@ public class MessagesResource {
     private final MessageService messageService;
 
     @GetMapping("/api/users/{userId}/messages/{page}")
-    public ResponseEntity<OutputMessagesPayload> getMessages(HttpServletRequest request, @PathVariable("userId") long userId, @PathVariable("page") Optional<Integer> page) {
+    public ResponseEntity<OutputMessagesPayload> getMessages(HttpServletRequest request, @PathVariable("userId") String userId, @PathVariable("page") Optional<Integer> page) {
         Try<String> token = HttpServletRequestUtil.getToken(request);
         return ResponseEntity.ok().body(messageService.readMessages(token, userId, page));
     }
 
     @GetMapping("/api/users/{userId}/messages/latest")
-    public ResponseEntity<InitialMessagePagesPayload> getInitialPages(HttpServletRequest request, @PathVariable("userId") long userId) {
+    public ResponseEntity<InitialMessagePagesPayload> getInitialPages(HttpServletRequest request, @PathVariable("userId") String userId) {
         Try<String> token = HttpServletRequestUtil.getToken(request);
         return ResponseEntity.ok().body(messageService.getLatestPagesToLoad(token, userId));
     }

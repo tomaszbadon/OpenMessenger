@@ -39,15 +39,15 @@ public class MessageServiceImplTest {
         messageService.setNumberOfMessagesPerPage(20);
 
         User currentUser = new User();
-        currentUser.setId(5L);
+        currentUser.setId("DUMMY_ID");
         when(currentUserService.getUserFromToken(anyString())).thenReturn(Try.success(currentUser));
 
         User user = new User();
-        user.setId(6L);
-        when(userService.tryToGetUser(anyLong())).thenReturn(Try.success(user));
+        user.setId("DUMMY_ID");
+        when(userService.tryToGetUser(anyString())).thenReturn(Try.success(user));
         when(messageRepository.countByConversationId(anyString())).thenReturn(0L);
 
-        InitialMessagePagesPayload initialMessagePagesPayload = messageService.getLatestPagesToLoad(DUMMY_TOKEN, 6L);
+        InitialMessagePagesPayload initialMessagePagesPayload = messageService.getLatestPagesToLoad(DUMMY_TOKEN, "DUMMY_ID");
         Assertions.assertEquals(0, initialMessagePagesPayload.getPagesToLoad().size());
     }
 
@@ -57,17 +57,17 @@ public class MessageServiceImplTest {
         messageService.setNumberOfMessagesPerPage(20);
 
         User currentUser = new User();
-        currentUser.setId(5L);
+        currentUser.setId("DUMMY_ID");
         when(currentUserService.getUserFromToken(anyString())).thenReturn(Try.success(currentUser));
 
         User user = new User();
-        user.setId(6L);
-        when(userService.tryToGetUser(anyLong())).thenReturn(Try.success(user));
+        user.setId("DUMMY_ID");
+        when(userService.tryToGetUser(anyString())).thenReturn(Try.success(user));
 
         when(messageRepository.countByConversationId(anyString())).thenReturn(20L);
-        when(messageRepository.countByRecipientIdAndIsReadAndConversationId(anyLong(), anyBoolean(), anyString())).thenReturn(0L);
+        when(messageRepository.countByRecipientIdAndIsReadAndConversationId(anyString(), anyBoolean(), anyString())).thenReturn(0L);
 
-        InitialMessagePagesPayload initialMessagePagesPayload = messageService.getLatestPagesToLoad(DUMMY_TOKEN, 6L);
+        InitialMessagePagesPayload initialMessagePagesPayload = messageService.getLatestPagesToLoad(DUMMY_TOKEN, "DUMMY_ID");
         Assertions.assertEquals(1, initialMessagePagesPayload.getPagesToLoad().size());
         Assertions.assertEquals(0, initialMessagePagesPayload.getPagesToLoad().get(0));
 
@@ -79,17 +79,17 @@ public class MessageServiceImplTest {
         messageService.setNumberOfMessagesPerPage(20);
 
         User currentUser = new User();
-        currentUser.setId(5L);
+        currentUser.setId("DUMMY_ID");
         when(currentUserService.getUserFromToken(anyString())).thenReturn(Try.success(currentUser));
 
         User user = new User();
-        user.setId(6L);
-        when(userService.tryToGetUser(anyLong())).thenReturn(Try.success(user));
+        user.setId("DUMMY_ID");
+        when(userService.tryToGetUser(anyString())).thenReturn(Try.success(user));
 
         when(messageRepository.countByConversationId(anyString())).thenReturn(20L);
-        when(messageRepository.countByRecipientIdAndIsReadAndConversationId(anyLong(), anyBoolean(), anyString())).thenReturn(0L);
+        when(messageRepository.countByRecipientIdAndIsReadAndConversationId(anyString(), anyBoolean(), anyString())).thenReturn(0L);
 
-        InitialMessagePagesPayload initialMessagePagesPayload = messageService.getLatestPagesToLoad(DUMMY_TOKEN, 6L);
+        InitialMessagePagesPayload initialMessagePagesPayload = messageService.getLatestPagesToLoad(DUMMY_TOKEN, "DUMMY_ID");
         Assertions.assertEquals(1, initialMessagePagesPayload.getPagesToLoad().size());
         Assertions.assertEquals(0, initialMessagePagesPayload.getPagesToLoad().get(0));
     }
@@ -100,17 +100,17 @@ public class MessageServiceImplTest {
         messageService.setNumberOfMessagesPerPage(20);
 
         User currentUser = new User();
-        currentUser.setId(5L);
+        currentUser.setId("DUMMY_ID");
         when(currentUserService.getUserFromToken(anyString())).thenReturn(Try.success(currentUser));
 
         User user = new User();
-        user.setId(6L);
-        when(userService.tryToGetUser(anyLong())).thenReturn(Try.success(user));
+        user.setId("DUMMY_ID");
+        when(userService.tryToGetUser(anyString())).thenReturn(Try.success(user));
 
         when(messageRepository.countByConversationId(anyString())).thenReturn(50L);
-        when(messageRepository.countByRecipientIdAndIsReadAndConversationId(anyLong(), anyBoolean(), anyString())).thenReturn(5L);
+        when(messageRepository.countByRecipientIdAndIsReadAndConversationId(anyString(), anyBoolean(), anyString())).thenReturn(5L);
 
-        InitialMessagePagesPayload initialMessagePagesPayload = messageService.getLatestPagesToLoad(DUMMY_TOKEN, 6L);
+        InitialMessagePagesPayload initialMessagePagesPayload = messageService.getLatestPagesToLoad(DUMMY_TOKEN, "DUMMY_ID");
         Assertions.assertEquals(1, initialMessagePagesPayload.getPagesToLoad().size());
         Assertions.assertEquals(2, initialMessagePagesPayload.getPagesToLoad().get(0));
     }
@@ -121,17 +121,17 @@ public class MessageServiceImplTest {
         messageService.setNumberOfMessagesPerPage(20);
 
         User currentUser = new User();
-        currentUser.setId(5L);
+        currentUser.setId("DUMMY_ID");
         when(currentUserService.getUserFromToken(anyString())).thenReturn(Try.success(currentUser));
 
         User user = new User();
-        user.setId(6L);
-        when(userService.tryToGetUser(anyLong())).thenReturn(Try.success(user));
+        user.setId("DUMMY_ID");
+        when(userService.tryToGetUser(anyString())).thenReturn(Try.success(user));
 
         when(messageRepository.countByConversationId(anyString())).thenReturn(110L);
-        when(messageRepository.countByRecipientIdAndIsReadAndConversationId(anyLong(), anyBoolean(), anyString())).thenReturn(50L);
+        when(messageRepository.countByRecipientIdAndIsReadAndConversationId(anyString(), anyBoolean(), anyString())).thenReturn(50L);
 
-        InitialMessagePagesPayload initialMessagePagesPayload = messageService.getLatestPagesToLoad(DUMMY_TOKEN, 6L);
+        InitialMessagePagesPayload initialMessagePagesPayload = messageService.getLatestPagesToLoad(DUMMY_TOKEN, "DUMMY_ID");
         Assertions.assertEquals(3, initialMessagePagesPayload.getPagesToLoad().size());
         Assertions.assertTrue(initialMessagePagesPayload.getPagesToLoad().contains(5));
         Assertions.assertTrue(initialMessagePagesPayload.getPagesToLoad().contains(4));

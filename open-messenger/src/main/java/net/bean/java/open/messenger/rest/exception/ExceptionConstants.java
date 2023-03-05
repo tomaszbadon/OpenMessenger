@@ -10,6 +10,4 @@ public class ExceptionConstants {
 
     public final static String USER_DOES_NOT_EXIST_IN_REPOSITORY = "The user: {0} does not exist in Repository";
 
-    public final static String RECIPIENT_DOES_NOT_EXIST_IN_REPOSITORY = "The recipient: {0} does not exist in Repository";
-
 }

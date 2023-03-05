@@ -35,8 +35,8 @@ public class UserServiceImplTest {
     protected void loadUserByUserName() {
         when(user.getUserName()).thenReturn("john.doe");
         when(user.getPassword()).thenReturn("12345678");
-        when(user.getRoles()).thenReturn(List.of(new Role(1L, "ROLE_USER")));
-        when(userRepository.findByUserName("john.doe")).thenReturn(user);
+        when(user.getRoles()).thenReturn(List.of(new Role("ROLE_USER")));
+        when(userRepository.findByUserName("john.doe")).thenReturn(List.of(user));
         UserDetails userDetails = userService.loadUserByUsername("john.doe");
 
         Assertions.assertEquals("john.doe", userDetails.getUsername());
@@ -46,7 +46,7 @@ public class UserServiceImplTest {
 
     @Test
     protected void loadUserByUserNameWithException() {
-        when(userRepository.findByUserName("john.doe")).thenReturn(null);
+        when(userRepository.findByUserName("john.doe")).thenReturn(List.of());
 
         UsernameNotFoundException exception = assertThrows(UsernameNotFoundException.class, () -> userService.loadUserByUsername("john.doe"));
         String message = MessageFormat.format(CANNOT_FIND_USER_IN_REPOSITORY, "john.doe");

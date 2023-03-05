@@ -5,5 +5,5 @@ import lombok.Data;
 @Data
 public class InputMessagePayload {
     private String message;
-    private Long recipient;
+    private String recipient;
 }

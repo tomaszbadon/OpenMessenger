@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.bean.java.open.messenger.model.entity.Role;
 import net.bean.java.open.messenger.model.entity.User;
 import net.bean.java.open.messenger.repository.MessageRepository;
+import net.bean.java.open.messenger.repository.UserRepository;
 import net.bean.java.open.messenger.rest.model.InputMessagePayload;
 import net.bean.java.open.messenger.rest.model.TokensInfo;
 import net.bean.java.open.messenger.service.MessageService;
@@ -22,7 +23,6 @@ import org.springframework.web.filter.CorsFilter;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -41,11 +41,10 @@ public class OpenMessengerApplication {
 	}
 
 	@Bean
-	CommandLineRunner run(UserService userService, MessageService messageService, MessageRepository messageRepository, JwtTokenServiceImpl jwtTokenService) throws ParseException {
+	CommandLineRunner run(UserService userService, MessageService messageService, UserRepository userRepository, MessageRepository messageRepository, JwtTokenServiceImpl jwtTokenService) {
 		return args -> {
-			userService.saveRole(new Role(null, "ROLE_USER"));
-			userService.saveRole(new Role(null, "ROLE_MANAGER"));
-			userService.saveRole(new Role(null, "ROLE_ADMIN"));
+
+			userRepository.deleteAll();
 
 			User daniel = createUser(userService, "Daniel", "Silva", "my_password", "avatar_1.png", "Catch every day :D");
 			User dominica = createUser(userService, "Dominica", "Rosatti", "my_password", "avatar_2.png", "Today I am out of office");
@@ -126,10 +125,9 @@ public class OpenMessengerApplication {
 	}
 
 	private User createUser(UserService userService, String firstName, String lastName, String password, String avatar, String status) {
+		List<Role> roles = List.of(new Role("ROLE_USER"), new Role("ROLE_ADMIN"));
 		String userName = firstName.toLowerCase() + "." + lastName.toLowerCase();
-		User user = userService.saveUser(new User(null, userName, firstName, lastName, password, userName+"@company.com", avatar, status, new ArrayList<>()));
-		userService.addRoleToUser(userName, "ROLE_USER");
-		userService.addRoleToUser(userName, "ROLE_ADMIN");
+		User user = userService.saveUser(new User(null, userName, firstName, lastName, password, userName+"@company.com", avatar, status, roles));
 		return user;
 	}
 
