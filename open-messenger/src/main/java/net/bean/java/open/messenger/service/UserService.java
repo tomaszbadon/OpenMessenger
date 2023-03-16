@@ -18,4 +18,6 @@ public interface UserService {
 
     List<User> getUsers();
 
+    void changePassword(String id, String password);
+
 }

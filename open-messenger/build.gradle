@@ -26,7 +26,8 @@ dependencies {
 	implementation 'org.springframework.security:spring-security-messaging'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
-	implementation group: 'io.vavr', name: 'vavr', version: '0.10.4'
+	implementation 'io.vavr:vavr:0.10.4'
+	implementation 'org.apache.commons:commons-lang3:3.0'
 
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'

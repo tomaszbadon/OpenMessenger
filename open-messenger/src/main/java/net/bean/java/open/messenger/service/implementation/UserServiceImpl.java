@@ -70,4 +70,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public List<User> getUsers() {
         return userRepository.findAll();
     }
+
+    @Override
+    public void changePassword(String id, String password) {
+        User user = tryToGetUser(id).get();
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+    }
 }

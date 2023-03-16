@@ -10,4 +10,8 @@ public class ExceptionConstants {
 
     public final static String USER_DOES_NOT_EXIST_IN_REPOSITORY = "The user: {0} does not exist in Repository";
 
+    public final static String PATCH_OPERATION_UNSUPPORTED = "The Patch operation: {0} is unsupported for path: {1}";
+
+    public final static String INTERNAL_EXCEPTION = "Internal Exception occurred due to: {0}";
+
 }
