@@ -35,7 +35,7 @@ public class UserServiceImplTest {
     protected void loadUserByUserName() {
         when(user.getUserName()).thenReturn("john.doe");
         when(user.getPassword()).thenReturn("12345678");
-        when(user.getRoles()).thenReturn(List.of(new Role("ROLE_USER")));
+        when(user.getRoles()).thenReturn(List.of(Role.ROLE_USER));
         when(userRepository.findByUserName("john.doe")).thenReturn(List.of(user));
         UserDetails userDetails = userService.loadUserByUsername("john.doe");
 

@@ -40,7 +40,7 @@ public class MessageServiceImplTest {
 
         User currentUser = new User();
         currentUser.setId("DUMMY_ID");
-        when(currentUserService.getUserFromToken(anyString())).thenReturn(Try.success(currentUser));
+        when(currentUserService.tryToGetUserFromToken((Try<String>) any())).thenReturn(Try.success(currentUser));
 
         User user = new User();
         user.setId("DUMMY_ID");
@@ -58,7 +58,7 @@ public class MessageServiceImplTest {
 
         User currentUser = new User();
         currentUser.setId("DUMMY_ID");
-        when(currentUserService.getUserFromToken(anyString())).thenReturn(Try.success(currentUser));
+        when(currentUserService.tryToGetUserFromToken((Try<String>) any())).thenReturn(Try.success(currentUser));
 
         User user = new User();
         user.setId("DUMMY_ID");
@@ -80,7 +80,7 @@ public class MessageServiceImplTest {
 
         User currentUser = new User();
         currentUser.setId("DUMMY_ID");
-        when(currentUserService.getUserFromToken(anyString())).thenReturn(Try.success(currentUser));
+        when(currentUserService.tryToGetUserFromToken((Try<String>) any())).thenReturn(Try.success(currentUser));
 
         User user = new User();
         user.setId("DUMMY_ID");
@@ -101,7 +101,7 @@ public class MessageServiceImplTest {
 
         User currentUser = new User();
         currentUser.setId("DUMMY_ID");
-        when(currentUserService.getUserFromToken(anyString())).thenReturn(Try.success(currentUser));
+        when(currentUserService.tryToGetUserFromToken((Try<String>) any())).thenReturn(Try.success(currentUser));
 
         User user = new User();
         user.setId("DUMMY_ID");
@@ -122,7 +122,7 @@ public class MessageServiceImplTest {
 
         User currentUser = new User();
         currentUser.setId("DUMMY_ID");
-        when(currentUserService.getUserFromToken(anyString())).thenReturn(Try.success(currentUser));
+        when(currentUserService.tryToGetUserFromToken((Try<String>) any())).thenReturn(Try.success(currentUser));
 
         User user = new User();
         user.setId("DUMMY_ID");
