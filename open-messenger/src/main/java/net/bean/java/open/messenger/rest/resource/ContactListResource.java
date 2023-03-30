@@ -1,7 +1,6 @@
 package net.bean.java.open.messenger.rest.resource;
 
 import lombok.RequiredArgsConstructor;
-import net.bean.java.open.messenger.model.User;
 import net.bean.java.open.messenger.rest.model.ContactList;
 import net.bean.java.open.messenger.service.ContactResource;
 import net.bean.java.open.messenger.service.CurrentUserService;
@@ -20,7 +19,7 @@ public class ContactListResource {
 
     @GetMapping("/api/users/current/contacts")
     public ResponseEntity<ContactList> getContacts(HttpServletRequest request) {
-        User user = currentUserService.getUserFromToken(request).get();
+        var user = currentUserService.tryToGetUserFromToken(request);
         return ResponseEntity.ok().body(contactResource.getContacts(user));
     }
 }

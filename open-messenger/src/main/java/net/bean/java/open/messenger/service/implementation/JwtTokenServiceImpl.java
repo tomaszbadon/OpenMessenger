@@ -69,11 +69,8 @@ public class JwtTokenServiceImpl implements JwtTokenService {
     }
 
     @Override
-    public Try<String> getUserName(String token) {
-        return Try.of(() -> {
-            DecodedJWT decodedJWT = verifier.verify(token);
-            return decodedJWT.getSubject();
-        }).onFailure(e -> InvalidTokenException.of(HttpStatus.BAD_REQUEST, e));
+    public Try<String> tryToGetUserName(Try<String> token) {
+        return token.flatMap(t -> getUserName(t));
     }
 
     @Override
@@ -99,4 +96,12 @@ public class JwtTokenServiceImpl implements JwtTokenService {
                 .sign(algorithm);
         return new Token(tokenType, token);
     }
+
+    private Try<String> getUserName(String token) {
+        return Try.of(() -> {
+            DecodedJWT decodedJWT = verifier.verify(token);
+            return decodedJWT.getSubject();
+        }).onFailure(e -> InvalidTokenException.of(HttpStatus.BAD_REQUEST, e));
+    }
+
 }

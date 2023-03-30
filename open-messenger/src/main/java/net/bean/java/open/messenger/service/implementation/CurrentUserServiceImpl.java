@@ -23,20 +23,21 @@ public class CurrentUserServiceImpl implements CurrentUserService {
     private final JwtTokenService jwtTokenService;
 
     @Override
-    public Try<User> getUserFromToken(String token) {
-        return jwtTokenService.getUserName(token)
+    public Try<User> tryToGetUserFromToken(Try<String> token) {
+        return jwtTokenService.tryToGetUserName(token)
                               .map(userName -> userService.getUser(userName)
                                                           .orElseThrow(() -> new UserNotFoundException(ExceptionConstants.CANNOT_GET_USER_FROM_TOKEN)));
     }
 
     @Override
-    public Try<User> getUserFromToken(HttpServletRequest httpServletRequest) {
-        return HttpServletRequestUtil.getToken(httpServletRequest).flatMap((this::getUserFromToken));
+    public Try<User> tryToGetUserFromToken(HttpServletRequest httpServletRequest) {
+        var token = HttpServletRequestUtil.getToken(httpServletRequest);
+        return tryToGetUserFromToken(token);
     }
 
     @Override
-    public Try<UserInfo> getUserInfoFromToken(HttpServletRequest httpServletRequest) {
-        return getUserFromToken(httpServletRequest).map(UserInfo::new);
+    public Try<UserInfo> tryToGetUserInfoFromToken(HttpServletRequest httpServletRequest) {
+        return tryToGetUserFromToken(httpServletRequest).map(UserInfo::new);
     }
 
 }

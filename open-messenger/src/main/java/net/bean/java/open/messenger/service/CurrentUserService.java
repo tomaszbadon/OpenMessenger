@@ -8,10 +8,10 @@ import javax.servlet.http.HttpServletRequest;
 
 public interface CurrentUserService {
 
-    Try<User> getUserFromToken(HttpServletRequest httpServletRequest);
+    Try<User> tryToGetUserFromToken(HttpServletRequest httpServletRequest);
 
-    Try<User> getUserFromToken(String token);
+    Try<User> tryToGetUserFromToken(Try<String> token);
 
-    Try<UserInfo> getUserInfoFromToken(HttpServletRequest httpServletRequest);
+    Try<UserInfo> tryToGetUserInfoFromToken(HttpServletRequest httpServletRequest);
 
 }

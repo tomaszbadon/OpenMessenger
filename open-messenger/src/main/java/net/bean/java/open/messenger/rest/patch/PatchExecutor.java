@@ -9,14 +9,11 @@ import net.bean.java.open.messenger.rest.resource.patch.PatchOperation;
 import net.bean.java.open.messenger.rest.resource.patch.PatchOperations;
 import net.bean.java.open.messenger.rest.resource.patch.PatchPath;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Component;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -50,11 +47,14 @@ public class PatchExecutor<S> {
 
     private Object execute(MatchedMethod method, Object... objects) {
         try {
-
             return method.getMethod().get().invoke(patchService, consolidateParams(method, objects));
-        } catch (IllegalArgumentException | InvocationTargetException | IllegalAccessException e) {
-            log.error(e.getMessage(), e);
-            throw new InternalException(e);
+        } catch (IllegalArgumentException | IllegalAccessException | InvocationTargetException e) {
+            if(Objects.nonNull(e.getCause()) && e.getCause() instanceof ResponseStatusException) {
+                throw (ResponseStatusException) e.getCause();
+            } else {
+                log.error(e.getMessage(), e);
+                throw new InternalException(e);
+            }
         }
     }
 

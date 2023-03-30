@@ -11,7 +11,7 @@ public interface JwtTokenService {
 
     TokensInfo createTokensInfo(net.bean.java.open.messenger.model.User user, String requestUrl);
 
-    Try<String> getUserName(String token);
+    Try<String> tryToGetUserName(Try<String> token);
 
     Try<UsernamePasswordAuthenticationToken> getUsernamePasswordAuthenticationToken(String token);
 

@@ -2,6 +2,7 @@ package net.bean.java.open.messenger.service.implementation;
 
 import io.vavr.control.Try;
 import lombok.RequiredArgsConstructor;
+import net.bean.java.open.messenger.model.User;
 import net.bean.java.open.messenger.rest.model.UserInfo;
 import net.bean.java.open.messenger.rest.patch.PatchExecutor;
 import net.bean.java.open.messenger.rest.resource.patch.PatchOperation;
@@ -19,19 +20,18 @@ public class PatchCurrentUserServiceImpl {
 
     private final UserService userService;
     private final CurrentUserServiceImpl currentUserService;
-    private final JwtTokenServiceImpl jwtTokenService;
 
     public Try<UserInfo> updateUser(HttpServletRequest httpServletRequest, PatchOperations patchOperations) {
-        String currentUserId = HttpServletRequestUtil.getToken(httpServletRequest).get();
+        Try<User> user = currentUserService.tryToGetUserFromToken(HttpServletRequestUtil.getToken(httpServletRequest));
         final PatchExecutor<PatchCurrentUserServiceImpl> patchExecutor = new PatchExecutor<>(this);
-        patchExecutor.execute(patchOperations, currentUserId);
-        return currentUserService.getUserInfoFromToken(httpServletRequest);
+        patchExecutor.execute(patchOperations, user);
+        return currentUserService.tryToGetUserInfoFromToken(httpServletRequest);
     }
 
     @PatchPath(operation = "replace", pathPattern = "/password")
-    public void changePassword(PatchOperation operation, String currentUserId) {
+    public void changePassword(PatchOperation operation, Try<User> user) {
         String password = operation.getValue();
-        userService.changePassword(currentUserId, password);
+        userService.changePassword(user.get().getId(), password);
     }
 
 }

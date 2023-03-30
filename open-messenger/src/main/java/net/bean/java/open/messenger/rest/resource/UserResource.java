@@ -23,8 +23,8 @@ public class UserResource {
 
     @GetMapping("/api/users/current")
     public ResponseEntity<UserInfo> getUser(HttpServletRequest request) {
-        UserInfo userInfo = currentUserService.getUserInfoFromToken(request).get();
-        return ResponseEntity.ok(userInfo);
+        var userInfo = currentUserService.tryToGetUserInfoFromToken(request);
+        return ResponseEntity.ok(userInfo.get());
     }
 
     @PatchMapping(value = "/api/users/current", consumes = "application/json")

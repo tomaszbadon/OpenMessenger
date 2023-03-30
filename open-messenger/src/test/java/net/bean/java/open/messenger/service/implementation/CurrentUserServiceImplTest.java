@@ -20,7 +20,7 @@ public class CurrentUserServiceImplTest {
 
     private final static String RANDOM_USER_NAME = "john.doe";
 
-    private final static String DUMMY_TOKEN = "<TOKEN>";
+    private final static Try<String> DUMMY_TOKEN = Try.success("<TOKEN>");
 
     @Mock
     private UserService userService;
@@ -33,9 +33,9 @@ public class CurrentUserServiceImplTest {
 
     @Test
     protected void getUserFromTokenWithUserNotFoundException() {
-        when(jwtTokenService.getUserName(DUMMY_TOKEN)).thenReturn(Try.success(RANDOM_USER_NAME));
+        when(jwtTokenService.tryToGetUserName(DUMMY_TOKEN)).thenReturn(Try.success(RANDOM_USER_NAME));
         when(userService.getUser(RANDOM_USER_NAME)).thenReturn(Optional.empty());
-        assertThrows(UserNotFoundException.class, () -> currentUserService.getUserFromToken(DUMMY_TOKEN).get());
+        assertThrows(UserNotFoundException.class, () -> currentUserService.tryToGetUserFromToken(DUMMY_TOKEN).get());
     }
 
 

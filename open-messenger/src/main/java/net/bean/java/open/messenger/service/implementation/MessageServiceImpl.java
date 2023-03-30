@@ -40,7 +40,7 @@ public class MessageServiceImpl extends MessageServiceV2ImplExt implements Messa
 
     @Override
     public OutputMessagePayload handleNewMessage(InputMessagePayload inputMessagePayload, Try<String> token) {
-        User sender = token.flatMap(t -> currentUserService.getUserFromToken(t)).get();
+        User sender = currentUserService.tryToGetUserFromToken(token).get();
         User recipient = userService.tryToGetUser(inputMessagePayload.getRecipient()).get();
         Message message = Message.of(sender.getId(), recipient.getId(), inputMessagePayload.getMessage());
         return new OutputMessagePayload(messageRepository.save(message));
@@ -61,7 +61,7 @@ public class MessageServiceImpl extends MessageServiceV2ImplExt implements Messa
     }
 
     public InitialMessagePagesPayload getLatestPagesToLoad(Try<String> token, String userId) {
-        User currentUser = token.flatMap(t -> currentUserService.getUserFromToken(t)).get();
+        User currentUser = currentUserService.tryToGetUserFromToken(token).get();
         User user = userService.tryToGetUser(userId).get();
         String conversationId = Message.conversationId(currentUser.getId(), user.getId());
         long numberOfPages = getNumberOfPagesByConversationId(conversationId);
@@ -80,7 +80,7 @@ public class MessageServiceImpl extends MessageServiceV2ImplExt implements Messa
 
     @Override
     public OutputMessagesPayload readMessages(Try<String> token, String userId, Optional<Integer> pageOptional) {
-        User currentUser = token.flatMap(t -> currentUserService.getUserFromToken(t)).get();
+        User currentUser = currentUserService.tryToGetUserFromToken(token).get();
         User user = userService.tryToGetUser(userId).get();
         String conversationId = Message.conversationId(currentUser.getId(), user.getId());
         Sort sort = Sort.by(Message.ID).ascending();
