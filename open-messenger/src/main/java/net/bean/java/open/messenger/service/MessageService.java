@@ -18,8 +18,8 @@ public interface MessageService {
 
     OutputMessagePayload handleNewMessage(InputMessagePayload inputMessagePayload, Date sendAt, User sender, boolean isRead);
 
-    InitialMessagePagesPayload getLatestPagesToLoad(Try<String>  token, String userId);
+    InitialMessagePagesPayload getLatestPagesToLoad(Try<String> token, String userId);
 
-    OutputMessagesPayload readMessages(Try<String>  token, String userId, Optional<Integer> page);
+    OutputMessagesPayload readMessages(Try<String> token, String userId, Optional<Integer> page);
 
 }

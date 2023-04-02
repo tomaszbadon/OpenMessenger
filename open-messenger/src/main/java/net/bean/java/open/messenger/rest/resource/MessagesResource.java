@@ -3,13 +3,13 @@ package net.bean.java.open.messenger.rest.resource;
 import io.vavr.control.Try;
 import lombok.RequiredArgsConstructor;
 import net.bean.java.open.messenger.rest.model.InitialMessagePagesPayload;
+import net.bean.java.open.messenger.rest.model.InputMessagePayload;
+import net.bean.java.open.messenger.rest.model.OutputMessagePayload;
 import net.bean.java.open.messenger.rest.model.OutputMessagesPayload;
 import net.bean.java.open.messenger.service.MessageService;
 import net.bean.java.open.messenger.util.HttpServletRequestUtil;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
@@ -32,5 +32,11 @@ public class MessagesResource {
         return ResponseEntity.ok().body(messageService.getLatestPagesToLoad(token, userId));
     }
 
+    @PostMapping("/api/messages")
+    public ResponseEntity<OutputMessagePayload> sendMessage(HttpServletRequest request, @RequestBody InputMessagePayload inputMessagePayload) {
+        Try<String> token = HttpServletRequestUtil.getToken(request);
+        OutputMessagePayload outputMessagesPayload = messageService.handleNewMessage(inputMessagePayload, token);
+        return ResponseEntity.created(null).body(outputMessagesPayload);
+    }
 
 }
