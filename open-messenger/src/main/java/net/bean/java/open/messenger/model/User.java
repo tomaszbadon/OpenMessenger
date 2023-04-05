@@ -22,6 +22,7 @@ public class User {
     @NotNull
     @Indexed(unique = true)
     private String userName;
+    public static final String USER_NAME = "userName";
 
     @NotNull
     private String firstName;

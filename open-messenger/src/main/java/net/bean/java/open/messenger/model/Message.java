@@ -13,6 +13,9 @@ import java.util.Date;
 public class Message {
 
     public final static String ID = "id";
+    public final static String CONVERSATION_ID = "conversationId";
+    public final static String RECIPIENT_ID = "recipientId";
+    public final static String IS_READ = "isRead";
     @Id
     private String id;
     private String conversationId;

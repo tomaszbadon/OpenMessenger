@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.text.MessageFormat;
 import java.util.List;
+import java.util.Optional;
 
 import static net.bean.java.open.messenger.rest.exception.ExceptionConstants.CANNOT_FIND_USER_IN_REPOSITORY;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -36,7 +37,7 @@ public class UserServiceImplTest {
         when(user.getUserName()).thenReturn("john.doe");
         when(user.getPassword()).thenReturn("12345678");
         when(user.getRoles()).thenReturn(List.of(Role.ROLE_USER));
-        when(userRepository.findByUserName("john.doe")).thenReturn(List.of(user));
+        when(userRepository.findByUserName("john.doe")).thenReturn(Optional.of(user));
         UserDetails userDetails = userService.loadUserByUsername("john.doe");
 
         Assertions.assertEquals("john.doe", userDetails.getUsername());
@@ -46,7 +47,7 @@ public class UserServiceImplTest {
 
     @Test
     protected void loadUserByUserNameWithException() {
-        when(userRepository.findByUserName("john.doe")).thenReturn(List.of());
+        when(userRepository.findByUserName("john.doe")).thenReturn(Optional.empty());
 
         UsernameNotFoundException exception = assertThrows(UsernameNotFoundException.class, () -> userService.loadUserByUsername("john.doe"));
         String message = MessageFormat.format(CANNOT_FIND_USER_IN_REPOSITORY, "john.doe");
