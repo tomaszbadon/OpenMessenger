@@ -1,11 +1,15 @@
 package net.bean.java.open.messenger;
 
 import lombok.extern.slf4j.Slf4j;
+import net.bean.java.open.messenger.model.enums.Role;
+import net.bean.java.open.messenger.model.User;
+import net.bean.java.open.messenger.repository.MessageRepository;
+import net.bean.java.open.messenger.repository.UserRepository;
 import net.bean.java.open.messenger.rest.model.InputMessagePayload;
-import net.bean.java.open.messenger.model.entity.Role;
-import net.bean.java.open.messenger.model.entity.User;
+import net.bean.java.open.messenger.rest.model.TokensInfo;
 import net.bean.java.open.messenger.service.MessageService;
 import net.bean.java.open.messenger.service.UserService;
+import net.bean.java.open.messenger.service.implementation.JwtTokenServiceImpl;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -18,8 +22,9 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
 import java.text.ParseException;
-import java.util.ArrayList;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.List;
 
 @SpringBootApplication
 @EnableScheduling
@@ -36,11 +41,10 @@ public class OpenMessengerApplication {
 	}
 
 	@Bean
-	CommandLineRunner run(UserService userService, MessageService messageService) throws ParseException {
+	CommandLineRunner run(UserService userService, MessageService messageService, UserRepository userRepository, MessageRepository messageRepository, JwtTokenServiceImpl jwtTokenService) {
 		return args -> {
-			userService.saveRole(new Role(null, "ROLE_USER"));
-			userService.saveRole(new Role(null, "ROLE_MANAGER"));
-			userService.saveRole(new Role(null, "ROLE_ADMIN"));
+
+			userRepository.deleteAll();
 
 			User daniel = createUser(userService, "Daniel", "Silva", "my_password", "avatar_1.png", "Catch every day :D");
 			User dominica = createUser(userService, "Dominica", "Rosatti", "my_password", "avatar_2.png", "Today I am out of office");
@@ -48,7 +52,8 @@ public class OpenMessengerApplication {
 			User claudia = createUser(userService, "Claudia", "Wiliams", "my_password", "avatar_4.png", "Sleep Eat Work Repeat");
 			User monica = createUser(userService, "Monica", "Rosatti", "my_password", "avatar_5.png", "I love you <3");
 
-			/*
+			messageRepository.deleteAll();
+
 			createConversation(messageService, "13-02-2021 17:32:56", chris, dominica, "However, this bright idea to just replace one tired snowmobile with a brand new snowmobile, you know, to free up the snowmobile parking lot for other vehicles, never worked.");
 			createConversation(messageService, "13-02-2021 17:32:43", chris, dominica, "It was not a huge issue until the warm up started last week.");
 			createConversation(messageService, "13-02-2021 17:33:11", dominica, chris, "On Friday, we had four big inches of snow.");
@@ -105,22 +110,24 @@ public class OpenMessengerApplication {
 			createConversation(messageService, "25-08-2021 14:12:54", dominica, chris, "Could you give me some minutes to check finish it?");
 			createConversation(messageService, "25-08-2021 15:34:34", chris, dominica, "Sure");
 			createConversation(messageService, "25-08-2021 08:04:55", dominica, chris, "I will make it in 10 minutes.");
-			*/
+
+
+			TokensInfo tokensInfo = jwtTokenService.createTokensInfo(new org.springframework.security.core.userdetails.User(dominica.getUserName(), dominica.getPassword(), List.of()), null);
 		};
 	}
 
-	private void createConversation(MessageService messageService, String sentAt, User from, User to, String message) throws ParseException {
+	private void createConversation(MessageService messageService, String sentAt, User sender, User recipient, String message) throws ParseException {
+		SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 		InputMessagePayload messageDTO = new InputMessagePayload();
 		messageDTO.setMessage(message);
-		messageDTO.setRecipient(to.getId());
-		messageService.saveMessageWithSpecificDate(messageDTO, from.getId(), sentAt);
+		messageDTO.setRecipient(recipient.getId());
+		messageService.handleNewMessage(messageDTO, format.parse(sentAt), sender);
 	}
 
 	private User createUser(UserService userService, String firstName, String lastName, String password, String avatar, String status) {
+		List<Role> roles = List.of(Role.ROLE_USER, Role.ROLE_ADMIN);
 		String userName = firstName.toLowerCase() + "." + lastName.toLowerCase();
-		User user = userService.saveUser(new User(null, userName, firstName, lastName, password, userName+"@company.com", avatar, status, new ArrayList<>()));
-		userService.addRoleToUser(userName, "ROLE_USER");
-		userService.addRoleToUser(userName, "ROLE_ADMIN");
+		User user = userService.saveUser(new User(null, userName, firstName, lastName, password, userName+"@company.com", avatar, status, roles));
 		return user;
 	}
 

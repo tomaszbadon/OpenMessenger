@@ -1,22 +1,17 @@
 package net.bean.java.open.messenger.service;
 
+import io.vavr.control.Try;
+import net.bean.java.open.messenger.model.User;
 import net.bean.java.open.messenger.rest.model.UserInfo;
-import net.bean.java.open.messenger.model.entity.User;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Optional;
 
 public interface CurrentUserService {
 
-    Optional<User> getUserFromToken(HttpServletRequest httpServletRequest);
+    Try<User> tryToGetUserFromToken(HttpServletRequest httpServletRequest);
 
-    Optional<User> getUserFromToken(String token);
+    Try<User> tryToGetUserFromToken(Try<String> token);
 
-    User getUserFromTokenOrElseThrowException(HttpServletRequest httpServletRequest);
-
-    User getUserFromTokenOrElseThrowException(String token);
-
-    UserInfo getUserInfoFromTokenOrElseThrowException(HttpServletRequest httpServletRequest);
-
+    Try<UserInfo> tryToGetUserInfoFromToken(HttpServletRequest httpServletRequest);
 
 }

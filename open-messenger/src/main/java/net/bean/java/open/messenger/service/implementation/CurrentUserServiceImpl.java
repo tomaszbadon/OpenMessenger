@@ -1,7 +1,8 @@
 package net.bean.java.open.messenger.service.implementation;
 
+import io.vavr.control.Try;
 import lombok.RequiredArgsConstructor;
-import net.bean.java.open.messenger.model.entity.User;
+import net.bean.java.open.messenger.model.User;
 import net.bean.java.open.messenger.rest.exception.ExceptionConstants;
 import net.bean.java.open.messenger.rest.exception.UserNotFoundException;
 import net.bean.java.open.messenger.rest.model.UserInfo;
@@ -12,7 +13,6 @@ import net.bean.java.open.messenger.util.HttpServletRequestUtil;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -22,35 +22,22 @@ public class CurrentUserServiceImpl implements CurrentUserService {
 
     private final JwtTokenService jwtTokenService;
 
-
     @Override
-    public Optional<User> getUserFromToken(String token) {
-        String userName = jwtTokenService.getUserName(token);
-        return userService.getUser(userName);
+    public Try<User> tryToGetUserFromToken(Try<String> token) {
+        return jwtTokenService.tryToGetUserName(token)
+                              .map(userName -> userService.getUser(userName)
+                                                          .orElseThrow(() -> new UserNotFoundException(ExceptionConstants.CANNOT_GET_USER_FROM_TOKEN)));
     }
 
     @Override
-    public Optional<User> getUserFromToken(HttpServletRequest httpServletRequest) {
-        String token = HttpServletRequestUtil.getToken(httpServletRequest);
-        return getUserFromToken(token);
+    public Try<User> tryToGetUserFromToken(HttpServletRequest httpServletRequest) {
+        var token = HttpServletRequestUtil.getToken(httpServletRequest);
+        return tryToGetUserFromToken(token);
     }
 
     @Override
-    public User getUserFromTokenOrElseThrowException(String token) {
-        return getUserFromToken(token)
-                        .orElseThrow(() -> new UserNotFoundException(ExceptionConstants.CANNOT_GET_USER_FROM_TOKEN));
-    }
-
-    @Override
-    public User getUserFromTokenOrElseThrowException(HttpServletRequest httpServletRequest) {
-        return getUserFromToken(httpServletRequest)
-                        .orElseThrow(() -> new UserNotFoundException(ExceptionConstants.CANNOT_GET_USER_FROM_TOKEN));
-    }
-
-    @Override
-    public UserInfo getUserInfoFromTokenOrElseThrowException(HttpServletRequest httpServletRequest) {
-        User user = getUserFromTokenOrElseThrowException(httpServletRequest);
-        return new UserInfo(user);
+    public Try<UserInfo> tryToGetUserInfoFromToken(HttpServletRequest httpServletRequest) {
+        return tryToGetUserFromToken(httpServletRequest).map(UserInfo::new);
     }
 
 }

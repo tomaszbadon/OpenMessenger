@@ -1,26 +1,27 @@
-package net.bean.java.open.messenger.service;
+package net.bean.java.open.messenger.service.implementation;
 
-import net.bean.java.open.messenger.model.entity.Role;
-import net.bean.java.open.messenger.model.entity.User;
+import net.bean.java.open.messenger.model.enums.Role;
+import net.bean.java.open.messenger.model.User;
 import net.bean.java.open.messenger.repository.UserRepository;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import net.bean.java.open.messenger.service.implementation.UserServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.text.MessageFormat;
 import java.util.List;
+import java.util.Optional;
 
 import static net.bean.java.open.messenger.rest.exception.ExceptionConstants.CANNOT_FIND_USER_IN_REPOSITORY;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest
-public class UserServiceTest {
+@ExtendWith(MockitoExtension.class)
+public class UserServiceImplTest {
 
     @Mock
     private UserRepository userRepository;
@@ -35,8 +36,8 @@ public class UserServiceTest {
     protected void loadUserByUserName() {
         when(user.getUserName()).thenReturn("john.doe");
         when(user.getPassword()).thenReturn("12345678");
-        when(user.getRoles()).thenReturn(List.of(new Role(1L, "ROLE_USER")));
-        when(userRepository.findByUserName("john.doe")).thenReturn(user);
+        when(user.getRoles()).thenReturn(List.of(Role.ROLE_USER));
+        when(userRepository.findByUserName("john.doe")).thenReturn(Optional.of(user));
         UserDetails userDetails = userService.loadUserByUsername("john.doe");
 
         Assertions.assertEquals("john.doe", userDetails.getUsername());
@@ -46,7 +47,7 @@ public class UserServiceTest {
 
     @Test
     protected void loadUserByUserNameWithException() {
-        when(userRepository.findByUserName("john.doe")).thenReturn(null);
+        when(userRepository.findByUserName("john.doe")).thenReturn(Optional.empty());
 
         UsernameNotFoundException exception = assertThrows(UsernameNotFoundException.class, () -> userService.loadUserByUsername("john.doe"));
         String message = MessageFormat.format(CANNOT_FIND_USER_IN_REPOSITORY, "john.doe");

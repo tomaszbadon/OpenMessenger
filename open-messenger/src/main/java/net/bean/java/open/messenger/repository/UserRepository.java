@@ -1,12 +1,15 @@
 package net.bean.java.open.messenger.repository;
 
-import net.bean.java.open.messenger.model.entity.User;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import net.bean.java.open.messenger.model.User;
 
-@Repository
-public interface UserRepository extends JpaRepository<User, Long> {
+import java.util.List;
+import java.util.Optional;
 
-    User findByUserName(String userName);
+public interface UserRepository {
 
+    Optional<User> findByUserName(String userName);
+    Optional<User> findById(String id);
+    List<User> findAll();
+    User save(User user);
+    void deleteAll();
 }

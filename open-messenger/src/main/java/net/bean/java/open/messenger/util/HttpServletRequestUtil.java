@@ -1,5 +1,6 @@
 package net.bean.java.open.messenger.util;
 
+import io.vavr.control.Try;
 import net.bean.java.open.messenger.rest.exception.InvalidTokenException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -10,12 +11,12 @@ public class HttpServletRequestUtil {
 
     public static final String BEARER = "Bearer ";
 
-    public static String getToken(HttpServletRequest request) {
+    public static Try<String> getToken(HttpServletRequest request) {
         String authorizationToken = request.getHeader(AUTHORIZATION);
         if(authorizationToken != null && authorizationToken.startsWith(BEARER)) {
-            return authorizationToken.substring(BEARER.length());
+            return Try.success(authorizationToken.substring(BEARER.length()));
         } else {
-            throw InvalidTokenException.of();
+            return Try.failure(InvalidTokenException.of());
         }
 
     }

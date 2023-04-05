@@ -1,7 +1,8 @@
 package net.bean.java.open.messenger.rest.resource;
 
+import io.vavr.control.Try;
 import net.bean.java.open.messenger.filter.CustomAuthenticationFilter;
-import net.bean.java.open.messenger.model.entity.User;
+import net.bean.java.open.messenger.model.User;
 import net.bean.java.open.messenger.rest.model.TokensInfo;
 import net.bean.java.open.messenger.service.JwtTokenService;
 import net.bean.java.open.messenger.service.UserService;
@@ -42,6 +43,7 @@ public class AuthenticationResourceTest {
         user.setLastName("Doe");
         user.setPassword(password);
         user.setEmail("j.doe@acke.com");
+        user.setRoles(List.of());
         userService.saveUser(user);
     }
 
@@ -57,11 +59,11 @@ public class AuthenticationResourceTest {
         ResponseEntity<TokensInfo> responseEntity = restTemplate.exchange("/login", HttpMethod.POST, new HttpEntity<>(map, headers), TokensInfo.class);
         Assertions.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 
-        String userNameFromToken = jwtTokenService.getUserName(Lists.newArrayList(responseEntity.getBody().getTokens()).get(0).getToken());
-        Assertions.assertEquals(user.getUserName(), userNameFromToken);
+        Try<String> userNameFromToken = jwtTokenService.tryToGetUserName(Try.success(Lists.newArrayList(responseEntity.getBody().getTokens()).get(0).getToken()));
+        Assertions.assertEquals(user.getUserName(), userNameFromToken.get());
 
-        userNameFromToken = jwtTokenService.getUserName(Lists.newArrayList(responseEntity.getBody().getTokens()).get(1).getToken());
-        Assertions.assertEquals(user.getUserName(), userNameFromToken);
+        userNameFromToken = jwtTokenService.tryToGetUserName(Try.success(Lists.newArrayList(responseEntity.getBody().getTokens()).get(1).getToken()));
+        Assertions.assertEquals(user.getUserName(), userNameFromToken.get());
     }
 
 }

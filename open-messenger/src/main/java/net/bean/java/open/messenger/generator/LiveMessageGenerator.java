@@ -3,9 +3,7 @@ package net.bean.java.open.messenger.generator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.bean.java.open.messenger.rest.model.InputMessagePayload;
-import net.bean.java.open.messenger.model.entity.Message;
-import net.bean.java.open.messenger.model.entity.User;
-import net.bean.java.open.messenger.service.MessageService;
+import net.bean.java.open.messenger.model.User;
 import net.bean.java.open.messenger.service.NotificationSerivce;
 import net.bean.java.open.messenger.service.UserService;
 import org.springframework.stereotype.Component;
@@ -20,7 +18,7 @@ import java.util.stream.Collectors;
 public class LiveMessageGenerator {
 
     private final UserService userService;
-    private final MessageService messageService;
+    //private final MessageService messageService;
     private final NotificationSerivce notificationSerivce;
 
     private final Random random = new Random();
@@ -51,10 +49,10 @@ public class LiveMessageGenerator {
         InputMessagePayload inputMessagePayload = new InputMessagePayload();
         inputMessagePayload.setMessage(message);
         inputMessagePayload.setRecipient(recipient.getId());
-        Message savedMessage = messageService.saveMessage(inputMessagePayload, sender.getId());
-        savedMessage = messageService.getMessageById(savedMessage.getId());
-        notificationSerivce.notifyUser(savedMessage);
-        log.info("A message from user {} was sent", sender.getUserName());
+        //Message savedMessage = messageService.saveMessage(inputMessagePayload, sender.getId());
+        //savedMessage = messageService.getMessageById(savedMessage.getId());
+        //notificationSerivce.notifyUser(savedMessage);
+        //log.info("A message from user {} was sent", sender.getUserName());
     }
 
 }

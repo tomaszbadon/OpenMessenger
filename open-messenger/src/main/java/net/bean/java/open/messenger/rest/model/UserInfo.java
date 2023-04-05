@@ -2,13 +2,13 @@ package net.bean.java.open.messenger.rest.model;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import net.bean.java.open.messenger.model.entity.User;
+import net.bean.java.open.messenger.model.User;
 
 @Data
 @RequiredArgsConstructor
 public class UserInfo {
 
-    private final Long id;
+    private final String id;
     private final String userName;
     private final String firstName;
     private final String lastName;

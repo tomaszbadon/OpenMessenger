@@ -1,26 +1,18 @@
 package net.bean.java.open.messenger.rest.resource;
 
+import io.vavr.control.Try;
 import lombok.RequiredArgsConstructor;
-import net.bean.java.open.messenger.model.entity.Message;
-import net.bean.java.open.messenger.model.entity.User;
+import net.bean.java.open.messenger.rest.model.InitialMessagePagesPayload;
 import net.bean.java.open.messenger.rest.model.InputMessagePayload;
 import net.bean.java.open.messenger.rest.model.OutputMessagePayload;
-import net.bean.java.open.messenger.rest.model.OutputMessagePayloadWithPage;
-import net.bean.java.open.messenger.service.CurrentUserService;
+import net.bean.java.open.messenger.rest.model.OutputMessagesPayload;
 import net.bean.java.open.messenger.service.MessageService;
-import net.bean.java.open.messenger.service.MessageServiceV2;
-import net.bean.java.open.messenger.service.NotificationSerivce;
 import net.bean.java.open.messenger.util.HttpServletRequestUtil;
-import net.bean.java.open.messenger.util.Pause;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.net.URI;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -28,54 +20,23 @@ public class MessagesResource {
 
     private final MessageService messageService;
 
-    private final MessageServiceV2 messageServiceV2;
-
-    private final NotificationSerivce notificationSerivce;
-
-    private final CurrentUserService currentUserService;
-
-    @GetMapping("/api/messages")
-    public ResponseEntity<OutputMessagePayloadWithPage> getMessages(HttpServletRequest request, @RequestParam long user1, @RequestParam long user2, @RequestParam Optional<Integer> page) {
-        //TODO validation
-        List<Message> returnedMessage = messageService.getMessages(user1, user2, page);
-        List<OutputMessagePayload> messages = returnedMessage
-                .stream()
-                .map(OutputMessagePayload::new)
-                .collect(Collectors.toList());
-        Pause._for(1000);
-        return ResponseEntity.ok().body(new OutputMessagePayloadWithPage(messages, page.orElseGet(() -> 0)));
+    @GetMapping("/api/users/{userId}/messages/{page}")
+    public ResponseEntity<OutputMessagesPayload> getMessages(HttpServletRequest request, @PathVariable("userId") String userId, @PathVariable("page") Optional<Integer> page) {
+        Try<String> token = HttpServletRequestUtil.getToken(request);
+        return ResponseEntity.ok().body(messageService.readMessages(token, userId, page));
     }
 
-    @GetMapping("/api/messages/latest")
-    public ResponseEntity<OutputMessagePayloadWithPage> getLatestMessages(HttpServletRequest request, @RequestParam long user1, @RequestParam long user2) {
-        Optional<Integer> page = Optional.of(messageService.getLastPage(user1, user2));
-        List<OutputMessagePayload> messages = messageService.getMessages(user1, user2, page).stream()
-                .map(OutputMessagePayload::new)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(new OutputMessagePayloadWithPage(messages, page.get()));
+    @GetMapping("/api/users/{userId}/messages/latest")
+    public ResponseEntity<InitialMessagePagesPayload> getInitialPages(HttpServletRequest request, @PathVariable("userId") String userId) {
+        Try<String> token = HttpServletRequestUtil.getToken(request);
+        return ResponseEntity.ok().body(messageService.getLatestPagesToLoad(token, userId));
     }
 
-    @GetMapping("/api/messages/{id}")
-    public ResponseEntity getMessageById(HttpServletRequest request, @PathVariable("id") long id) {
-
-        User userFromToken = currentUserService.getUserFromTokenOrElseThrowException(request);
-
-        Message message = messageService.getMessageById(id);
-        if (message == null) {
-            return ResponseEntity.noContent().build();
-        } else if (message.getRecipient().getId() == userFromToken.getId() || message.getSender().getId() == userFromToken.getId()) {
-            return ResponseEntity.ok().body(new OutputMessagePayload(message));
-        } else {
-            return new ResponseEntity<String>("You are unauthorized to query data belonging to another user.", HttpStatus.UNAUTHORIZED);
-        }
-    }
-
-    @PostMapping(value = "/api/messages")
-    public ResponseEntity<OutputMessagePayload> newMessage(HttpServletRequest request, @RequestBody InputMessagePayload messageDTO) {
-        String token = HttpServletRequestUtil.getToken(request);
-        OutputMessagePayload outputMessagePayload = messageServiceV2.handleNewMessage(messageDTO, token);
-        URI uri = URI.create("/messages/" + outputMessagePayload.getId());
-        return ResponseEntity.created(uri).body(outputMessagePayload);
+    @PostMapping("/api/messages")
+    public ResponseEntity<OutputMessagePayload> sendMessage(HttpServletRequest request, @RequestBody InputMessagePayload inputMessagePayload) {
+        Try<String> token = HttpServletRequestUtil.getToken(request);
+        OutputMessagePayload outputMessagesPayload = messageService.handleNewMessage(inputMessagePayload, token);
+        return ResponseEntity.created(null).body(outputMessagesPayload);
     }
 
 }

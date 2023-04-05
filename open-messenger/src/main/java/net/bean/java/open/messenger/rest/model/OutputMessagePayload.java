@@ -2,7 +2,7 @@ package net.bean.java.open.messenger.rest.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import net.bean.java.open.messenger.model.entity.Message;
+import net.bean.java.open.messenger.model.Message;
 
 import java.text.SimpleDateFormat;
 
@@ -12,19 +12,19 @@ public class OutputMessagePayload {
 
     private static SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 
-    private long id;
+    private String id;
     private String message;
-    private Long recipient;
-    private Long sender;
-    private boolean isAcknowledged;
+    private String recipient;
+    private String sender;
+    private boolean isRead;
     private String sentAt;
 
     public OutputMessagePayload(Message m) {
         id = m.getId();
-        message = m.getContent();
-        recipient = m.getRecipient().getId();
-        sender = m.getSender().getId();
-        isAcknowledged = m.isAcknowledged();
+        message = m.getMessage();
+        recipient = m.getRecipientId();
+        sender = m.getSenderId();
+        isRead = m.isRead();
         sentAt = format.format(m.getSentAt());
     }
 

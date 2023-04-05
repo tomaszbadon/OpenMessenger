@@ -17,8 +17,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import static org.springframework.http.HttpMethod.GET;
-import static org.springframework.http.HttpMethod.POST;
+import static org.springframework.http.HttpMethod.*;
 
 @Configuration
 @EnableWebSecurity
@@ -50,6 +49,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.authorizeHttpRequests().antMatchers("/stomp-endpoint/**").permitAll();
         http.authorizeHttpRequests().antMatchers(GET, "/api/**").hasRole("USER");
         http.authorizeHttpRequests().antMatchers(POST, "/api/**").hasRole("USER");
+        http.authorizeHttpRequests().antMatchers(PATCH, "/api/**").hasRole("USER");
         http.authorizeHttpRequests().anyRequest().denyAll();
 
         http.addFilter(new CustomAuthenticationFilter(this.authenticationManagerBean(), jwtTokenService));
