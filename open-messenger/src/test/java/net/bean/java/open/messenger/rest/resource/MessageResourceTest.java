@@ -45,8 +45,8 @@ public class MessageResourceTest {
         this.tokenService = tokenService;
         this.userService = userService;
         this.messageRepository = messageRepository;
-        daniel = userService.getUser("daniel.silva").orElseThrow();
-        dominica = userService.getUser("dominica.rosatti").orElseThrow();
+        daniel = userService.getUserByUserName("daniel.silva").orElseThrow();
+        dominica = userService.getUserByUserName("dominica.rosatti").orElseThrow();
     }
 
     @AfterEach

@@ -3,7 +3,7 @@ package net.bean.java.open.messenger.service.implementation;
 import io.vavr.control.Try;
 import lombok.RequiredArgsConstructor;
 import net.bean.java.open.messenger.model.User;
-import net.bean.java.open.messenger.rest.exception.ExceptionConstants;
+import net.bean.java.open.messenger.exception.ExceptionConstants;
 import net.bean.java.open.messenger.rest.exception.UserNotFoundException;
 import net.bean.java.open.messenger.rest.model.UserInfo;
 import net.bean.java.open.messenger.service.CurrentUserService;
@@ -25,7 +25,7 @@ public class CurrentUserServiceImpl implements CurrentUserService {
     @Override
     public Try<User> tryToGetUserFromToken(Try<String> token) {
         return jwtTokenService.tryToGetUserName(token)
-                              .map(userName -> userService.getUser(userName)
+                              .map(userName -> userService.getUserByUserName(userName)
                                                           .orElseThrow(() -> new UserNotFoundException(ExceptionConstants.CANNOT_GET_USER_FROM_TOKEN)));
     }
 

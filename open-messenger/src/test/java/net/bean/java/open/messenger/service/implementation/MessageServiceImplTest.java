@@ -44,7 +44,7 @@ public class MessageServiceImplTest {
 
         User user = new User();
         user.setId("DUMMY_ID");
-        when(userService.tryToGetUser(anyString())).thenReturn(Try.success(user));
+        when(userService.tryToGetUserById(anyString())).thenReturn(Try.success(user));
         when(messageRepository.countByConversationId(anyString())).thenReturn(0L);
 
         InitialMessagePagesPayload initialMessagePagesPayload = messageService.getLatestPagesToLoad(DUMMY_TOKEN, "DUMMY_ID");
@@ -62,7 +62,7 @@ public class MessageServiceImplTest {
 
         User user = new User();
         user.setId("DUMMY_ID");
-        when(userService.tryToGetUser(anyString())).thenReturn(Try.success(user));
+        when(userService.tryToGetUserById(anyString())).thenReturn(Try.success(user));
 
         when(messageRepository.countByConversationId(anyString())).thenReturn(20L);
         when(messageRepository.countByRecipientIdAndIsReadAndConversationId(anyString(), anyBoolean(), anyString())).thenReturn(0L);
@@ -84,7 +84,7 @@ public class MessageServiceImplTest {
 
         User user = new User();
         user.setId("DUMMY_ID");
-        when(userService.tryToGetUser(anyString())).thenReturn(Try.success(user));
+        when(userService.tryToGetUserById(anyString())).thenReturn(Try.success(user));
 
         when(messageRepository.countByConversationId(anyString())).thenReturn(20L);
         when(messageRepository.countByRecipientIdAndIsReadAndConversationId(anyString(), anyBoolean(), anyString())).thenReturn(0L);
@@ -105,7 +105,7 @@ public class MessageServiceImplTest {
 
         User user = new User();
         user.setId("DUMMY_ID");
-        when(userService.tryToGetUser(anyString())).thenReturn(Try.success(user));
+        when(userService.tryToGetUserById(anyString())).thenReturn(Try.success(user));
 
         when(messageRepository.countByConversationId(anyString())).thenReturn(50L);
         when(messageRepository.countByRecipientIdAndIsReadAndConversationId(anyString(), anyBoolean(), anyString())).thenReturn(5L);
@@ -126,7 +126,7 @@ public class MessageServiceImplTest {
 
         User user = new User();
         user.setId("DUMMY_ID");
-        when(userService.tryToGetUser(anyString())).thenReturn(Try.success(user));
+        when(userService.tryToGetUserById(anyString())).thenReturn(Try.success(user));
 
         when(messageRepository.countByConversationId(anyString())).thenReturn(110L);
         when(messageRepository.countByRecipientIdAndIsReadAndConversationId(anyString(), anyBoolean(), anyString())).thenReturn(50L);

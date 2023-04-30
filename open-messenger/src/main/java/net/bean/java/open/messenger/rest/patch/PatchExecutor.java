@@ -3,7 +3,7 @@ package net.bean.java.open.messenger.rest.patch;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.bean.java.open.messenger.rest.exception.InternalException;
+import net.bean.java.open.messenger.exception.InternalException;
 import net.bean.java.open.messenger.rest.exception.UnsupportedPatchOperation;
 import net.bean.java.open.messenger.rest.resource.patch.PatchOperation;
 import net.bean.java.open.messenger.rest.resource.patch.PatchOperations;

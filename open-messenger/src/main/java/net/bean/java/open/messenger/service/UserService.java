@@ -10,11 +10,11 @@ public interface UserService {
 
     User saveUser(User save);
 
-    Optional<User> getUser(String userName);
+    Optional<User> getUserByUserName(String userName);
 
     Optional<User> getUserById(String id);
 
-    Try<User> tryToGetUser(String id);
+    Try<User> tryToGetUserById(String id);
 
     List<User> getUsers();
 

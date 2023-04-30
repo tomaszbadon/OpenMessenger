@@ -1,4 +1,4 @@
-package net.bean.java.open.messenger.rest.exception;
+package net.bean.java.open.messenger.exception;
 
 public class ExceptionConstants {
 
@@ -13,5 +13,8 @@ public class ExceptionConstants {
     public final static String PATCH_OPERATION_UNSUPPORTED = "The Patch operation: {0} is unsupported for path: {1}";
 
     public final static String INTERNAL_EXCEPTION = "Internal Exception occurred due to: {0}";
+
+    public final static String CREATION_OF_THE_USER_WENT_WRONG = "The creation of the user: {0} went wrong due to exception";
+
 
 }

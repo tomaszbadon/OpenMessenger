@@ -3,7 +3,7 @@ package net.bean.java.open.messenger.rest.resource;
 import lombok.RequiredArgsConstructor;
 import net.bean.java.open.messenger.rest.model.MessageAcknownledge;
 import net.bean.java.open.messenger.rest.model.Notification;
-import net.bean.java.open.messenger.service.NotificationSerivce;
+import net.bean.java.open.messenger.service.NotificationService;
 import net.bean.java.open.messenger.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -20,7 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class NotificationsResource {
 
-    private final NotificationSerivce notificationsService;
+    private final NotificationService notificationsService;
     private final UserService userService;
 
     @GetMapping("/api/users/{userId}/notifications")

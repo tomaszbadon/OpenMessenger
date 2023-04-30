@@ -5,7 +5,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.text.MessageFormat;
 
-import static net.bean.java.open.messenger.rest.exception.ExceptionConstants.USER_DOES_NOT_EXIST_IN_REPOSITORY;
+import static net.bean.java.open.messenger.exception.ExceptionConstants.USER_DOES_NOT_EXIST_IN_REPOSITORY;
 
 public class UserNotFoundException extends ResponseStatusException {
 

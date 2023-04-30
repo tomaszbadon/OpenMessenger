@@ -41,28 +41,28 @@ public class MessageServiceImpl extends MessageServiceV2ImplExt implements Messa
     @Override
     public OutputMessagePayload handleNewMessage(InputMessagePayload inputMessagePayload, Try<String> token) {
         User sender = currentUserService.tryToGetUserFromToken(token).get();
-        User recipient = userService.tryToGetUser(inputMessagePayload.getRecipient()).get();
+        User recipient = userService.tryToGetUserById(inputMessagePayload.getRecipient()).get();
         Message message = Message.of(sender.getId(), recipient.getId(), inputMessagePayload.getMessage());
         return new OutputMessagePayload(messageRepository.save(message));
     }
 
     @Override
     public OutputMessagePayload handleNewMessage(InputMessagePayload inputMessagePayload, Date sendAt, User sender) {
-        User recipient = userService.tryToGetUser(inputMessagePayload.getRecipient()).get();
+        User recipient = userService.tryToGetUserById(inputMessagePayload.getRecipient()).get();
         Message message = Message.of(sender.getId(), recipient.getId(), inputMessagePayload.getMessage(), sendAt);
         return new OutputMessagePayload(messageRepository.save(message));
     }
 
     @Override
     public OutputMessagePayload handleNewMessage(InputMessagePayload inputMessagePayload, Date sendAt, User sender, boolean isRead) {
-        User recipient = userService.tryToGetUser(inputMessagePayload.getRecipient()).get();
+        User recipient = userService.tryToGetUserById(inputMessagePayload.getRecipient()).get();
         Message message = Message.of(sender.getId(), recipient.getId(), inputMessagePayload.getMessage(), sendAt, isRead);
         return new OutputMessagePayload(messageRepository.save(message));
     }
 
     public InitialMessagePagesPayload getLatestPagesToLoad(Try<String> token, String userId) {
         User currentUser = currentUserService.tryToGetUserFromToken(token).get();
-        User user = userService.tryToGetUser(userId).get();
+        User user = userService.tryToGetUserById(userId).get();
         String conversationId = Message.conversationId(currentUser.getId(), user.getId());
         long numberOfPages = getNumberOfPagesByConversationId(conversationId);
         if(numberOfPages == 0) {
@@ -81,7 +81,7 @@ public class MessageServiceImpl extends MessageServiceV2ImplExt implements Messa
     @Override
     public OutputMessagesPayload readMessages(Try<String> token, String userId, Optional<Integer> pageOptional) {
         User currentUser = currentUserService.tryToGetUserFromToken(token).get();
-        User user = userService.tryToGetUser(userId).get();
+        User user = userService.tryToGetUserById(userId).get();
         String conversationId = Message.conversationId(currentUser.getId(), user.getId());
         Sort sort = Sort.by(Message.ID).ascending();
         int page = pageOptional.orElse(0);

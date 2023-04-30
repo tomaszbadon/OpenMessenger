@@ -46,8 +46,8 @@ public class MessageResourceTestWithDummyData {
         this.userService = userService;
         this.tokenService = jwtTokenService;
         this.messageRepository = messageRepository;
-        daniel = userService.getUser("daniel.silva").orElseThrow();
-        dominica = userService.getUser("dominica.rosatti").orElseThrow();
+        daniel = userService.getUserByUserName("daniel.silva").orElseThrow();
+        dominica = userService.getUserByUserName("dominica.rosatti").orElseThrow();
     }
 
     @BeforeEach

@@ -6,7 +6,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.text.MessageFormat;
 
-import static net.bean.java.open.messenger.rest.exception.ExceptionConstants.PATCH_OPERATION_UNSUPPORTED;
+import static net.bean.java.open.messenger.exception.ExceptionConstants.PATCH_OPERATION_UNSUPPORTED;
 
 public class UnsupportedPatchOperation extends ResponseStatusException {
 

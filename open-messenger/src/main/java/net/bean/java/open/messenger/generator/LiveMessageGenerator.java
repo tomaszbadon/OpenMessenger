@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.bean.java.open.messenger.rest.model.InputMessagePayload;
 import net.bean.java.open.messenger.model.User;
-import net.bean.java.open.messenger.service.NotificationSerivce;
+import net.bean.java.open.messenger.service.NotificationService;
 import net.bean.java.open.messenger.service.UserService;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +19,7 @@ public class LiveMessageGenerator {
 
     private final UserService userService;
     //private final MessageService messageService;
-    private final NotificationSerivce notificationSerivce;
+    private final NotificationService notificationService;
 
     private final Random random = new Random();
 
@@ -41,7 +41,7 @@ public class LiveMessageGenerator {
 
     //@Scheduled(fixedRate = 3000, initialDelayString = "5000")
     public void reportCurrentTime() {
-        User recipient = userService.getUser("dominica.rosatti").get();
+        User recipient = userService.getUserByUserName("dominica.rosatti").get();
         List<User> users = userService.getUsers().stream().filter((u) -> u.getId() != recipient.getId()).collect(Collectors.toList());
         User sender = users.get(random.nextInt(users.size()));
         //User sender = userService.getUser("christopher.wolf").get();

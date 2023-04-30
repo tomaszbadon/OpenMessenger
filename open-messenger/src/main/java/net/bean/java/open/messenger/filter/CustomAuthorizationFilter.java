@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 
@@ -28,9 +29,11 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
 
     private final JwtTokenService jwtTokenService;
 
+    private final AllowedPathChecker allowedPathChecker;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        if(request.getServletPath().equals("/login") || request.getServletPath().equals("/token/refresh/**")) {
+        if(allowedPathChecker.isPathAllowedWithoutToken(request.getServletPath())) {
             filterChain.doFilter(request, response);
         } else {
             check(request, response, filterChain);
