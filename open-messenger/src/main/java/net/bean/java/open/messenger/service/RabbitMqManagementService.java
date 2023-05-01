@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.bean.java.open.messenger.config.RabbitMqConfig;
 import net.bean.java.open.messenger.model.User;
 import net.bean.java.open.messenger.util.UserQueueNameProvider;
+import org.springframework.amqp.core.Queue;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,8 @@ import java.util.concurrent.TimeoutException;
 @RequiredArgsConstructor
 @Slf4j
 public class RabbitMqManagementService implements MessagingManagementService {
+
+    private final static String NO_PERMISSION = "^$";
 
     @Value("${application.rabbitmq.user}")
     private String userName;
@@ -45,7 +48,7 @@ public class RabbitMqManagementService implements MessagingManagementService {
     @Override
     public void assignUserToApplicationVirtualHost(User user) {
         String queueName = userQueueNameProvider.createQueueName(user);
-        client.updatePermissions(applicationVirtualHost.getName(), user.getUserName(), new UserPermissions(queueName, "$^", "$^"));
+        client.updatePermissions(applicationVirtualHost.getName(), user.getUserName(), new UserPermissions(queueName, NO_PERMISSION, NO_PERMISSION));
         log.info(MessageFormat.format("The user: {1} has been assigned successfully to a VirtualHost: {0}"
                 , applicationVirtualHost.getName(), user.getUserName()));
     }

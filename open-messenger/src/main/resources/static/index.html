@@ -26,6 +26,7 @@
 
     client.connect(userName, 'my_password', function(frame) {
         console.log('Connected: ' + frame);
+
         client.subscribe('/amq/queue/user-queue-' + userName, function(messageOutput) {
             console.log(messageOutput.body);
         });

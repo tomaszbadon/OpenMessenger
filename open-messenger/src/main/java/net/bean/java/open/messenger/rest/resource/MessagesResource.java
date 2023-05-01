@@ -32,6 +32,12 @@ public class MessagesResource {
         return ResponseEntity.ok().body(messageService.getLatestPagesToLoad(token, userId));
     }
 
+    @GetMapping("/api/messages/{messageId}")
+    public ResponseEntity<OutputMessagePayload> getMessage(HttpServletRequest request, @PathVariable("messageId") String messageId) {
+        Try<String> token = HttpServletRequestUtil.getToken(request);
+        return ResponseEntity.ok(messageService.readMessage(token, messageId));
+    }
+
     @PostMapping("/api/messages")
     public ResponseEntity<OutputMessagePayload> sendMessage(HttpServletRequest request, @RequestBody InputMessagePayload inputMessagePayload) {
         Try<String> token = HttpServletRequestUtil.getToken(request);

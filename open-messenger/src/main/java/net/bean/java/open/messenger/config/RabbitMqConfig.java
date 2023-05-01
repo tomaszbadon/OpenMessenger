@@ -4,6 +4,7 @@ import com.rabbitmq.http.client.Client;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import net.bean.java.open.messenger.exception.InternalException;
+import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;

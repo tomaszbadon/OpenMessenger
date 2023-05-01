@@ -4,6 +4,7 @@ import io.vavr.control.Try;
 import net.bean.java.open.messenger.model.User;
 import net.bean.java.open.messenger.model.Message;
 import net.bean.java.open.messenger.repository.MessageRepository;
+import net.bean.java.open.messenger.rest.exception.MessageNotFoundException;
 import net.bean.java.open.messenger.rest.model.InitialMessagePagesPayload;
 import net.bean.java.open.messenger.rest.model.InputMessagePayload;
 import net.bean.java.open.messenger.rest.model.OutputMessagePayload;
@@ -23,19 +24,16 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Transactional
 @Service
+@Transactional
 public class MessageServiceImpl extends MessageServiceV2ImplExt implements MessageService {
 
     private final UserService userService;
 
-    private final CurrentUserService currentUserService;
-
     @Autowired
     public MessageServiceImpl(MessageRepository messageRepository, UserService userService, CurrentUserService currentUserService) {
-        super(messageRepository);
+        super(messageRepository, currentUserService);
         this.userService = userService;
-        this.currentUserService = currentUserService;
     }
 
     @Override
@@ -88,5 +86,10 @@ public class MessageServiceImpl extends MessageServiceV2ImplExt implements Messa
         Pageable pageable = PageRequest.of(page, numberOfMessagesPerPage, sort);
         List<Message> messages = messageRepository.findByConversationId(conversationId, pageable);
         return new OutputMessagesPayload(messages.stream().map(OutputMessagePayload::new).collect(Collectors.toList()), page);
+    }
+
+    @Override
+    public OutputMessagePayload readMessage(Try<String> token, String messageId) {
+        return tryToReadMessage(token, messageId).mapTry(OutputMessagePayload::new).get();
     }
 }

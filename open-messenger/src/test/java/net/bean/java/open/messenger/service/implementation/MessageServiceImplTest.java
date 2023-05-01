@@ -1,9 +1,14 @@
 package net.bean.java.open.messenger.service.implementation;
 
 import io.vavr.control.Try;
+import net.bean.java.open.messenger.exception.ExceptionConstants;
+import net.bean.java.open.messenger.model.Message;
 import net.bean.java.open.messenger.model.User;
 import net.bean.java.open.messenger.repository.MessageRepository;
+import net.bean.java.open.messenger.rest.exception.MessageNotFoundException;
+import net.bean.java.open.messenger.rest.exception.NoPermissionException;
 import net.bean.java.open.messenger.rest.model.InitialMessagePagesPayload;
+import net.bean.java.open.messenger.rest.model.OutputMessagePayload;
 import net.bean.java.open.messenger.service.UserService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -12,6 +17,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
+
+import java.text.MessageFormat;
+import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
@@ -136,6 +145,47 @@ public class MessageServiceImplTest {
         Assertions.assertTrue(initialMessagePagesPayload.getPagesToLoad().contains(5));
         Assertions.assertTrue(initialMessagePagesPayload.getPagesToLoad().contains(4));
         Assertions.assertTrue(initialMessagePagesPayload.getPagesToLoad().contains(3));
+    }
+
+    @Test
+    @DisplayName("It test getting a single message from a conversation")
+    protected void getMessage() {
+        User currentUser = new User();
+        currentUser.setId("DUMMY_ID");
+        when(currentUserService.tryToGetUserFromToken((Try<String>) any())).thenReturn(Try.success(currentUser));
+
+        Message message = Message.of("DUMMY_ID", "DUMMY_ID_2", "This is a message");
+        when(messageRepository.findById(any())).thenReturn(Optional.of(message));
+
+        OutputMessagePayload outputMessagePayload = messageService.readMessage(DUMMY_TOKEN, "DUMMY_ID");
+        Assertions.assertEquals(message.getMessage(), outputMessagePayload.getMessage());
+        Assertions.assertEquals(message.getSenderId(), outputMessagePayload.getSender());
+        Assertions.assertEquals(message.getRecipientId(), outputMessagePayload.getRecipient());
+    }
+
+    @Test
+    @DisplayName("It test getting a 404 when a message does not exists")
+    protected void getMessageWithMessageNotFound() {
+        when(messageRepository.findById(any())).thenReturn(Optional.empty());
+        MessageNotFoundException e = Assertions.assertThrows(MessageNotFoundException.class, () -> messageService.readMessage(DUMMY_TOKEN, "DUMMY_ID"));
+        String expected = MessageFormat.format(ExceptionConstants.MESSAGE_NOT_FOUND, "DUMMY_ID");
+        Assertions.assertTrue(e.getMessage().contains(expected));
+        Assertions.assertEquals(HttpStatus.NOT_FOUND, e.getStatus());
+    }
+
+    @Test
+    @DisplayName("It test getting a 403 when a message does not belong to client")
+    protected void getMessageWhenNoPermission() {
+        User currentUser = new User();
+        currentUser.setId("DUMMY_ID_1");
+        when(currentUserService.tryToGetUserFromToken((Try<String>) any())).thenReturn(Try.success(currentUser));
+
+        Message message = Message.of("DUMMY_ID_2", "DUMMY_ID_3", "This is a message");
+        when(messageRepository.findById(any())).thenReturn(Optional.of(message));
+
+        NoPermissionException e = Assertions.assertThrows(NoPermissionException.class, () -> messageService.readMessage(DUMMY_TOKEN, "DUMMY_ID"));
+        Assertions.assertTrue(e.getMessage().contains(ExceptionConstants.USER_DOES_NOT_HAVE_PERMISSION));
+        Assertions.assertEquals(HttpStatus.FORBIDDEN, e.getStatus());
     }
 
 }

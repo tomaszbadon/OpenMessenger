@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.data.mongodb.core.query.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @RequiredArgsConstructor
@@ -41,6 +42,11 @@ public class MessageRepositoryImpl implements MessageRepository {
         query.addCriteria(Criteria.where(Message.CONVERSATION_ID).is(conversationId));
         query.with(pageable);
         return template.find(query, Message.class);
+    }
+
+    @Override
+    public Optional<Message> findById(String messageId) {
+        return Optional.ofNullable(template.findById(messageId, Message.class));
     }
 
     @Override

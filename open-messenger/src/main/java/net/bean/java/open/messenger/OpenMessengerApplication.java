@@ -8,6 +8,7 @@ import net.bean.java.open.messenger.repository.UserRepository;
 import net.bean.java.open.messenger.service.MessageService;
 import net.bean.java.open.messenger.service.MessagingManagementService;
 import net.bean.java.open.messenger.service.UserService;
+import org.springframework.amqp.core.Queue;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
