@@ -2,7 +2,7 @@ package net.bean.java.open.messenger.rest.resource;
 
 import lombok.RequiredArgsConstructor;
 import net.bean.java.open.messenger.rest.model.MessageAcknownledge;
-import net.bean.java.open.messenger.rest.model.Notification;
+import net.bean.java.open.messenger.rest.model.UnreadMessage;
 import net.bean.java.open.messenger.service.NotificationService;
 import net.bean.java.open.messenger.service.UserService;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +24,7 @@ public class NotificationsResource {
     private final UserService userService;
 
     @GetMapping("/api/users/{userId}/notifications")
-    public ResponseEntity<List<Notification>> getAllNotificationsForAUser(HttpServletRequest request, @PathVariable("userId") long userId) {
+    public ResponseEntity<List<UnreadMessage>> getAllNotificationsForAUser(HttpServletRequest request, @PathVariable("userId") long userId) {
         throw new UnsupportedOperationException();
     }
 

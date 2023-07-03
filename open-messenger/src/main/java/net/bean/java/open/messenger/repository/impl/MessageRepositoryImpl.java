@@ -45,6 +45,13 @@ public class MessageRepositoryImpl implements MessageRepository {
     }
 
     @Override
+    public List<Message> findByRecipientIdAndIsRead(String recipientId, boolean isRead) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where(Message.RECIPIENT_ID).is(recipientId).and(Message.IS_READ).is(isRead));
+        return template.find(query, Message.class);
+    }
+
+    @Override
     public Optional<Message> findById(String messageId) {
         return Optional.ofNullable(template.findById(messageId, Message.class));
     }

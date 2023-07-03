@@ -1,6 +1,5 @@
 package net.bean.java.open.messenger.service.implementation;
 
-import io.vavr.control.Option;
 import io.vavr.control.Try;
 import lombok.RequiredArgsConstructor;
 import net.bean.java.open.messenger.model.Message;
@@ -8,7 +7,6 @@ import net.bean.java.open.messenger.model.User;
 import net.bean.java.open.messenger.repository.MessageRepository;
 import net.bean.java.open.messenger.rest.exception.MessageNotFoundException;
 import net.bean.java.open.messenger.rest.exception.NoPermissionException;
-import net.bean.java.open.messenger.rest.model.OutputMessagePayload;
 import net.bean.java.open.messenger.service.CurrentUserService;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -17,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
-public abstract class MessageServiceV2ImplExt {
+public abstract class MessageServiceExtension {
 
     protected int numberOfMessagesPerPage;
 

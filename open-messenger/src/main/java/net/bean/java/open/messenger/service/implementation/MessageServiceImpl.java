@@ -4,7 +4,6 @@ import io.vavr.control.Try;
 import net.bean.java.open.messenger.model.User;
 import net.bean.java.open.messenger.model.Message;
 import net.bean.java.open.messenger.repository.MessageRepository;
-import net.bean.java.open.messenger.rest.exception.MessageNotFoundException;
 import net.bean.java.open.messenger.rest.model.InitialMessagePagesPayload;
 import net.bean.java.open.messenger.rest.model.InputMessagePayload;
 import net.bean.java.open.messenger.rest.model.OutputMessagePayload;
@@ -26,7 +25,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
-public class MessageServiceImpl extends MessageServiceV2ImplExt implements MessageService {
+public class MessageServiceImpl extends MessageServiceExtension implements MessageService {
 
     private final UserService userService;
 

@@ -7,6 +7,6 @@ import java.util.Collection;
 @Data
 public class MessageAcknownledge {
 
-    private Collection<Notification> notificationsToAcknowledge;
+    private Collection<UnreadMessage> notificationsToAcknowledge;
 
 }

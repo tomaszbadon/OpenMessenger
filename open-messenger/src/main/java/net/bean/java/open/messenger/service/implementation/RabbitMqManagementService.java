@@ -1,4 +1,4 @@
-package net.bean.java.open.messenger.service;
+package net.bean.java.open.messenger.service.implementation;
 
 import com.rabbitmq.http.client.Client;
 import com.rabbitmq.http.client.domain.QueueInfo;
@@ -7,8 +7,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.bean.java.open.messenger.config.RabbitMqConfig;
 import net.bean.java.open.messenger.model.User;
+import net.bean.java.open.messenger.service.MessagingManagementService;
 import net.bean.java.open.messenger.util.UserQueueNameProvider;
-import org.springframework.amqp.core.Queue;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 

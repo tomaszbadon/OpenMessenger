@@ -10,9 +10,11 @@ public interface MessageRepository {
 
     Long countByConversationId(String conversationId);
 
-    Long countByRecipientIdAndIsReadAndConversationId(String recipientId, boolean isAcknowledged, String conversationId);
+    Long countByRecipientIdAndIsReadAndConversationId(String recipientId, boolean isRead, String conversationId);
 
     List<Message> findByConversationId(String conversationId, Pageable pageable);
+
+    List<Message> findByRecipientIdAndIsRead(String recipientId, boolean isRead);
 
     Optional<Message> findById(String messageId);
 
