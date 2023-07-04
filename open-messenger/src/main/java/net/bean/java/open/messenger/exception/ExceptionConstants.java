@@ -20,4 +20,6 @@ public class ExceptionConstants {
 
     public final static String USER_DOES_NOT_HAVE_PERMISSION = "The current user does not have permission to get the resource";
 
+    public final static String CANNOT_PROCESS_REQUEST = "The request cannot be processed due to an internal error";
+
 }

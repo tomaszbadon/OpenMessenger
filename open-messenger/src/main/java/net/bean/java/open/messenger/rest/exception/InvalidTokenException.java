@@ -18,8 +18,4 @@ public class InvalidTokenException extends ResponseStatusException {
         return new InvalidTokenException(httpStatus, throwable);
     }
 
-    public static InvalidTokenException of() {
-        return new InvalidTokenException();
-    }
-
 }

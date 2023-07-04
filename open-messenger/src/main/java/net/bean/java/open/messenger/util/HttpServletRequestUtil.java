@@ -17,8 +17,7 @@ public class HttpServletRequestUtil {
         if(StringUtils.isNotEmpty(authorizationToken) && authorizationToken.startsWith(BEARER)) {
             return Try.success(authorizationToken.substring(BEARER.length()));
         } else {
-            return Try.failure(InvalidTokenException.of());
+            return Try.failure(new InvalidTokenException());
         }
-
     }
 }
