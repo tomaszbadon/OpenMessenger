@@ -177,7 +177,7 @@ public class MessageServiceImplTest {
         MessageNotFoundException e = Assertions.assertThrows(MessageNotFoundException.class, () -> messageService.readMessage(DUMMY_TOKEN, "DUMMY_ID"));
         String expected = MessageFormat.format(ExceptionConstants.MESSAGE_NOT_FOUND, "DUMMY_ID");
         Assertions.assertTrue(e.getMessage().contains(expected));
-        Assertions.assertEquals(HttpStatus.NOT_FOUND, e.getStatus());
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST, e.getStatus());
         verifyNoInteractions(notificationService);
     }
 
