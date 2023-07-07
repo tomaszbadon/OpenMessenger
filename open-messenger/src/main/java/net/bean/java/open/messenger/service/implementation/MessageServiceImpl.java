@@ -10,6 +10,7 @@ import net.bean.java.open.messenger.rest.model.OutputMessagePayload;
 import net.bean.java.open.messenger.rest.model.OutputMessagesPayload;
 import net.bean.java.open.messenger.service.CurrentUserService;
 import net.bean.java.open.messenger.service.MessageService;
+import net.bean.java.open.messenger.service.NotificationService;
 import net.bean.java.open.messenger.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -29,32 +30,38 @@ public class MessageServiceImpl extends MessageServiceExtension implements Messa
 
     private final UserService userService;
 
+    private final NotificationService notificationService;
+
     @Autowired
-    public MessageServiceImpl(MessageRepository messageRepository, UserService userService, CurrentUserService currentUserService) {
+    public MessageServiceImpl(MessageRepository messageRepository, UserService userService, CurrentUserService currentUserService, NotificationService notificationService) {
         super(messageRepository, currentUserService);
         this.userService = userService;
+        this.notificationService = notificationService;
     }
 
     @Override
     public OutputMessagePayload handleNewMessage(InputMessagePayload inputMessagePayload, Try<String> token) {
         User sender = currentUserService.tryToGetUserFromToken(token).get();
         User recipient = userService.tryToGetUserById(inputMessagePayload.getRecipient()).get();
-        Message message = Message.of(sender.getId(), recipient.getId(), inputMessagePayload.getMessage());
-        return new OutputMessagePayload(messageRepository.save(message));
+        Message message = messageRepository.save(Message.of(sender.getId(), recipient.getId(), inputMessagePayload.getMessage()));
+        notificationService.sendNotificationToUser(recipient);
+        return new OutputMessagePayload(message);
     }
 
     @Override
     public OutputMessagePayload handleNewMessage(InputMessagePayload inputMessagePayload, Date sendAt, User sender) {
         User recipient = userService.tryToGetUserById(inputMessagePayload.getRecipient()).get();
-        Message message = Message.of(sender.getId(), recipient.getId(), inputMessagePayload.getMessage(), sendAt);
-        return new OutputMessagePayload(messageRepository.save(message));
+        Message message = messageRepository.save(Message.of(sender.getId(), recipient.getId(), inputMessagePayload.getMessage(), sendAt));
+        notificationService.sendNotificationToUser(recipient);
+        return new OutputMessagePayload(message);
     }
 
     @Override
     public OutputMessagePayload handleNewMessage(InputMessagePayload inputMessagePayload, Date sendAt, User sender, boolean isRead) {
         User recipient = userService.tryToGetUserById(inputMessagePayload.getRecipient()).get();
-        Message message = Message.of(sender.getId(), recipient.getId(), inputMessagePayload.getMessage(), sendAt, isRead);
-        return new OutputMessagePayload(messageRepository.save(message));
+        Message message = messageRepository.save(Message.of(sender.getId(), recipient.getId(), inputMessagePayload.getMessage(), sendAt, isRead));
+        notificationService.sendNotificationToUser(recipient);
+        return new OutputMessagePayload(message);
     }
 
     public InitialMessagePagesPayload getLatestPagesToLoad(Try<String> token, String userId) {

@@ -14,7 +14,7 @@ public interface MessageRepository {
 
     List<Message> findByConversationId(String conversationId, Pageable pageable);
 
-    List<Message> findByRecipientIdAndIsRead(String recipientId, boolean isRead);
+    List<Message> findByRecipientIdAndIsRead(String recipientId, boolean isRead, String... fields);
 
     Optional<Message> findById(String messageId);
 

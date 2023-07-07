@@ -11,7 +11,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Random;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -25,13 +24,13 @@ public class MessageSender {
     @Autowired
     private final UserService userService;
 
-    @Scheduled(fixedRate = 3000, initialDelayString = "5000")
+    //@Scheduled(fixedRate = 3000, initialDelayString = "5000")
     public void send() {
         List<User> users = userService.getUsers();
-        Random r = new Random();
-        int index = r.nextInt(users.size());
-        User user = users.get(index);
-        user = userService.getUserByUserName("dominica.rosatti").get();
+//        Random r = new Random();
+//        int index = r.nextInt(users.size());
+//        User user = users.get(index);
+        User user = userService.getUserByUserName("dominica.rosatti").get();
         String queue = userQueueNameProvider.createQueueName(user);
         log.info("Sent a message to user: " + user.getUserName() + " to queue: " + queue);
         template.convertAndSend(queue, String.valueOf(System.currentTimeMillis()));

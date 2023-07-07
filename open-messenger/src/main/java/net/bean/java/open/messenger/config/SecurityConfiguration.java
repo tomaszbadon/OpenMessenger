@@ -28,7 +28,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsService userDetailsService;
     private final PasswordEncoder passwordEncoder;
-    private final UserService userService;
     private final JwtTokenService jwtTokenService;
     private final AllowedPathChecker allowedPathChecker;
 
@@ -44,7 +43,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         http.authorizeHttpRequests().antMatchers(GET, "/", "/webjars/**").permitAll();
-        http.authorizeHttpRequests().antMatchers("/stomp-endpoint/**").permitAll();
+        http.authorizeHttpRequests().antMatchers("/stomp-endpoint/**").permitAll(); //TODO ?????
         http.authorizeHttpRequests().antMatchers(GET, "/api/**").hasRole("USER");
         http.authorizeHttpRequests().antMatchers(POST, "/api/**").hasRole("USER");
         http.authorizeHttpRequests().antMatchers(PATCH, "/api/**").hasRole("USER");
