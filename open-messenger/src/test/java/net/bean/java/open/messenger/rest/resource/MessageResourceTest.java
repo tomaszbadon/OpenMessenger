@@ -14,6 +14,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.platform.commons.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -38,6 +39,8 @@ public class MessageResourceTest {
 
     private final User dominica;
 
+    private final User monica;
+
     @Autowired
     public MessageResourceTest(TestRestTemplate restTemplate, MessageServiceImpl messageService, JwtTokenService tokenService, UserService userService, MessageRepository messageRepository) {
         this.restTemplate = restTemplate;
@@ -47,6 +50,7 @@ public class MessageResourceTest {
         this.messageRepository = messageRepository;
         daniel = userService.getUserByUserName("daniel.silva").orElseThrow();
         dominica = userService.getUserByUserName("dominica.rosatti").orElseThrow();
+        monica = userService.getUserByUserName("monica.rosatti").orElseThrow();
     }
 
     @AfterEach
@@ -56,7 +60,7 @@ public class MessageResourceTest {
 
 
     @Test
-    protected void postMessageAndRead() {
+    void postMessageAndRead() {
         final String message = "This is a message";
         InputMessagePayload body = new InputMessagePayload();
         body.setMessage(message);
@@ -81,6 +85,30 @@ public class MessageResourceTest {
         Assertions.assertEquals(false, outputMessagePayload.isRead());
         Assertions.assertEquals(daniel.getId(), outputMessagePayload.getRecipient());
         Assertions.assertEquals(dominica.getId(), outputMessagePayload.getSender());
+    }
+
+    @Test
+    void postMessageAndReadWithNoPermissionException() {
+        final String message = "This is a message";
+        InputMessagePayload body = new InputMessagePayload();
+        body.setMessage(message);
+        body.setRecipient(daniel.getId());
+
+        TokensInfo dominicaTokensInfo = tokenService.createTokensInfo(dominica, null);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.AUTHORIZATION, HttpServletRequestUtil.BEARER + dominicaTokensInfo.getTokens().stream().findFirst().orElseThrow().getToken());
+        ResponseEntity<OutputMessagePayload> postResponse = restTemplate.exchange("/api/messages", HttpMethod.POST, new HttpEntity<>(body, headers), OutputMessagePayload.class);
+        Assertions.assertTrue(postResponse.getStatusCode() == HttpStatus.CREATED);
+        Assertions.assertTrue(StringUtils.isNotBlank(postResponse.getBody().getId()));
+        String messageId = postResponse.getBody().getId();
+
+
+        TokensInfo monicaTokenInfo = tokenService.createTokensInfo(monica, null);
+        headers = new HttpHeaders();
+        headers.add(HttpHeaders.AUTHORIZATION, HttpServletRequestUtil.BEARER + monicaTokenInfo.getTokens().stream().findFirst().orElseThrow().getToken());
+        String url = String.format("/api/messages/%s", messageId);
+        ResponseEntity<OutputMessagesPayload> getResponse = restTemplate.exchange(url, HttpMethod.GET, new HttpEntity<>(headers), OutputMessagesPayload.class);
+        Assertions.assertTrue(getResponse.getStatusCode().equals(HttpStatus.FORBIDDEN));
     }
 
 }

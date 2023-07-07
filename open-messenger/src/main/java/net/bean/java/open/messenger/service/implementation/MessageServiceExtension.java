@@ -51,18 +51,12 @@ public abstract class MessageServiceExtension {
     }
 
     final Try<Message> tryToReadMessage(Try<String> token, String messageId) {
-        Optional<Message> optional = messageRepository.findById(messageId);
-        if(!optional.isPresent()) {
+        Optional<Message> optionalMessage = messageRepository.findById(messageId);
+        if(!optionalMessage.isPresent()) {
             return Try.failure(new MessageNotFoundException(messageId));
         }
-        Message message = optional.get();
-        return currentUserService.tryToGetUserFromToken(token).flatMap(user -> {
-            if(isUserAllowedToFetch(message, user)) {
-                return Try.success(message);
-            } else {
-                return Try.failure(new NoPermissionException());
-            }
-        });
+        return currentUserService.tryToGetUserFromToken(token)
+                                 .flatMap(user -> optionalMessage.filter(message -> isUserAllowedToFetch(message, user)).map(Try::success).orElse(Try.failure(new NoPermissionException())));
     }
 
     @Value("${application.message.page}")

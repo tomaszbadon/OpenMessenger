@@ -9,6 +9,7 @@ import net.bean.java.open.messenger.rest.exception.MessageNotFoundException;
 import net.bean.java.open.messenger.rest.exception.NoPermissionException;
 import net.bean.java.open.messenger.rest.model.InitialMessagePagesPayload;
 import net.bean.java.open.messenger.rest.model.OutputMessagePayload;
+import net.bean.java.open.messenger.service.NotificationService;
 import net.bean.java.open.messenger.service.UserService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -23,7 +24,7 @@ import java.text.MessageFormat;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class MessageServiceImplTest {
@@ -38,6 +39,9 @@ public class MessageServiceImplTest {
 
     @Mock
     private MessageRepository messageRepository;
+
+    @Mock
+    private NotificationService notificationService;
 
     @InjectMocks
     private MessageServiceImpl messageService;
@@ -161,16 +165,20 @@ public class MessageServiceImplTest {
         Assertions.assertEquals(message.getMessage(), outputMessagePayload.getMessage());
         Assertions.assertEquals(message.getSenderId(), outputMessagePayload.getSender());
         Assertions.assertEquals(message.getRecipientId(), outputMessagePayload.getRecipient());
+
+        verify(notificationService, times(1)).sendNotificationToUser(currentUser);
     }
 
     @Test
     @DisplayName("It test getting a 404 when a message does not exists")
     protected void getMessageWithMessageNotFound() {
         when(messageRepository.findById(any())).thenReturn(Optional.empty());
+
         MessageNotFoundException e = Assertions.assertThrows(MessageNotFoundException.class, () -> messageService.readMessage(DUMMY_TOKEN, "DUMMY_ID"));
         String expected = MessageFormat.format(ExceptionConstants.MESSAGE_NOT_FOUND, "DUMMY_ID");
         Assertions.assertTrue(e.getMessage().contains(expected));
         Assertions.assertEquals(HttpStatus.NOT_FOUND, e.getStatus());
+        verifyNoInteractions(notificationService);
     }
 
     @Test
@@ -186,6 +194,7 @@ public class MessageServiceImplTest {
         NoPermissionException e = Assertions.assertThrows(NoPermissionException.class, () -> messageService.readMessage(DUMMY_TOKEN, "DUMMY_ID"));
         Assertions.assertTrue(e.getMessage().contains(ExceptionConstants.USER_DOES_NOT_HAVE_PERMISSION));
         Assertions.assertEquals(HttpStatus.FORBIDDEN, e.getStatus());
+        verifyNoInteractions(notificationService);
     }
 
 }

@@ -64,6 +64,7 @@ public class MessageServiceImpl extends MessageServiceExtension implements Messa
         return new OutputMessagePayload(message);
     }
 
+    @Override
     public InitialMessagePagesPayload getLatestPagesToLoad(Try<String> token, String userId) {
         User currentUser = currentUserService.tryToGetUserFromToken(token).get();
         User user = userService.tryToGetUserById(userId).get();
@@ -91,11 +92,16 @@ public class MessageServiceImpl extends MessageServiceExtension implements Messa
         int page = pageOptional.orElse(0);
         Pageable pageable = PageRequest.of(page, numberOfMessagesPerPage, sort);
         List<Message> messages = messageRepository.findByConversationId(conversationId, pageable);
+        notificationService.sendNotificationToUser(currentUser);
         return new OutputMessagesPayload(messages.stream().map(OutputMessagePayload::new).collect(Collectors.toList()), page);
     }
 
     @Override
     public OutputMessagePayload readMessage(Try<String> token, String messageId) {
-        return tryToReadMessage(token, messageId).mapTry(OutputMessagePayload::new).get();
+        Try<OutputMessagePayload> outputMessagePayloads = tryToReadMessage(token, messageId).mapTry(OutputMessagePayload::new);
+        outputMessagePayloads.onSuccess(o -> {
+            currentUserService.tryToGetUserFromToken(token).onSuccess(user -> notificationService.sendNotificationToUser(user));
+        });
+        return outputMessagePayloads.get();
     }
 }

@@ -10,7 +10,7 @@ import static net.bean.java.open.messenger.exception.ExceptionConstants.MESSAGE_
 public class MessageNotFoundException extends ResponseStatusException {
 
     public MessageNotFoundException(String messageId) {
-        super(HttpStatus.NOT_FOUND, MessageFormat.format(MESSAGE_NOT_FOUND, messageId));
+        super(HttpStatus.BAD_REQUEST, MessageFormat.format(MESSAGE_NOT_FOUND, messageId));
     }
 
 }
