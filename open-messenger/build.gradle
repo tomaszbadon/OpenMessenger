@@ -7,11 +7,18 @@ plugins {
 
 group = 'net.bean.java.open.messenger'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '11'
+sourceCompatibility = '17'
+
+war {
+	archiveFileName = 'open-messenger.war'
+}
 
 configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
+	}
+	all {
+		exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
 	}
 }
 
@@ -20,16 +27,28 @@ repositories {
 }
 
 dependencies {
+
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-log4j2'
+	implementation 'org.apache.logging.log4j:log4j-spring-boot'
+
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'com.auth0:java-jwt:3.18.2'
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 	implementation 'org.springframework.security:spring-security-messaging'
+	implementation 'org.springframework.boot:spring-boot-starter-amqp'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
-	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+	implementation 'com.rabbitmq:http-client:5.0.0'
 	implementation 'io.vavr:vavr:0.10.4'
 	implementation 'org.apache.commons:commons-lang3:3.0'
+
+	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+
+	implementation 'org.webjars:webjars-locator:0.14'
+	implementation 'org.webjars:sockjs-client:1.0.2'
+	implementation 'org.webjars:stomp-websocket:2.3.3'
+	implementation 'org.webjars:jquery:3.1.1'
 
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
@@ -40,6 +59,7 @@ dependencies {
 	testImplementation 'org.junit.jupiter:junit-jupiter-engine'
 	testImplementation 'org.apache.httpcomponents:httpclient:4.5.11'
 	testImplementation 'com.google.guava:guava:31.0.1-jre'
+	testImplementation 'org.springframework.amqp:spring-rabbit-test'
 }
 
 tasks.named('test') {

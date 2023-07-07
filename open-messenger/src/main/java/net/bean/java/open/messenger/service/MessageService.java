@@ -22,4 +22,6 @@ public interface MessageService {
 
     OutputMessagesPayload readMessages(Try<String> token, String userId, Optional<Integer> page);
 
+    OutputMessagePayload readMessage(Try<String> token, String messageId);
+
 }

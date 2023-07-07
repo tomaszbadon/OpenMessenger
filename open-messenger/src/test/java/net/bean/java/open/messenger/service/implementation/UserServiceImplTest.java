@@ -16,7 +16,7 @@ import java.text.MessageFormat;
 import java.util.List;
 import java.util.Optional;
 
-import static net.bean.java.open.messenger.rest.exception.ExceptionConstants.CANNOT_FIND_USER_IN_REPOSITORY;
+import static net.bean.java.open.messenger.exception.ExceptionConstants.CANNOT_FIND_USER_IN_REPOSITORY;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 

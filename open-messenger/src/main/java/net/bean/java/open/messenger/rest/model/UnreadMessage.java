@@ -5,9 +5,9 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class Notification {
+public class UnreadMessage {
 
-    private long sender;
-    private long messageId;
+    private String sender;
+    private String messageId;
 
 }

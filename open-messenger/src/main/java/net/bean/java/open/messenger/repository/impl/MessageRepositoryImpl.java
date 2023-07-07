@@ -10,7 +10,9 @@ import org.springframework.stereotype.Repository;
 
 import org.springframework.data.mongodb.core.query.Query;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 
 @RequiredArgsConstructor
@@ -41,6 +43,19 @@ public class MessageRepositoryImpl implements MessageRepository {
         query.addCriteria(Criteria.where(Message.CONVERSATION_ID).is(conversationId));
         query.with(pageable);
         return template.find(query, Message.class);
+    }
+
+    @Override
+    public List<Message> findByRecipientIdAndIsRead(String recipientId, boolean isRead, String... fields) {
+        Query query = new Query();
+        Arrays.stream(fields).forEach(query.fields()::include);
+        query.addCriteria(Criteria.where(Message.RECIPIENT_ID).is(recipientId).and(Message.IS_READ).is(isRead));
+        return template.find(query, Message.class);
+    }
+
+    @Override
+    public Optional<Message> findById(String messageId) {
+        return Optional.ofNullable(template.findById(messageId, Message.class));
     }
 
     @Override

@@ -4,8 +4,8 @@ import io.vavr.control.Try;
 import net.bean.java.open.messenger.model.User;
 import net.bean.java.open.messenger.rest.model.ContactList;
 
-public interface ContactResource {
+public interface ContactService {
 
-    ContactList getContacts(Try<User> user);
+    Try<ContactList> getContacts(Try<User> user);
 
 }

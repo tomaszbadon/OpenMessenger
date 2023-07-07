@@ -1,5 +1,7 @@
 package net.bean.java.open.messenger.config;
 
+import lombok.RequiredArgsConstructor;
+import net.bean.java.open.messenger.filter.AllowedPathChecker;
 import net.bean.java.open.messenger.filter.CustomAuthenticationFilter;
 import net.bean.java.open.messenger.filter.CustomAuthorizationFilter;
 import net.bean.java.open.messenger.service.JwtTokenService;
@@ -21,20 +23,13 @@ import static org.springframework.http.HttpMethod.*;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsService userDetailsService;
     private final PasswordEncoder passwordEncoder;
-    private final UserService userService;
     private final JwtTokenService jwtTokenService;
-
-    @Autowired
-    public SecurityConfiguration(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder, UserService userService, JwtTokenService jwtTokenService) {
-        this.userDetailsService = userDetailsService;
-        this.passwordEncoder = passwordEncoder;
-        this.userService = userService;
-        this.jwtTokenService = jwtTokenService;
-    }
+    private final AllowedPathChecker allowedPathChecker;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -46,14 +41,16 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
         http.cors();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http.authorizeHttpRequests().antMatchers("/stomp-endpoint/**").permitAll();
+
+        http.authorizeHttpRequests().antMatchers(GET, "/", "/webjars/**").permitAll();
+        http.authorizeHttpRequests().antMatchers("/stomp-endpoint/**").permitAll(); //TODO ?????
         http.authorizeHttpRequests().antMatchers(GET, "/api/**").hasRole("USER");
         http.authorizeHttpRequests().antMatchers(POST, "/api/**").hasRole("USER");
         http.authorizeHttpRequests().antMatchers(PATCH, "/api/**").hasRole("USER");
         http.authorizeHttpRequests().anyRequest().denyAll();
 
         http.addFilter(new CustomAuthenticationFilter(this.authenticationManagerBean(), jwtTokenService));
-        http.addFilterBefore(new CustomAuthorizationFilter(jwtTokenService), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new CustomAuthorizationFilter(jwtTokenService, allowedPathChecker), UsernamePasswordAuthenticationFilter.class);
     }
 
     @Bean

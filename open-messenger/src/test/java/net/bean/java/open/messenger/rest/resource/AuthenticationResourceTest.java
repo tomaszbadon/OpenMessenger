@@ -20,6 +20,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import java.util.List;
+import java.util.Optional;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -37,14 +38,19 @@ public class AuthenticationResourceTest {
     public AuthenticationResourceTest(TestRestTemplate restTemplate, UserService userService, JwtTokenService jwtTokenService) {
         this.restTemplate = restTemplate;
         this.jwtTokenService = jwtTokenService;
-        user = new User();
-        user.setUserName("john.doe");
-        user.setFirstName("John");
-        user.setLastName("Doe");
-        user.setPassword(password);
-        user.setEmail("j.doe@acke.com");
-        user.setRoles(List.of());
-        userService.saveUser(user);
+        Optional<User> userOptional = userService.getUserByUserName("john.doe");
+        if(userOptional.isPresent()) {
+            user = userOptional.get();
+        } else {
+            User u = new User();
+            u.setUserName("john.doe");
+            u.setFirstName("John");
+            u.setLastName("Doe");
+            u.setPassword(password);
+            u.setEmail("j.doe@acke.com");
+            u.setRoles(List.of());
+            user = userService.saveUser(u);
+        }
     }
 
     @Test
@@ -52,7 +58,7 @@ public class AuthenticationResourceTest {
     public void authenticationTest() {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        MultiValueMap<String, String> map = new LinkedMultiValueMap();
+        MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
         map.put(CustomAuthenticationFilter.USERNAME, List.of(user.getUserName()));
         map.put(CustomAuthenticationFilter.PASSWORD, List.of(password));
 
@@ -64,6 +70,29 @@ public class AuthenticationResourceTest {
 
         userNameFromToken = jwtTokenService.tryToGetUserName(Try.success(Lists.newArrayList(responseEntity.getBody().getTokens()).get(1).getToken()));
         Assertions.assertEquals(user.getUserName(), userNameFromToken.get());
+    }
+
+    @Test
+    @DisplayName("Invalid authentication Test with JWT")
+    public void invalidAuthenticationTest() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        MultiValueMap<String, String> map = new LinkedMultiValueMap();
+        map.put(CustomAuthenticationFilter.USERNAME, List.of("john.doe"));
+        map.put(CustomAuthenticationFilter.PASSWORD, List.of("pa$$word"));
+
+        ResponseEntity<Object> responseEntity = restTemplate.exchange("/login", HttpMethod.POST, new HttpEntity<>(map, headers), Object.class);
+        Assertions.assertEquals(HttpStatus.UNAUTHORIZED, responseEntity.getStatusCode());
+    }
+
+    @Test
+    @DisplayName("Authorisation Test with JWT")
+    public void invalidAuthorisationTest() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+        ResponseEntity<Object> responseEntity = restTemplate.exchange("/api/users/current", HttpMethod.POST, new HttpEntity<>(headers), Object.class);
+        Assertions.assertEquals(HttpStatus.FORBIDDEN, responseEntity.getStatusCode());
     }
 
 }

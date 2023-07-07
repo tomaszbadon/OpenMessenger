@@ -1,18 +1,27 @@
 package net.bean.java.open.messenger.service.implementation;
 
+import io.vavr.control.Try;
 import lombok.RequiredArgsConstructor;
+import net.bean.java.open.messenger.model.Message;
+import net.bean.java.open.messenger.model.User;
 import net.bean.java.open.messenger.repository.MessageRepository;
+import net.bean.java.open.messenger.rest.exception.MessageNotFoundException;
+import net.bean.java.open.messenger.rest.exception.NoPermissionException;
+import net.bean.java.open.messenger.service.CurrentUserService;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
-public abstract class MessageServiceV2ImplExt {
+public abstract class MessageServiceExtension {
 
     protected int numberOfMessagesPerPage;
 
     final MessageRepository messageRepository;
+
+    final CurrentUserService currentUserService;
 
     final long getNumberOfPagesByConversationId(String conversationId) {
         return getNumberOfPages(messageRepository.countByConversationId(conversationId));
@@ -41,6 +50,15 @@ public abstract class MessageServiceV2ImplExt {
         return pages;
     }
 
+    final Try<Message> tryToReadMessage(Try<String> token, String messageId) {
+        Optional<Message> optionalMessage = messageRepository.findById(messageId);
+        if(!optionalMessage.isPresent()) {
+            return Try.failure(new MessageNotFoundException(messageId));
+        }
+        return currentUserService.tryToGetUserFromToken(token)
+                                 .flatMap(user -> optionalMessage.filter(message -> isUserAllowedToFetch(message, user)).map(Try::success).orElse(Try.failure(new NoPermissionException())));
+    }
+
     @Value("${application.message.page}")
     public void setNumberOfMessagesPerPage(String numberOfMessagesPerPage) {
         this.numberOfMessagesPerPage = Integer.parseInt(numberOfMessagesPerPage);
@@ -48,6 +66,10 @@ public abstract class MessageServiceV2ImplExt {
 
     public void setNumberOfMessagesPerPage(int numberOfMessagesPerPage) {
         this.numberOfMessagesPerPage = numberOfMessagesPerPage;
+    }
+
+    private boolean isUserAllowedToFetch(Message message, User user) {
+        return message.getSenderId().equals(user.getId()) || message.getRecipientId().equals(user.getId());
     }
 
 }

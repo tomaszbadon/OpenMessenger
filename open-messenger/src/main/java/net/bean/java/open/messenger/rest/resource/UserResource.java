@@ -23,13 +23,14 @@ public class UserResource {
 
     @GetMapping("/api/users/current")
     public ResponseEntity<UserInfo> getUser(HttpServletRequest request) {
-        var userInfo = currentUserService.tryToGetUserInfoFromToken(request);
-        return ResponseEntity.ok(userInfo.get());
+        return currentUserService.tryToGetUserInfoFromToken(request)
+                                 .map(ResponseEntity::ok).get();
     }
 
     @PatchMapping(value = "/api/users/current", consumes = "application/json")
     public ResponseEntity<UserInfo> patchUser(HttpServletRequest request, @RequestBody PatchOperations operations) {
-        return ResponseEntity.ok(patchCurrentUserService.updateUser(request, operations).get());
+        return patchCurrentUserService.updateUser(request, operations)
+                                      .map(ResponseEntity::ok).get();
     }
 
 }

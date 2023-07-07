@@ -2,7 +2,7 @@ package net.bean.java.open.messenger.rest.resource;
 
 import lombok.RequiredArgsConstructor;
 import net.bean.java.open.messenger.rest.model.ContactList;
-import net.bean.java.open.messenger.service.ContactResource;
+import net.bean.java.open.messenger.service.ContactService;
 import net.bean.java.open.messenger.service.CurrentUserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,11 +15,11 @@ import javax.servlet.http.HttpServletRequest;
 public class ContactListResource {
     private final CurrentUserService currentUserService;
 
-    private final ContactResource contactResource;
+    private final ContactService contactService;
 
     @GetMapping("/api/users/current/contacts")
     public ResponseEntity<ContactList> getContacts(HttpServletRequest request) {
         var user = currentUserService.tryToGetUserFromToken(request);
-        return ResponseEntity.ok().body(contactResource.getContacts(user));
+        return contactService.getContacts(user).map(list -> ResponseEntity.ok().body(list)).get();
     }
 }

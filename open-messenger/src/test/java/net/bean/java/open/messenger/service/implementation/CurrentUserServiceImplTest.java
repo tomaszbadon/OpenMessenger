@@ -34,7 +34,7 @@ public class CurrentUserServiceImplTest {
     @Test
     protected void getUserFromTokenWithUserNotFoundException() {
         when(jwtTokenService.tryToGetUserName(DUMMY_TOKEN)).thenReturn(Try.success(RANDOM_USER_NAME));
-        when(userService.getUser(RANDOM_USER_NAME)).thenReturn(Optional.empty());
+        when(userService.getUserByUserName(RANDOM_USER_NAME)).thenReturn(Optional.empty());
         assertThrows(UserNotFoundException.class, () -> currentUserService.tryToGetUserFromToken(DUMMY_TOKEN).get());
     }
 
