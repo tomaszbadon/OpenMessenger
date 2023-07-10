@@ -62,7 +62,7 @@ public class AuthenticationResourceTest {
         map.put(CustomAuthenticationFilter.USERNAME, List.of(user.getUserName()));
         map.put(CustomAuthenticationFilter.PASSWORD, List.of(password));
 
-        ResponseEntity<TokensInfo> responseEntity = restTemplate.exchange("/login", HttpMethod.POST, new HttpEntity<>(map, headers), TokensInfo.class);
+        ResponseEntity<TokensInfo> responseEntity = restTemplate.exchange(CustomAuthenticationFilter.FILTER_PROCESSES_URL, HttpMethod.POST, new HttpEntity<>(map, headers), TokensInfo.class);
         Assertions.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 
         Try<String> userNameFromToken = jwtTokenService.tryToGetUserName(Try.success(Lists.newArrayList(responseEntity.getBody().getTokens()).get(0).getToken()));
@@ -81,7 +81,7 @@ public class AuthenticationResourceTest {
         map.put(CustomAuthenticationFilter.USERNAME, List.of("john.doe"));
         map.put(CustomAuthenticationFilter.PASSWORD, List.of("pa$$word"));
 
-        ResponseEntity<Object> responseEntity = restTemplate.exchange("/login", HttpMethod.POST, new HttpEntity<>(map, headers), Object.class);
+        ResponseEntity<Object> responseEntity = restTemplate.exchange(CustomAuthenticationFilter.FILTER_PROCESSES_URL, HttpMethod.POST, new HttpEntity<>(map, headers), Object.class);
         Assertions.assertEquals(HttpStatus.UNAUTHORIZED, responseEntity.getStatusCode());
     }
 

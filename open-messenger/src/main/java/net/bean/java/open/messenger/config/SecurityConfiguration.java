@@ -5,8 +5,6 @@ import net.bean.java.open.messenger.filter.AllowedPathChecker;
 import net.bean.java.open.messenger.filter.CustomAuthenticationFilter;
 import net.bean.java.open.messenger.filter.CustomAuthorizationFilter;
 import net.bean.java.open.messenger.service.JwtTokenService;
-import net.bean.java.open.messenger.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -38,18 +36,24 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+
+        http.formLogin().disable();
+
         http.csrf().disable();
         http.cors();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         http.authorizeHttpRequests().antMatchers(GET, "/", "/webjars/**").permitAll();
+        http.authorizeHttpRequests().antMatchers(GET, "/api-docs").permitAll();
         http.authorizeHttpRequests().antMatchers("/stomp-endpoint/**").permitAll(); //TODO ?????
         http.authorizeHttpRequests().antMatchers(GET, "/api/**").hasRole("USER");
         http.authorizeHttpRequests().antMatchers(POST, "/api/**").hasRole("USER");
         http.authorizeHttpRequests().antMatchers(PATCH, "/api/**").hasRole("USER");
         http.authorizeHttpRequests().anyRequest().denyAll();
 
-        http.addFilter(new CustomAuthenticationFilter(this.authenticationManagerBean(), jwtTokenService));
+        CustomAuthenticationFilter customAuthenticationFilter = new CustomAuthenticationFilter(this.authenticationManagerBean(), jwtTokenService);
+        customAuthenticationFilter.setFilterProcessesUrl(CustomAuthenticationFilter.FILTER_PROCESSES_URL);
+        http.addFilter(customAuthenticationFilter);
         http.addFilterBefore(new CustomAuthorizationFilter(jwtTokenService, allowedPathChecker), UsernamePasswordAuthenticationFilter.class);
     }
 
