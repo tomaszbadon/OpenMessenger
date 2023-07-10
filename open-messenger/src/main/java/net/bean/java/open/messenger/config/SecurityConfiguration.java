@@ -44,7 +44,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         http.authorizeHttpRequests().antMatchers(GET, "/", "/webjars/**").permitAll();
-        http.authorizeHttpRequests().antMatchers(GET, "/api-docs").permitAll();
         http.authorizeHttpRequests().antMatchers("/stomp-endpoint/**").permitAll(); //TODO ?????
         http.authorizeHttpRequests().antMatchers(GET, "/api/**").hasRole("USER");
         http.authorizeHttpRequests().antMatchers(POST, "/api/**").hasRole("USER");
