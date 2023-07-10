@@ -26,6 +26,8 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 
     public static final String PASSWORD = "password";
 
+    public static final String FILTER_PROCESSES_URL = "/api/login";
+
     private final AuthenticationManager authenticationManager;
 
     private final JwtTokenService jwtTokenService;
@@ -39,7 +41,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
     }
 
     @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException, ServletException {
+    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException {
         User user = (User) authentication.getPrincipal();
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         new ObjectMapper().writeValue(response.getOutputStream(), jwtTokenService.createTokensInfo(user, request.getRequestURL().toString()));
