@@ -7,6 +7,7 @@ import net.bean.java.open.messenger.service.UserService;
 import net.bean.java.open.messenger.util.UserQueueNameProvider;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -15,6 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 @Component
+@Profile("dev")
 public class MessageSender {
 
     private final RabbitTemplate template;

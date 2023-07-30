@@ -13,11 +13,13 @@ import net.bean.java.open.messenger.service.NotificationService;
 import net.bean.java.open.messenger.util.UserQueueNameProvider;
 import org.springframework.amqp.AmqpException;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@Profile({"prod", "dev"})
 @RequiredArgsConstructor
 @Slf4j
 public class NotificationServiceImpl implements NotificationService {
