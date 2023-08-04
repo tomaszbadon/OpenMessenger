@@ -1,5 +1,7 @@
 package net.bean.java.open.messenger.rest.resource;
 
+import com.rabbitmq.http.client.Client;
+import net.bean.java.open.messenger.config.RabbitMqConfig;
 import net.bean.java.open.messenger.model.User;
 import net.bean.java.open.messenger.repository.MessageRepository;
 import net.bean.java.open.messenger.rest.model.InitialMessagePagesPayload;
@@ -17,12 +19,15 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.*;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ActiveProfiles("test")
 public class MessageResourceTestWithDummyData {
 
     private final TestRestTemplate restTemplate;
@@ -38,6 +43,12 @@ public class MessageResourceTestWithDummyData {
     private final User daniel;
 
     private final User dominica;
+
+    @MockBean
+    private Client client;
+
+    @MockBean
+    private RabbitMqConfig.RabbitMqVirtualHost virtualHost;
 
     @Autowired
     public MessageResourceTestWithDummyData(TestRestTemplate restTemplate, MessageServiceImpl messageService, UserService userService, MessageRepository messageRepository, JwtTokenService jwtTokenService) {

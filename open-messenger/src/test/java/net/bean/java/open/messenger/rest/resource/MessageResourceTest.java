@@ -1,5 +1,7 @@
 package net.bean.java.open.messenger.rest.resource;
 
+import com.rabbitmq.http.client.Client;
+import net.bean.java.open.messenger.config.RabbitMqConfig;
 import net.bean.java.open.messenger.model.User;
 import net.bean.java.open.messenger.repository.MessageRepository;
 import net.bean.java.open.messenger.rest.model.InputMessagePayload;
@@ -17,13 +19,20 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.platform.commons.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.*;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import static net.bean.java.open.messenger.util.UserCreator.createUser;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ActiveProfiles("test")
 public class MessageResourceTest {
+
+    private final String PASSWORD = "my_password";
 
     private final TestRestTemplate restTemplate;
 
@@ -41,6 +50,12 @@ public class MessageResourceTest {
 
     private final User monica;
 
+    @MockBean
+    private Client client;
+
+    @MockBean
+    private RabbitMqConfig.RabbitMqVirtualHost virtualHost;
+
     @Autowired
     public MessageResourceTest(TestRestTemplate restTemplate, MessageServiceImpl messageService, JwtTokenService tokenService, UserService userService, MessageRepository messageRepository) {
         this.restTemplate = restTemplate;
@@ -48,9 +63,9 @@ public class MessageResourceTest {
         this.tokenService = tokenService;
         this.userService = userService;
         this.messageRepository = messageRepository;
-        daniel = userService.getUserByUserName("daniel.silva").orElseThrow();
-        dominica = userService.getUserByUserName("dominica.rosatti").orElseThrow();
-        monica = userService.getUserByUserName("monica.rosatti").orElseThrow();
+        daniel = createUser(userService, "Daniel", "Silva", PASSWORD, "avatar_1.png", "Catch every day :D");
+        dominica = createUser(userService, "Dominica", "Rosatti", PASSWORD, "avatar_2.png", "Today I am out of office");
+        monica = createUser(userService, "Monica", "Rosatti", PASSWORD, "avatar_5.png", "I love you <3");
     }
 
     @AfterEach
