@@ -58,6 +58,7 @@ dependencies {
 	testImplementation 'org.apache.httpcomponents:httpclient:4.5.11'
 	testImplementation 'com.google.guava:guava:31.0.1-jre'
 	testImplementation 'org.springframework.amqp:spring-rabbit-test'
+	testImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo'
 }
 
 tasks.named('test') {
