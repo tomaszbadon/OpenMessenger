@@ -1,6 +1,8 @@
 package net.bean.java.open.messenger.rest.resource;
 
+import com.rabbitmq.http.client.Client;
 import io.vavr.control.Try;
+import net.bean.java.open.messenger.config.RabbitMqConfig;
 import net.bean.java.open.messenger.filter.CustomAuthenticationFilter;
 import net.bean.java.open.messenger.model.User;
 import net.bean.java.open.messenger.rest.model.TokensInfo;
@@ -13,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.*;
 import org.springframework.test.context.ActiveProfiles;
@@ -22,6 +25,7 @@ import org.springframework.util.MultiValueMap;
 
 import java.util.List;
 import java.util.Optional;
+
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -35,6 +39,12 @@ public class AuthenticationResourceTest {
     private final User user;
 
     private final String password = "This_Is_Random_PassWord8";
+
+    @MockBean
+    private Client client;
+
+    @MockBean
+    private RabbitMqConfig.RabbitMqVirtualHost virtualHost;
 
     @Autowired
     public AuthenticationResourceTest(TestRestTemplate restTemplate, UserService userService, JwtTokenService jwtTokenService) {
