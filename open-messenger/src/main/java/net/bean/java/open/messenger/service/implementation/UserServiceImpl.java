@@ -7,6 +7,8 @@ import net.bean.java.open.messenger.exception.InternalException;
 import net.bean.java.open.messenger.model.User;
 import net.bean.java.open.messenger.repository.UserRepository;
 import net.bean.java.open.messenger.rest.exception.UserNotFoundException;
+import net.bean.java.open.messenger.rest.model.user.NewUserInfo;
+import net.bean.java.open.messenger.rest.model.user.UserInfo;
 import net.bean.java.open.messenger.service.MessagingManagementService;
 import net.bean.java.open.messenger.service.UserService;
 import net.bean.java.open.messenger.util.UserQueueNameProvider;
@@ -26,6 +28,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeoutException;
 
+import static io.vavr.API.$;
+import static io.vavr.API.Case;
+import static io.vavr.Predicates.instanceOf;
 import static net.bean.java.open.messenger.exception.ExceptionConstants.CANNOT_FIND_USER_IN_REPOSITORY;
 import static net.bean.java.open.messenger.exception.ExceptionConstants.CREATION_OF_THE_USER_WENT_WRONG;
 
@@ -63,6 +68,23 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         } catch (IOException | TimeoutException e) {
             throw new InternalException(MessageFormat.format(CREATION_OF_THE_USER_WENT_WRONG, user.getUserName()), e);
         }
+    }
+
+    @Override
+    public Try<UserInfo> tryToCreateUser(NewUserInfo newUserInfo) {
+        //noinspection unchecked
+        return Try.of(() -> {
+            User user = new User(newUserInfo, passwordEncoder);
+            messagingManagementService.createUser(user.getUserName(), user.getPassword());
+            messagingManagementService.assignUserToApplicationVirtualHost(user);
+            messagingManagementService.createQueue(userQueueNameProvider.createQueueName(user));
+            user = userRepository.save(user);
+            log.info("Save a User {} to the database with id: '{}'", user.getUserName(), user.getId());
+            return new UserInfo(user);
+        }).mapFailure(
+                Case($(instanceOf(IOException.class)), t -> new InternalException(MessageFormat.format(CREATION_OF_THE_USER_WENT_WRONG, newUserInfo.getUserName()), t)),
+                Case($(instanceOf(TimeoutException.class)), t -> new InternalException(MessageFormat.format(CREATION_OF_THE_USER_WENT_WRONG, newUserInfo.getUserName()), t))
+        );
     }
 
     @Override

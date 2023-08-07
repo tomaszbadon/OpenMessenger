@@ -7,7 +7,7 @@ import net.bean.java.open.messenger.repository.MessageRepository;
 import net.bean.java.open.messenger.rest.model.InputMessagePayload;
 import net.bean.java.open.messenger.rest.model.OutputMessagePayload;
 import net.bean.java.open.messenger.rest.model.OutputMessagesPayload;
-import net.bean.java.open.messenger.rest.model.TokensInfo;
+import net.bean.java.open.messenger.rest.model.token.TokensInfo;
 import net.bean.java.open.messenger.service.JwtTokenService;
 import net.bean.java.open.messenger.service.UserService;
 import net.bean.java.open.messenger.service.implementation.MessageServiceImpl;

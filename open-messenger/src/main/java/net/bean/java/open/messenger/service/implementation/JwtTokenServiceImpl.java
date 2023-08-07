@@ -3,14 +3,16 @@ package net.bean.java.open.messenger.service.implementation;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import io.vavr.control.Try;
 import lombok.extern.slf4j.Slf4j;
+import net.bean.java.open.messenger.exception.InternalException;
 import net.bean.java.open.messenger.rest.exception.InvalidTokenException;
-import net.bean.java.open.messenger.rest.model.Token;
-import net.bean.java.open.messenger.rest.model.TokenType;
-import net.bean.java.open.messenger.rest.model.TokensInfo;
+import net.bean.java.open.messenger.rest.model.token.Token;
+import net.bean.java.open.messenger.rest.model.token.TokenType;
+import net.bean.java.open.messenger.rest.model.token.TokensInfo;
 import net.bean.java.open.messenger.service.JwtTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -82,8 +84,10 @@ public class JwtTokenServiceImpl implements JwtTokenService {
             Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
             stream(roles).forEach(role -> authorities.add(new SimpleGrantedAuthority(role)));
             return Try.success(new UsernamePasswordAuthenticationToken(user, null, authorities));
-        } catch (TokenExpiredException e) {
+        } catch (TokenExpiredException | JWTDecodeException e) {
             return Try.failure(InvalidTokenException.of(HttpStatus.FORBIDDEN, e));
+        } catch(Exception e) {
+            return Try.failure(new InternalException(e));
         }
     }
 

@@ -1,7 +1,7 @@
 package net.bean.java.open.messenger.service;
 
 import io.vavr.control.Try;
-import net.bean.java.open.messenger.rest.model.TokensInfo;
+import net.bean.java.open.messenger.rest.model.token.TokensInfo;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.User;
 

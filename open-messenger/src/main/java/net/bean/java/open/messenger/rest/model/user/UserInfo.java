@@ -1,12 +1,12 @@
-package net.bean.java.open.messenger.rest.model;
+package net.bean.java.open.messenger.rest.model.user;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import net.bean.java.open.messenger.model.User;
 
-@RequiredArgsConstructor
 @Data
-public class ContactInfo {
+@RequiredArgsConstructor
+public class UserInfo {
 
     private final String id;
     private final String userName;
@@ -16,7 +16,7 @@ public class ContactInfo {
     private final String avatar;
     private final String status;
 
-    public ContactInfo(User user) {
+    public UserInfo(User user) {
         id = user.getId();
         userName = user.getUserName();
         firstName = user.getFirstName();

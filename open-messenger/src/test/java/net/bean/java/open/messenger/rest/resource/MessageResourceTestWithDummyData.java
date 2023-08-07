@@ -6,7 +6,7 @@ import net.bean.java.open.messenger.model.User;
 import net.bean.java.open.messenger.repository.MessageRepository;
 import net.bean.java.open.messenger.rest.model.InitialMessagePagesPayload;
 import net.bean.java.open.messenger.rest.model.OutputMessagesPayload;
-import net.bean.java.open.messenger.rest.model.TokensInfo;
+import net.bean.java.open.messenger.rest.model.token.TokensInfo;
 import net.bean.java.open.messenger.rest.util.DummyMessageCreator;
 import net.bean.java.open.messenger.service.JwtTokenService;
 import net.bean.java.open.messenger.service.UserService;

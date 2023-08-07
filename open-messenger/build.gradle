@@ -59,6 +59,7 @@ dependencies {
 	testImplementation 'com.google.guava:guava:31.0.1-jre'
 	testImplementation 'org.springframework.amqp:spring-rabbit-test'
 	testImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo'
+	testImplementation 'org.mockito:mockito-inline:5.2.0'
 }
 
 tasks.named('test') {

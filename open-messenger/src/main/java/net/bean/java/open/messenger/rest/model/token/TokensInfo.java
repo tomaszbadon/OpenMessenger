@@ -1,4 +1,4 @@
-package net.bean.java.open.messenger.rest.model;
+package net.bean.java.open.messenger.rest.model.token;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

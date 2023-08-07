@@ -5,7 +5,7 @@ import io.vavr.control.Try;
 import net.bean.java.open.messenger.config.RabbitMqConfig;
 import net.bean.java.open.messenger.filter.CustomAuthenticationFilter;
 import net.bean.java.open.messenger.model.User;
-import net.bean.java.open.messenger.rest.model.TokensInfo;
+import net.bean.java.open.messenger.rest.model.token.TokensInfo;
 import net.bean.java.open.messenger.service.JwtTokenService;
 import net.bean.java.open.messenger.service.UserService;
 import org.assertj.core.util.Lists;
