@@ -83,14 +83,14 @@ public class CustomAuthorizationFilterTest {
     void doFilterInternalWithInvalidToken() throws IOException, ServletException {
         try (MockedStatic<HttpServletRequestUtil> httpServletRequestUtil = Mockito.mockStatic(HttpServletRequestUtil.class)) {
 
-                httpServletRequestUtil.when(() -> HttpServletRequestUtil.getToken(request)).thenReturn(Try.success("token"));
-                when(jwtTokenService.getUsernamePasswordAuthenticationToken("token")).thenReturn(Try.failure(new InvalidTokenException()));
+            httpServletRequestUtil.when(() -> HttpServletRequestUtil.getToken(request)).thenReturn(Try.success("token"));
+            when(jwtTokenService.getUsernamePasswordAuthenticationToken("token")).thenReturn(Try.failure(new InvalidTokenException()));
 
-                CustomAuthorizationFilter customAuthorizationFilter = new CustomAuthorizationFilter(jwtTokenService);
-                customAuthorizationFilter.doFilterInternal(request, response, filterChain);
+            CustomAuthorizationFilter customAuthorizationFilter = new CustomAuthorizationFilter(jwtTokenService);
+            customAuthorizationFilter.doFilterInternal(request, response, filterChain);
 
-                verifyNoInteractions(securityContext);
-                verifyNoInteractions(filterChain);
+            verifyNoInteractions(securityContext);
+            verifyNoInteractions(filterChain);
         }
     }
 
