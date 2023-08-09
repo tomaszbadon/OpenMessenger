@@ -48,7 +48,7 @@ public class MessageServiceImplTest {
 
     @Test
     @DisplayName("It tests getting the latest pages when there are no messages")
-    protected void getLatestPagesToLoadWhenNoMessages() {
+    void getLatestPagesToLoadWhenNoMessages() {
         messageService.setNumberOfMessagesPerPage(20);
 
         User currentUser = new User();
@@ -66,7 +66,7 @@ public class MessageServiceImplTest {
 
     @Test
     @DisplayName("It tests getting the latest page when there are only a few messages")
-    protected void getLatestPagesToLoadWhenThereAreFewMessages() {
+    void getLatestPagesToLoadWhenThereAreFewMessages() {
         messageService.setNumberOfMessagesPerPage(20);
 
         User currentUser = new User();
@@ -109,7 +109,7 @@ public class MessageServiceImplTest {
 
     @Test
     @DisplayName("It tests getting the latest pages when there are a few unread messages ")
-    protected void getLatestPagesToLoadWhenThereAreFewUnreadMessages() {
+    void getLatestPagesToLoadWhenThereAreFewUnreadMessages() {
         messageService.setNumberOfMessagesPerPage(20);
 
         User currentUser = new User();
@@ -130,7 +130,7 @@ public class MessageServiceImplTest {
 
     @Test
     @DisplayName("It tests getting the latest pages when there are many unread messages")
-    protected void getLatestPagesToLoadWhenThereAreManyUnreadMessages() {
+    void getLatestPagesToLoadWhenThereAreManyUnreadMessages() {
         messageService.setNumberOfMessagesPerPage(20);
 
         User currentUser = new User();
@@ -153,7 +153,7 @@ public class MessageServiceImplTest {
 
     @Test
     @DisplayName("It test getting a single message from a conversation")
-    protected void getMessage() {
+    void getMessage() {
         User currentUser = new User();
         currentUser.setId("DUMMY_ID");
         when(currentUserService.tryToGetUserFromToken((Try<String>) any())).thenReturn(Try.success(currentUser));
@@ -171,7 +171,7 @@ public class MessageServiceImplTest {
 
     @Test
     @DisplayName("It test getting a 404 when a message does not exists")
-    protected void getMessageWithMessageNotFound() {
+    void getMessageWithMessageNotFound() {
         when(messageRepository.findById(any())).thenReturn(Optional.empty());
 
         MessageNotFoundException e = Assertions.assertThrows(MessageNotFoundException.class, () -> messageService.readMessage(DUMMY_TOKEN, "DUMMY_ID"));
@@ -183,7 +183,7 @@ public class MessageServiceImplTest {
 
     @Test
     @DisplayName("It test getting a 403 when a message does not belong to client")
-    protected void getMessageWhenNoPermission() {
+    void getMessageWhenNoPermission() {
         User currentUser = new User();
         currentUser.setId("DUMMY_ID_1");
         when(currentUserService.tryToGetUserFromToken((Try<String>) any())).thenReturn(Try.success(currentUser));

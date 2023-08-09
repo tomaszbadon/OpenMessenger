@@ -26,6 +26,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 public class CustomAuthorizationFilterTest {
 
+    public static final String TOKEN = "token";
     @Mock
     private JwtTokenService jwtTokenService;
 
@@ -51,8 +52,8 @@ public class CustomAuthorizationFilterTest {
         try (MockedStatic<HttpServletRequestUtil> httpServletRequestUtil = Mockito.mockStatic(HttpServletRequestUtil.class);
              MockedStatic<SecurityContextHolder> securityContextHolder = Mockito.mockStatic(SecurityContextHolder.class)) {
 
-            httpServletRequestUtil.when(() -> HttpServletRequestUtil.getToken(request)).thenReturn(Try.success("token"));
-            when(jwtTokenService.getUsernamePasswordAuthenticationToken("token")).thenReturn(Try.success(usernamePasswordAuthenticationToken));
+            httpServletRequestUtil.when(() -> HttpServletRequestUtil.getToken(request)).thenReturn(Try.success(TOKEN));
+            when(jwtTokenService.getUsernamePasswordAuthenticationToken(TOKEN)).thenReturn(Try.success(usernamePasswordAuthenticationToken));
             securityContextHolder.when(() -> SecurityContextHolder.getContext()).thenReturn(securityContext);
 
             CustomAuthorizationFilter customAuthorizationFilter = new CustomAuthorizationFilter(jwtTokenService);
@@ -83,8 +84,8 @@ public class CustomAuthorizationFilterTest {
     void doFilterInternalWithInvalidToken() throws IOException, ServletException {
         try (MockedStatic<HttpServletRequestUtil> httpServletRequestUtil = Mockito.mockStatic(HttpServletRequestUtil.class)) {
 
-            httpServletRequestUtil.when(() -> HttpServletRequestUtil.getToken(request)).thenReturn(Try.success("token"));
-            when(jwtTokenService.getUsernamePasswordAuthenticationToken("token")).thenReturn(Try.failure(new InvalidTokenException()));
+            httpServletRequestUtil.when(() -> HttpServletRequestUtil.getToken(request)).thenReturn(Try.success(TOKEN));
+            when(jwtTokenService.getUsernamePasswordAuthenticationToken(TOKEN)).thenReturn(Try.failure(new InvalidTokenException()));
 
             CustomAuthorizationFilter customAuthorizationFilter = new CustomAuthorizationFilter(jwtTokenService);
             customAuthorizationFilter.doFilterInternal(request, response, filterChain);

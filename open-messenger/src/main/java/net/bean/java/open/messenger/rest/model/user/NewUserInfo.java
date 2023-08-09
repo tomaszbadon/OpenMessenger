@@ -11,15 +11,15 @@ import javax.validation.constraints.Pattern;
 public class NewUserInfo {
 
     @NotBlank
-    @Length(min = 6, max = 20)
+    @Length(min = 6, max = 20, message = "The username is too short or too long")
     private String userName;
 
     @NotBlank
-    @Length(min = 2, max = 20)
+    @Length(min = 2, max = 20, message = "The first name is too short or too long")
     private String firstName;
 
     @NotBlank
-    @Length(min = 2, max = 20)
+    @Length(min = 2, max = 20, message = "The last name is too short or too long")
     private String lastName;
 
     @NotBlank
@@ -27,7 +27,7 @@ public class NewUserInfo {
     private String email;
 
     @NotBlank
-    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,20}$")
+    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,20}$", message = "The password has to have at least 8 characters")
     private String password;
 
 }

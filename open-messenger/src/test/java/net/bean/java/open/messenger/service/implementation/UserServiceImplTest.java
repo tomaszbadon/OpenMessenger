@@ -26,17 +26,15 @@ public class UserServiceImplTest {
     @Mock
     private UserRepository userRepository;
 
-    @Mock
-    private User user;
-
     @InjectMocks
     private UserServiceImpl userService;
 
     @Test
-    protected void loadUserByUserName() {
-        when(user.getUserName()).thenReturn("john.doe");
-        when(user.getPassword()).thenReturn("12345678");
-        when(user.getRoles()).thenReturn(List.of(Role.ROLE_USER));
+    void loadUserByUserName() {
+        User user = new User();
+        user.setUserName("john.doe");
+        user.setPassword("12345678");
+        user.setRoles(List.of(Role.ROLE_USER));
         when(userRepository.findByUserName("john.doe")).thenReturn(Optional.of(user));
         UserDetails userDetails = userService.loadUserByUsername("john.doe");
 
@@ -46,9 +44,8 @@ public class UserServiceImplTest {
     }
 
     @Test
-    protected void loadUserByUserNameWithException() {
+    void loadUserByUserNameWithException() {
         when(userRepository.findByUserName("john.doe")).thenReturn(Optional.empty());
-
         UsernameNotFoundException exception = assertThrows(UsernameNotFoundException.class, () -> userService.loadUserByUsername("john.doe"));
         String message = MessageFormat.format(CANNOT_FIND_USER_IN_REPOSITORY, "john.doe");
         Assertions.assertEquals(message, exception.getMessage());

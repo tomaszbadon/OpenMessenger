@@ -60,6 +60,8 @@ dependencies {
 	testImplementation 'org.springframework.amqp:spring-rabbit-test'
 	testImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo'
 	testImplementation 'org.mockito:mockito-inline:5.2.0'
+	testImplementation 'org.assertj:assertj-core:3.11.1'
+
 }
 
 tasks.named('test') {

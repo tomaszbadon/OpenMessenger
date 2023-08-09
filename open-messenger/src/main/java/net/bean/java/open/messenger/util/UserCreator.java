@@ -10,7 +10,7 @@ public class UserCreator {
 
     private UserCreator() { }
 
-    public static User createUser(UserService userService, String firstName, String lastName, String password, String avatar, String status) {
+    public static User createUserIfNeeded(UserService userService, String firstName, String lastName, String password, String avatar, String status) {
         List<Role> roles = List.of(Role.ROLE_USER);
         String userName = firstName.toLowerCase() + "." + lastName.toLowerCase();
         return userService.getUserByUserName(userName).orElseGet(() -> {
