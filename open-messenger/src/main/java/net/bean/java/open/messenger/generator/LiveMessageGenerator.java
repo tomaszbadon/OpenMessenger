@@ -46,7 +46,7 @@ public class LiveMessageGenerator {
         "Yo!"
     );
 
-    @Scheduled(fixedRate = 3000, initialDelayString = "5000")
+    //@Scheduled(fixedRate = 3000, initialDelayString = "5000")
     public void reportCurrentTime() {
         User recipient = userService.getUserByUserName("dominica.rosatti").get();
         List<User> users = userService.getUsers().stream().filter((u) -> u.getId() != recipient.getId()).collect(Collectors.toList());
