@@ -5,9 +5,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.bean.java.open.messenger.exception.InternalException;
 import net.bean.java.open.messenger.exception.UserAlreadyExistsException;
+import net.bean.java.open.messenger.exception.UserNotFoundException;
 import net.bean.java.open.messenger.model.User;
 import net.bean.java.open.messenger.repository.UserRepository;
-import net.bean.java.open.messenger.exception.UserNotFoundException;
 import net.bean.java.open.messenger.rest.model.user.NewUserInfo;
 import net.bean.java.open.messenger.rest.model.user.UserInfo;
 import net.bean.java.open.messenger.service.MessagingManagementService;
@@ -22,18 +22,17 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.TimeoutException;
 
 import static io.vavr.API.$;
 import static io.vavr.API.Case;
 import static io.vavr.Predicates.instanceOf;
-import static net.bean.java.open.messenger.exception.ExceptionConstants.*;
+import static net.bean.java.open.messenger.exception.ExceptionConstants.CANNOT_FIND_USER_IN_REPOSITORY;
+import static net.bean.java.open.messenger.exception.ExceptionConstants.CREATION_OF_THE_USER_WENT_WRONG;
 
 @Service
 @Transactional
@@ -55,22 +54,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
         user.getRoles().forEach(role -> authorities.add(new SimpleGrantedAuthority(role.name())));
         return new org.springframework.security.core.userdetails.User(user.getUserName(), user.getPassword(), authorities);
-    }
-
-    @Override
-    @Deprecated
-    public User saveUser(User user) {
-        try {
-            messagingManagementService.createUser(user.getUserName(), user.getPassword());
-            messagingManagementService.assignUserToApplicationVirtualHost(user);
-            messagingManagementService.createQueue(userQueueNameProvider.createQueueName(user));
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
-            user = userRepository.save(user);
-            log.info("Save a User {} to the database with id: '{}'", user.getUserName(), user.getId());
-            return user;
-        } catch (IOException | TimeoutException e) {
-            throw new InternalException(MessageFormat.format(CREATION_OF_THE_USER_WENT_WRONG, user.getUserName()));
-        }
     }
 
     @Override

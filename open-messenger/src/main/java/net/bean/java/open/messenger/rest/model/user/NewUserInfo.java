@@ -1,6 +1,8 @@
 package net.bean.java.open.messenger.rest.model.user;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import net.bean.java.open.messenger.rest.annotation.UniqueUserNameConstraint;
 import org.hibernate.validator.constraints.Length;
 
@@ -9,6 +11,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class NewUserInfo {
 
     @NotBlank

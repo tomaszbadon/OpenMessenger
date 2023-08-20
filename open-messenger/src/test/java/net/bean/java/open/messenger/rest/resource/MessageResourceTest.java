@@ -63,16 +63,15 @@ public class MessageResourceTest {
         this.tokenService = tokenService;
         this.userService = userService;
         this.messageRepository = messageRepository;
-        daniel = createUserIfNeeded(userService, "Daniel", "Silva", PASSWORD, "avatar_1.png", "Catch every day :D");
-        dominica = createUserIfNeeded(userService, "Dominica", "Rosatti", PASSWORD, "avatar_2.png", "Today I am out of office");
-        monica = createUserIfNeeded(userService, "Monica", "Rosatti", PASSWORD, "avatar_5.png", "I love you <3");
+        daniel = createUserIfNeeded(userService, "Daniel", "Silva", PASSWORD);
+        dominica = createUserIfNeeded(userService, "Dominica", "Rosatti", PASSWORD);
+        monica = createUserIfNeeded(userService, "Monica", "Rosatti", PASSWORD);
     }
 
     @AfterEach
     protected void cleanUpRepository() {
         messageRepository.deleteAll();
     }
-
 
     @Test
     void postMessageAndRead() {

@@ -33,11 +33,11 @@ public class ApplicationAuxiliaryDevBeans {
             messagingManagementService.deleteAllQueues();
 
             final String myPassword = "my_password";
-            User daniel = createUserIfNeeded(userService, "Daniel", "Silva", myPassword, "avatar_1.png", "Catch every day :D");
-            User dominica = createUserIfNeeded(userService, "Dominica", "Rosatti", myPassword, "avatar_2.png", "Today I am out of office");
-            User chris = createUserIfNeeded(userService, "Christopher", "Wolf", myPassword, "avatar_3.png", "Party Hard");
-            User claudia = createUserIfNeeded(userService, "Claudia", "Wiliams", myPassword, "avatar_4.png", "Sleep Eat Work Repeat");
-            User monica = createUserIfNeeded(userService, "Monica", "Rosatti", myPassword, "avatar_5.png", "I love you <3");
+            User daniel = createUserIfNeeded(userService, "Daniel", "Silva", myPassword);
+            User dominica = createUserIfNeeded(userService, "Dominica", "Rosatti", myPassword);
+            User chris = createUserIfNeeded(userService, "Christopher", "Wolf", myPassword);
+            User claudia = createUserIfNeeded(userService, "Claudia", "Wiliams", myPassword);
+            User monica = createUserIfNeeded(userService, "Monica", "Rosatti", myPassword);
         };
     }
 

@@ -10,8 +10,6 @@ import java.util.Optional;
 
 public interface UserService {
 
-    User saveUser(User save);
-
     Try<UserInfo> tryToCreateUser(NewUserInfo newUserInfo);
 
     Optional<User> getUserByUserName(String userName);

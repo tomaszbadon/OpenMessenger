@@ -8,6 +8,7 @@ import net.bean.java.open.messenger.model.User;
 import net.bean.java.open.messenger.rest.model.token.TokensInfo;
 import net.bean.java.open.messenger.service.JwtTokenService;
 import net.bean.java.open.messenger.service.UserService;
+import net.bean.java.open.messenger.util.UserCreator;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -50,19 +51,7 @@ public class AuthenticationResourceTest {
     public AuthenticationResourceTest(TestRestTemplate restTemplate, UserService userService, JwtTokenService jwtTokenService) {
         this.restTemplate = restTemplate;
         this.jwtTokenService = jwtTokenService;
-        Optional<User> userOptional = userService.getUserByUserName("john.doe");
-        if(userOptional.isPresent()) {
-            user = userOptional.get();
-        } else {
-            User u = new User();
-            u.setUserName("john.doe");
-            u.setFirstName("John");
-            u.setLastName("Doe");
-            u.setPassword(password);
-            u.setEmail("j.doe@acke.com");
-            u.setRoles(List.of());
-            user = userService.saveUser(u);
-        }
+        this.user = UserCreator.createUserIfNeeded(userService, "John", "Doe", password);
     }
 
     @Test
