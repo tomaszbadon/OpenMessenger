@@ -1,4 +1,4 @@
-package net.bean.java.open.messenger.rest.exception;
+package net.bean.java.open.messenger.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;

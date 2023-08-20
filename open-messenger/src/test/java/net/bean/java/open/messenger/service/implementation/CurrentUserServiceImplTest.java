@@ -1,7 +1,7 @@
 package net.bean.java.open.messenger.service.implementation;
 
 import io.vavr.control.Try;
-import net.bean.java.open.messenger.rest.exception.UserNotFoundException;
+import net.bean.java.open.messenger.exception.UserNotFoundException;
 import net.bean.java.open.messenger.service.JwtTokenService;
 import net.bean.java.open.messenger.service.UserService;
 import org.junit.jupiter.api.Test;

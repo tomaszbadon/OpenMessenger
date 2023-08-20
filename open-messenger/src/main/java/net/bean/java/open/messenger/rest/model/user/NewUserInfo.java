@@ -1,6 +1,7 @@
 package net.bean.java.open.messenger.rest.model.user;
 
 import lombok.Data;
+import net.bean.java.open.messenger.rest.annotation.UniqueUserNameConstraint;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Email;
@@ -12,6 +13,7 @@ public class NewUserInfo {
 
     @NotBlank
     @Length(min = 6, max = 20, message = "The username is too short or too long")
+    @UniqueUserNameConstraint
     private String userName;
 
     @NotBlank

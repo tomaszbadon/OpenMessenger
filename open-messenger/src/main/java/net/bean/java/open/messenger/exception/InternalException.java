@@ -16,9 +16,4 @@ public class InternalException extends ResponseStatusException {
     public InternalException(String message) {
         super(HttpStatus.INTERNAL_SERVER_ERROR, message);
     }
-
-    public InternalException(String message, Exception exception) {
-        super(HttpStatus.INTERNAL_SERVER_ERROR, message, exception);
-    }
-
 }

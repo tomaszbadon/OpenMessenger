@@ -6,7 +6,7 @@ import net.bean.java.open.messenger.model.Message;
 import net.bean.java.open.messenger.model.User;
 import net.bean.java.open.messenger.repository.MessageRepository;
 import net.bean.java.open.messenger.rest.exception.MessageNotFoundException;
-import net.bean.java.open.messenger.rest.exception.NoPermissionException;
+import net.bean.java.open.messenger.exception.NoPermissionException;
 import net.bean.java.open.messenger.service.CurrentUserService;
 import org.springframework.beans.factory.annotation.Value;
 

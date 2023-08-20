@@ -4,7 +4,7 @@ import io.vavr.control.Try;
 import lombok.RequiredArgsConstructor;
 import net.bean.java.open.messenger.model.User;
 import net.bean.java.open.messenger.exception.ExceptionConstants;
-import net.bean.java.open.messenger.rest.exception.UserNotFoundException;
+import net.bean.java.open.messenger.exception.UserNotFoundException;
 import net.bean.java.open.messenger.rest.model.user.UserInfo;
 import net.bean.java.open.messenger.service.CurrentUserService;
 import net.bean.java.open.messenger.service.JwtTokenService;

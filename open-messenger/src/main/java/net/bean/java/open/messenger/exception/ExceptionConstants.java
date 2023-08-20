@@ -14,7 +14,9 @@ public class ExceptionConstants {
 
     public final static String INTERNAL_EXCEPTION = "Internal Exception occurred due to: {0}";
 
-    public final static String CREATION_OF_THE_USER_WENT_WRONG = "The creation of the user: {0} went wrong due to exception";
+    public final static String CREATION_OF_THE_USER_WENT_WRONG = "The creation of the user: {0} went wrong due to unexpected behaviour";
+
+    public final static String USER_ALREADY_EXIST = "The username: {0} already exists in the repository";
 
     public final static String MESSAGE_NOT_FOUND = "The message with id: {0} was not found in the Repository";
 

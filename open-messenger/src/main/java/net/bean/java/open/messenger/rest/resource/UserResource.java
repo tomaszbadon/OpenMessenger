@@ -36,7 +36,7 @@ public class UserResource {
     }
 
     @PostMapping(value = "/api/users", consumes = "application/json")
-    public ResponseEntity<UserInfo> createUser(HttpServletRequest request, @RequestBody @Valid NewUserInfo newUserInfo) {
+    public ResponseEntity<UserInfo> createUser(@RequestBody @Valid NewUserInfo newUserInfo) {
         return userService.tryToCreateUser(newUserInfo).map(userInfo -> {
             URI location = URI.create("/api/users/current");
             return ResponseEntity.created(location).body(userInfo);
@@ -60,5 +60,4 @@ public class UserResource {
         });
         return errors;
     }
-
 }
