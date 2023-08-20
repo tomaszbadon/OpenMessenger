@@ -2,7 +2,7 @@ package net.bean.java.open.messenger.service;
 
 import io.vavr.control.Try;
 import net.bean.java.open.messenger.model.User;
-import net.bean.java.open.messenger.rest.model.UserInfo;
+import net.bean.java.open.messenger.rest.model.user.UserInfo;
 
 import javax.servlet.http.HttpServletRequest;
 

@@ -1,7 +1,6 @@
 package net.bean.java.open.messenger.config;
 
 import lombok.RequiredArgsConstructor;
-import net.bean.java.open.messenger.filter.AllowedPathChecker;
 import net.bean.java.open.messenger.filter.CustomAuthenticationFilter;
 import net.bean.java.open.messenger.filter.CustomAuthorizationFilter;
 import net.bean.java.open.messenger.service.JwtTokenService;
@@ -27,7 +26,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private final UserDetailsService userDetailsService;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenService jwtTokenService;
-    private final AllowedPathChecker allowedPathChecker;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -43,7 +41,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.cors();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-        http.authorizeHttpRequests().antMatchers(GET, "/", "/webjars/**").permitAll();
+        //http.authorizeHttpRequests().antMatchers(GET, "/", "/webjars/**").permitAll();
+        http.authorizeHttpRequests().antMatchers(POST, "/api/users").permitAll();
         http.authorizeHttpRequests().antMatchers(GET, "/api/**").hasRole("USER");
         http.authorizeHttpRequests().antMatchers(POST, "/api/**").hasRole("USER");
         http.authorizeHttpRequests().antMatchers(PATCH, "/api/**").hasRole("USER");
@@ -52,7 +51,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         CustomAuthenticationFilter customAuthenticationFilter = new CustomAuthenticationFilter(this.authenticationManagerBean(), jwtTokenService);
         customAuthenticationFilter.setFilterProcessesUrl(CustomAuthenticationFilter.FILTER_PROCESSES_URL);
         http.addFilter(customAuthenticationFilter);
-        http.addFilterBefore(new CustomAuthorizationFilter(jwtTokenService, allowedPathChecker), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new CustomAuthorizationFilter(jwtTokenService), UsernamePasswordAuthenticationFilter.class);
     }
 
     @Bean

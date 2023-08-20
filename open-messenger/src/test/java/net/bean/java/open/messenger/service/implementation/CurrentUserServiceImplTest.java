@@ -1,7 +1,7 @@
 package net.bean.java.open.messenger.service.implementation;
 
 import io.vavr.control.Try;
-import net.bean.java.open.messenger.rest.exception.UserNotFoundException;
+import net.bean.java.open.messenger.exception.UserNotFoundException;
 import net.bean.java.open.messenger.service.JwtTokenService;
 import net.bean.java.open.messenger.service.UserService;
 import org.junit.jupiter.api.Test;
@@ -32,7 +32,7 @@ public class CurrentUserServiceImplTest {
     private CurrentUserServiceImpl currentUserService;
 
     @Test
-    protected void getUserFromTokenWithUserNotFoundException() {
+    void getUserFromTokenWithUserNotFoundException() {
         when(jwtTokenService.tryToGetUserName(DUMMY_TOKEN)).thenReturn(Try.success(RANDOM_USER_NAME));
         when(userService.getUserByUserName(RANDOM_USER_NAME)).thenReturn(Optional.empty());
         assertThrows(UserNotFoundException.class, () -> currentUserService.tryToGetUserFromToken(DUMMY_TOKEN).get());

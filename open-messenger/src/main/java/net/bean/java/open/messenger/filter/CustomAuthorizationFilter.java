@@ -22,18 +22,8 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
 
     private final JwtTokenService jwtTokenService;
 
-    private final AllowedPathChecker allowedPathChecker;
-
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) {
-        if (allowedPathChecker.isPathAllowedWithoutToken(request.getServletPath())) {
-            filter(request, response, filterChain);
-        } else {
-            check(request, response, filterChain);
-        }
-    }
-
-    private void check(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) {
         HttpServletRequestUtil.getToken(request)
                 .onFailure(t -> filter(request, response, filterChain))
                 .flatMap(jwtTokenService::getUsernamePasswordAuthenticationToken)

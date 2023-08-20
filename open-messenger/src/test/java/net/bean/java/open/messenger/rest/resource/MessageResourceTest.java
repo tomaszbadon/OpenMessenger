@@ -7,7 +7,7 @@ import net.bean.java.open.messenger.repository.MessageRepository;
 import net.bean.java.open.messenger.rest.model.InputMessagePayload;
 import net.bean.java.open.messenger.rest.model.OutputMessagePayload;
 import net.bean.java.open.messenger.rest.model.OutputMessagesPayload;
-import net.bean.java.open.messenger.rest.model.TokensInfo;
+import net.bean.java.open.messenger.rest.model.token.TokensInfo;
 import net.bean.java.open.messenger.service.JwtTokenService;
 import net.bean.java.open.messenger.service.UserService;
 import net.bean.java.open.messenger.service.implementation.MessageServiceImpl;
@@ -25,14 +25,14 @@ import org.springframework.http.*;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static net.bean.java.open.messenger.util.UserCreator.createUser;
+import static net.bean.java.open.messenger.util.UserCreator.createUserIfNeeded;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 public class MessageResourceTest {
 
-    private final String PASSWORD = "my_password";
+    private static final String PASSWORD = "my_password";
 
     private final TestRestTemplate restTemplate;
 
@@ -63,16 +63,15 @@ public class MessageResourceTest {
         this.tokenService = tokenService;
         this.userService = userService;
         this.messageRepository = messageRepository;
-        daniel = createUser(userService, "Daniel", "Silva", PASSWORD, "avatar_1.png", "Catch every day :D");
-        dominica = createUser(userService, "Dominica", "Rosatti", PASSWORD, "avatar_2.png", "Today I am out of office");
-        monica = createUser(userService, "Monica", "Rosatti", PASSWORD, "avatar_5.png", "I love you <3");
+        daniel = createUserIfNeeded(userService, "Daniel", "Silva", PASSWORD);
+        dominica = createUserIfNeeded(userService, "Dominica", "Rosatti", PASSWORD);
+        monica = createUserIfNeeded(userService, "Monica", "Rosatti", PASSWORD);
     }
 
     @AfterEach
     protected void cleanUpRepository() {
         messageRepository.deleteAll();
     }
-
 
     @Test
     void postMessageAndRead() {

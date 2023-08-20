@@ -3,7 +3,7 @@ package net.bean.java.open.messenger.service.implementation;
 import io.vavr.control.Try;
 import lombok.RequiredArgsConstructor;
 import net.bean.java.open.messenger.model.User;
-import net.bean.java.open.messenger.rest.model.UserInfo;
+import net.bean.java.open.messenger.rest.model.user.UserInfo;
 import net.bean.java.open.messenger.rest.patch.PatchExecutor;
 import net.bean.java.open.messenger.rest.resource.patch.PatchOperation;
 import net.bean.java.open.messenger.rest.resource.patch.PatchOperations;
