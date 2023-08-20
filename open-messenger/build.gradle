@@ -44,11 +44,6 @@ dependencies {
 
 	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
 
-//	implementation 'org.webjars:webjars-locator:0.14'
-//	implementation 'org.webjars:sockjs-client:1.0.2'
-//	implementation 'org.webjars:stomp-websocket:2.3.3'
-//	implementation 'org.webjars:jquery:3.1.1'
-
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	annotationProcessor 'org.projectlombok:lombok'
