@@ -1,0 +1,40 @@
+version: '3.1'
+
+services:
+  mongodb:
+    build:
+      context: ./mongodb
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - 27017:27017
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=mongoadmin
+      - MONGO_INITDB_ROOT_PASSWORD=mongopass
+
+  rabbitmq:
+    image: rabbitmq:3.11-management-alpine
+    restart: always
+    ports:
+      - 15672:15672 
+      - 5672:5672
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest 
+      - RABBITMQ_DEFAULT_PASS=guest
+  
+  open-messenger:
+    build:
+      context: ./open-messenger
+      dockerfile: Dockerfile
+    depends_on:
+      - mongodb
+      - rabbitmq
+    environment:
+      - OM_MONGO_HOST=mongodb
+      - OM_MONGO_USER=open-messenger-user
+      - OM_MONGO_PASS=secret
+      - OM_RABBITMQ_HOST=rabbitmq
+    ports:
+      - 8080:8080
+
+    # docker compose -f open-messenger.yaml up -d

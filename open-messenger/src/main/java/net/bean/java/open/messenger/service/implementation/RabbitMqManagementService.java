@@ -24,7 +24,7 @@ public class RabbitMqManagementService implements MessagingManagementService {
 
     private final static String NO_PERMISSION = "^$";
 
-    @Value("${application.rabbitmq.user}")
+    @Value("${spring.rabbitmq.username}")
     private String userName;
 
     private final Client client;

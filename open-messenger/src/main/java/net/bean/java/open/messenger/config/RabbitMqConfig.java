@@ -21,43 +21,17 @@ import java.net.URL;
 @Profile({"dev", "prod"})
 public class RabbitMqConfig {
 
-    @Value("${application.rabbitmq.user}")
+    @Value("${spring.rabbitmq.username}")
     private String userName;
 
-    @Value("${application.rabbitmq.password}")
+    @Value("${spring.rabbitmq.password}")
     private String password;
-
-    @Value("${application.rabbitmq.host}")
-    private String host;
 
     @Value("${application.rabbitmq.api.url}")
     private String apiUrl;
 
-    @Value("${application.rabbitmq.port}")
-    private String port;
-
-    @Value("${application.rabbitmq.virtualHost}")
+    @Value("${spring.rabbitmq.virtual-host}")
     private String virtualHost;
-
-    @Bean
-    public CachingConnectionFactory connectionFactory() {
-        CachingConnectionFactory factory = new CachingConnectionFactory("localhost");
-        factory.setUsername(userName);
-        factory.setPassword(password);
-        factory.setVirtualHost(virtualHost);
-        factory.setPort(Integer.parseInt(port));
-        return factory;
-    }
-
-    @Bean
-    public RabbitAdmin amqpAdmin() {
-        return new RabbitAdmin(connectionFactory());
-    }
-
-    @Bean
-    public RabbitTemplate rabbitTemplate() {
-        return new RabbitTemplate(connectionFactory());
-    }
 
     @Bean
     public Client client() {
