@@ -1,0 +1,56 @@
+@import '../styles/_variables.sass'
+
+.contact-list
+    height: 100%
+    display: flex
+    flex-direction: column
+
+.contact
+    margin: 10px 0px 0px 0px
+    width: 100%
+    height: 50px
+    display: grid
+    grid-template-columns: 50px auto
+    grid-template-rows: auto auto
+
+.contact:hover
+    background-color: $contact-hover-color
+    cursor: pointer
+    border-radius: 5px
+
+.contact-selected
+    background-color: $contact-selected-color
+    border-radius: 5px 
+
+.contact-avatar
+    grid-column-start: 1
+    grid-column-end: 2
+    grid-row: 1 / 3
+    display: flex
+    justify-content: center
+
+.contact-avatar-img
+    width: 40px
+    height: 40px
+    border-radius: 50%
+    margin: 5px
+
+.contact-name
+    grid-row: 1 / 2
+    grid-column-start: 2
+    grid-column-end: 3
+    display: flex
+    align-items: center
+    font: bold 110% Tahoma
+    color: $contact-name-color
+    white-space: nowrap
+
+.contact-status
+    grid-row: 2 / 3
+    grid-column-start: 2
+    grid-column-end: 3
+    display: flex
+    align-items: center
+    font: italic 80% Tahoma
+    color: $status-font-color
+    white-space: nowrap

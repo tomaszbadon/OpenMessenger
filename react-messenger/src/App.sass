@@ -1,0 +1,32 @@
+@import './styles/_variables.sass'
+
+#root
+    height: 100%
+    width: 100%
+    display: flex
+    align-items: center
+    justify-content: center
+
+.box
+    width: 80%
+    height: 80%
+    background-color: $application-background-color
+    border-radius: 10px
+    padding: 10px
+    -webkit-box-shadow: 8px 8px 24px 0px rgba(66, 68, 90, 1)
+    -moz-box-shadow: 8px 8px 24px 0px rgba(66, 68, 90, 1)
+    box-shadow: 8px 8px 24px 0px rgba(66, 68, 90, 1)
+    display: grid
+    grid-template-columns: 400px auto
+
+.contact-list
+    grid-column-start: 1
+    grid-column-end: 2
+    height: 100%
+    overflow-y: scroll
+
+.conversation
+    grid-column-start: 2
+    grid-column-end: 3
+    height: 100%
+    overflow-y: scroll
