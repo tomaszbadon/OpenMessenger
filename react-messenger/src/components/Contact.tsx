@@ -3,11 +3,11 @@ import './Contact.sass'
 
 export function ContactComponent(properties: any) {
 
-    let contact: Contact = properties.contact
-    let selected: Boolean = properties.selected
-    let onClickCallback = properties.onClick
+    let contact = properties.contact as Contact
+    let selected = properties.selected as Boolean
+    let onClickCallback = properties.onClick as ((contact: Contact) => void);
 
-    return <div onClick={() => onClickCallback(contact)} className={ selected ? "contact contact-selected" : "contact"} >
+    return <div onClick={() => onClickCallback(contact)} className={ selected ? "contact contact-selected" : "contact contact-unselected"} >
 
         <div className="contact-avatar">
             <img alt="contact's avatar" className="contact-avatar-img" src={'/assets/' + contact.avatar} />
