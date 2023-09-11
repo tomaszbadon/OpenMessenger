@@ -2,6 +2,7 @@ import { Contact } from '../datamodel/Contact';
 import { ContactComponent } from '../components/Contact';
 import { useParams, useNavigate } from 'react-router-dom';
 import './Chat.sass'
+import Finder from '../components/Finder';
 
 export interface SelectedContact {
   contact: Contact,
@@ -29,6 +30,7 @@ export default function Chat() {
       return (
             <div className='box'>
               <div className='contact-list'>
+                <Finder />
                 { contacts.map(c => <ContactComponent
                                             key={c.username} 
                                             contact={c} selected={selectedContact.username === c.username }
