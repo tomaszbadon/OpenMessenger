@@ -1,0 +1,65 @@
+@import '../styles/_variables.sass'
+
+.message-group-wrapper
+    width: 100%
+    display: flex
+    color: $contact-name-color
+    margin: 5px 0px 5px 0px
+
+// https://stackoverflow.com/questions/70807077/implementing-infinite-scroll-on-top-when-scrolling-using-library-i-have-live-co    
+
+.right
+    justify-content: flex-end
+
+.left
+    justify-content: flex-start
+
+.message-group
+    max-width: 80%
+
+.message-avatar-container
+    display: flex
+    align-items: center
+
+.single-message
+    padding: 10px
+    margin: 5px 0px 5px 0px
+    border-radius: 5px
+    display: inline-block
+
+.single-message-right
+    float: right
+    background-color: $input-background-color
+
+.single-message-left
+    background-color: $contact-new-message
+
+.message
+    line-height: 1.5
+
+.message-metadata
+    font: italic 80% $default-font
+    color: $status-font-color
+
+.message-metadata-left
+    float: left
+
+.message-metadata-right
+    float: right
+
+.date-separator
+    margin-top: 10px
+    text-align: center
+    font-style: italic
+    font: italic 80% $default-font
+    color: $status-font-color
+
+.load-previous
+    position: sticky
+    width: 60px
+    height: 60px
+    margin-left: auto
+    margin-right: auto
+
+.previous img
+    cursor: pointer

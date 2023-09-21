@@ -21,6 +21,16 @@
 .contact-selected
     background-color: $contact-selected-color
 
+.contact-with-unread-message
+    // animation-name: example
+    animation-duration: 1s
+    animation-iteration-count: infinite
+
+@keyframes example 
+  to 
+    background-color: $contact-new-message
+
+
 .contact-avatar
     grid-column-start: 1
     grid-column-end: 2
@@ -50,6 +60,6 @@
     grid-column-end: 3
     display: flex
     align-items: center
-    font: italic 80% Tahoma
+    font: italic 80% $default-font
     color: $status-font-color
     white-space: nowrap

@@ -54,3 +54,31 @@ table
     display: flex
     align-items: center
     justify-content: center
+
+.box
+    background-color: $application-background-color
+    border-radius: 10px
+    padding: 10px
+    -webkit-box-shadow: 8px 8px 24px 0px rgba(66, 68, 90, 1)
+    -moz-box-shadow: 8px 8px 24px 0px rgba(66, 68, 90, 1)
+    box-shadow: 8px 8px 24px 0px rgba(66, 68, 90, 1)
+    display: grid
+
+.box input[type=text]
+    font: bold 100% $default-font
+    color: $contact-name-color
+    border-radius: 5px
+    background-color: $input-background-color
+    border: 1px solid $status-font-color
+    line-height: 2em
+
+.box input[type=password]
+    background-color: $input-background-color
+    font: bold 100% $default-font
+    color: $contact-name-color
+    border-radius: 5px
+    border: 1px solid $status-font-color
+    line-height: 2em
+
+.box input[type=text]:focus
+    border: 1px solid $status-font-color
