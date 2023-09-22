@@ -2,11 +2,11 @@ import { Contact } from '../datamodel/Contact';
 import { ContactComponent } from '../components/Contact';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useState, useCallback } from 'react';
-import { AuthData } from '../auth/AuthWrapper';
 import Finder from '../components/Finder';
-import './Chat.sass'
 import Conversation from '../components/Conversation';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import { useAppSelector } from '../auth/types';
+import './Chat.sass'
 
 export interface SelectedContact {
   contact: Contact,
@@ -29,7 +29,7 @@ export default function Chat() {
   let { username } = useParams();
   const [filteredContacts, setFilteredContacts] = useState(contacts.sort((a: Contact, b: Contact) => (a.lastName < b.lastName ? -1 : 1)));
   const navigate = useNavigate();
-  const context = AuthData();
+  const { user } = useAppSelector((state) => state.authSlice)
 
   const [state, setState] = useState<TempState>({ items: [1] })
 
@@ -43,11 +43,6 @@ export default function Chat() {
     let text = input.toLocaleLowerCase();
     setFilteredContacts(contacts.filter(c => c.firstName.toLocaleLowerCase().startsWith(text) || c.lastName.toLocaleLowerCase().startsWith(text)));
   }, []);
-
-  function doLogout() {
-    context?.logout();
-    navigate("/login");
-  }
 
   const fetchMoreData = () => {
     setTimeout(() => {
@@ -93,8 +88,6 @@ export default function Chat() {
           ))}
 
         </InfiniteScroll>
-
-        {/* <Conversation /> */}
       </div>
     </div>
   );

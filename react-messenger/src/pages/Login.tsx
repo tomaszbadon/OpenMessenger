@@ -1,30 +1,29 @@
-import { useEffect, useReducer } from 'react';
+import { useReducer } from 'react';
 import { useNavigate } from "react-router-dom";
-import { AuthData, UserContextNullable } from '../auth/AuthWrapper';
+import { login } from '../auth/AuthenticationSlice';
+import { useAppDispatch, useAppSelector } from '../auth/types';
 import './Login.sass'
+
+interface FormData { username: string, password: string }
 
 const Login = () => {
 
   const navigate = useNavigate()
 
-  interface FormData { username: string, password: string }
+  const { user } = useAppSelector((state) => state.authSlice)
 
-  const userContext: UserContextNullable = AuthData()
+  const dispatch = useAppDispatch()
 
-  function reducer(formData: FormData, newItems: any): FormData{
+  const handleLoginForm = () => {
+    dispatch(login({user: {username: formData.username, isAuthenticated: true }, tokens: []}))
+    navigate("/chat")
+  }
+
+  const localFormReducer = (formData: FormData, newItems: any) => {
     return {...formData, ...newItems }
   }
 
-  const [formData, setFormData] = useReducer(reducer, {username: "dominica.rosatti", password: "my_password"});
-
-  async function doLogin() {
-    try {
-      await userContext?.login(formData.username, formData.password)
-      navigate("/chat")
-    } catch(error) {
-      console.error(error)
-    }
-  }
+  const [formData, setFormData] = useReducer(localFormReducer, {username: "dominica.rosatti", password: "my_password"});
 
   return <>
     <div className="box login login-form box-500">
@@ -35,7 +34,7 @@ const Login = () => {
           <label>Password:</label>
           <input value={formData.password} onChange={(e) => setFormData({password: e.target.value}) } type="password" placeholder="" />
           <div className="button-div">
-            <button className="button" onClick={doLogin} >Login</button>
+            <button className="button" onClick={handleLoginForm} >Login</button>
           </div>
       </div>
       <div className="links">

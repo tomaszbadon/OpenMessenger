@@ -1,13 +1,15 @@
 import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import reportWebVitals from "./reportWebVitals";
-import { AuthWrapper } from "./auth/AuthWrapper";
 import './index.sass'
+import { Provider } from "react-redux";
+import { store } from './store/store'
+import { RenderRoutes } from "./auth/RenderRoutes";
 
 export default function App() {
   return (
     <BrowserRouter>
-      <AuthWrapper />
+      <RenderRoutes />
     </BrowserRouter>
   )
 }
@@ -15,6 +17,9 @@ export default function App() {
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
-root.render(<App />);
+root.render(<Provider store={store}>
+  <App />
+</Provider>
+);
 
 reportWebVitals();
