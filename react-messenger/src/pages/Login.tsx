@@ -21,7 +21,6 @@ const Login = () => {
 
   const handleLoginForm = async () => {
     let payload = await trigger({ username: formData.username, password: formData.password }).unwrap();
-    console.log(JSON.stringify(payload))
     if (typeof payload !== 'undefined') {
       dispatch(login({ user: { username: formData.username, isAuthenticated: true }, tokens: payload.tokens }))
       navigate("/chat")

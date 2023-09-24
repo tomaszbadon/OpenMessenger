@@ -1,6 +1,9 @@
+
+export type Contacts = { contacts: Contact[] }
+
 export interface Contact {
-    username: string,
+    userName: string,
     firstName: string,
     lastName: string,
-    avatar: string
+    avatar?: string
 }

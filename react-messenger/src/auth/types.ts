@@ -1,7 +1,12 @@
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux"
 import type { RootState, AppDispatch } from '../store/store'
 
-export type TokenType = 'ACCESS_TOKEN' | 'REFRESH_TOKEN'
+export enum TokenTypeEnum { 
+    ACCESS_TOKEN = 'ACCESS_TOKEN',
+    REFRESH_TOKEN = 'REFRESH_TOKEN'
+}
+
+export type TokenType = TokenTypeEnum.ACCESS_TOKEN | TokenTypeEnum.REFRESH_TOKEN
 
 export interface Token { type: TokenType, token: string }
 

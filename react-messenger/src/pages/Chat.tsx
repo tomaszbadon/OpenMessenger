@@ -1,11 +1,12 @@
 import { Contact } from '../datamodel/Contact';
 import { ContactComponent } from '../components/Contact';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
+import { TokenTypeEnum, useAppSelector } from '../auth/types';
+import { useGetContactsQuery } from '../service/contactService';
 import Finder from '../components/Finder';
 import Conversation from '../components/Conversation';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { useAppSelector } from '../auth/types';
 import './Chat.sass'
 
 export interface SelectedContact {
@@ -17,31 +18,35 @@ interface TempState {
   items: number[]
 }
 
-let contacts: Contact[] = [
-  { username: "daniel.silva", firstName: "Daniel", lastName: "Silva", avatar: "avatar_1.png" },
-  { username: "dominica.rosatti", firstName: "Dominica", lastName: "Rosatti", avatar: "avatar_2.png" },
-  { username: "christian.wolf", firstName: "Christopher", lastName: "Wolf", avatar: "avatar_3.png" },
-  { username: "claudia.williams", firstName: "Claudia", lastName: "Williams", avatar: "avatar_4.png" },
-  { username: "monica.rosatti", firstName: "Monica", lastName: "Rosatti", avatar: "avatar_5.png" }
-]
-
 export default function Chat() {
-  let { username } = useParams();
-  const [filteredContacts, setFilteredContacts] = useState(contacts.sort((a: Contact, b: Contact) => (a.lastName < b.lastName ? -1 : 1)));
+
   const navigate = useNavigate();
-  const { user } = useAppSelector((state) => state.authSlice)
+
+  let { username } = useParams();
+
+  const { user, tokens } = useAppSelector((state) => state.authSlice)
+
+  const getAccessToken = () => tokens.find (t => t.type === TokenTypeEnum.ACCESS_TOKEN)
+
+  const [filteredContacts, setFilteredContacts] = useState<Contact[] | null>(null)
+
+  const { data, isLoading, error } = useGetContactsQuery(getAccessToken(), { })
 
   const [state, setState] = useState<TempState>({ items: [1] })
 
-  let selectedContact = contacts.find(contact => contact.username === username) ?? contacts[0];
+  let selectedContact = data?.contacts.find(contact => contact.userName === username) ?? data?.contacts[0]
 
   function selectUserOnClick(selectedContact: Contact) {
-    navigate("/chat/" + selectedContact.username);
+    navigate("/chat/" + selectedContact.userName);
   }
 
   const filterContacts = useCallback((input: string) => {
-    let text = input.toLocaleLowerCase();
-    setFilteredContacts(contacts.filter(c => c.firstName.toLocaleLowerCase().startsWith(text) || c.lastName.toLocaleLowerCase().startsWith(text)));
+    if(input.length === 0) {
+      setFilteredContacts(null)
+    } else {
+      let text = input.toLowerCase();
+      setFilteredContacts(data?.contacts.filter(c => c.firstName.toLocaleLowerCase().startsWith(text) || c.lastName.toLocaleLowerCase().startsWith(text)) ?? [])
+    }
   }, []);
 
   const fetchMoreData = () => {
@@ -52,14 +57,16 @@ export default function Chat() {
     }, 250);
   };
 
+  let contacts: Contact[] = filteredContacts ?? data?.contacts ?? []
+
   return (
     <div className='box box-grid box-80-80'>
       <div className='contact-list'>
         <Finder onChange={filterContacts} />
-        {filteredContacts.map(c => <ContactComponent
-          key={c.username}
-          contact={c} selected={selectedContact.username === c.username}
-          hasNewMessage={c.username === 'claudia.williams'}
+        {contacts.map(c => <ContactComponent
+          key={c.userName}
+          contact={c} selected={selectedContact?.userName === c.userName}
+          hasNewMessage={c.userName === 'claudia.williams'}
           onClick={selectUserOnClick}
         />)}
       </div>
