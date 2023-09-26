@@ -1,6 +1,4 @@
 import './Finder.sass'
-import { memo } from 'react';
-
 function Finder(properties: any) {
     
     let onChange = properties.onChange as ((arg: string) => void);
@@ -12,4 +10,4 @@ function Finder(properties: any) {
     </>
 }
 
-export default memo(Finder);
+export default Finder

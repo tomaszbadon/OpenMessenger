@@ -1,15 +1,13 @@
 import { useReducer } from 'react';
 import { useNavigate } from "react-router-dom";
-import { login } from '../auth/AuthenticationSlice';
-import { Credentials, useAppDispatch } from '../auth/types';
+import { Credentials, UserContext } from '../auth/types';
 import { useLazyGetTokensQuery } from '../service/loginService';
 import './Login.sass'
+import { saveUserContext } from '../util/userContextManagement';
 
 const Login = () => {
 
   const navigate = useNavigate()
-
-  const dispatch = useAppDispatch()
 
   const localFormReducer = (formData: Credentials, newItems: any) => {
     return { ...formData, ...newItems }
@@ -22,7 +20,8 @@ const Login = () => {
   const handleLoginForm = async () => {
     let payload = await trigger({ username: formData.username, password: formData.password }).unwrap();
     if (typeof payload !== 'undefined') {
-      dispatch(login({ user: { username: formData.username, isAuthenticated: true }, tokens: payload.tokens }))
+      let userContext: UserContext = { user: { username: formData.username, isAuthenticated: true }, tokens: payload.tokens }
+      saveUserContext(userContext)
       navigate("/chat")
     }
   }

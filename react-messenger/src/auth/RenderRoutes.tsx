@@ -1,12 +1,11 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { navigationItems } from "./Navigation";
 import Layout from "../pages/_layout";
-import { useSelector } from "react-redux";
-import { useAppSelector } from './types';
+import { getUserContext } from '../util/userContextManagement';
 
 export const RenderRoutes = () => {
 
-     const { user } = useAppSelector((state) => state.authSlice)
+     let user = getUserContext().user
      
      return (
           <Routes>
