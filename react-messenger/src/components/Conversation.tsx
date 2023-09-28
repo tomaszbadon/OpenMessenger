@@ -1,130 +1,85 @@
+import { Message, useGetMessagesQuery } from '../service/messageService';
 import './Conversation.sass'
 
 interface ConversationProp {
-    index: number
+  index: number
+}
+
+interface GroupOfMessages {
+  recipient: String,
+  sender: String,
+  messages: Message[]
+  date: string
+}
+
+
+function groupMessages(messages: Message[]): GroupOfMessages[] {
+
+  let groupOfMessages = new Array<GroupOfMessages>()
+
+  for (let message of messages) {
+    let date: string | any;
+    let match = message.sentAt.match("^(\\d{2}-\\d{2}-\\d{4}).+$");
+    if (match) {
+      date = match[1];
+    }
+    if (groupOfMessages.length === 0) {
+      let messagesTempArray: Message[] = [];
+      messagesTempArray.push(message);
+      groupOfMessages.push({ recipient: message.recipient, sender: message.sender, messages: messagesTempArray, date: date });
+    } else {
+      let last = groupOfMessages[groupOfMessages.length - 1];
+      if (last.recipient === message.recipient && last.sender === message.sender && last.date === date) {
+        last.messages.push(message);
+      } else {
+        let messagesTempArray: Message[] = [];
+        messagesTempArray.push(message);
+        var newGroup = { recipient: message.recipient, sender: message.sender, messages: messagesTempArray, date: date }
+        groupOfMessages.push(newGroup);
+      }
+    }
+  }
+  return groupOfMessages;
 }
 
 export default function Conversation(prop: ConversationProp) {
 
-    return <>
-        {/* <div className="load-previous">
-            <img src="/assets/up_arrow_icon_2.png" width={'30px'} />
-        </div> */}
-        <div className="message-group-wrapper right">
-            <div className="message-group">
-                <div className="single-message single-message-right">
-                    <p className="message">Hello World { prop.index }</p>
-                    <p className="message-metadata message-metadata-right">23:34</p>
-                </div>
-                <div className="single-message single-message-right">
-                    <p className="message">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries</p>
-                    <p className="message-metadata message-metadata-right">23:34</p>
-                </div>
-                <div className="single-message single-message-right">
-                    <p className="message">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here'.</p>
-                    <p className="message-metadata message-metadata-right">23:35</p>
-                </div>
-            </div>
-            <div className="message-avatar-container">
-                <img alt="contact's avatar" className="contact-avatar-img" src={'/assets/avatar_1.png'} />
-            </div>
-        </div>
+  const userId = "6511e2afc7ef1c6367748b99"
 
-        <div className="date-separator">
-            <p>- Monday 23.09.2022 -</p>
-        </div>
+  const response = useGetMessagesQuery({ userId: userId, page: 0 });
 
-        <div className="message-group-wrapper left">
-            <div className="message-avatar-container">
-                <img alt="contact's avatar" className="contact-avatar-img" src={'/assets/avatar_1.png'} />
-            </div>
-            <div className="message-group">
-                <div className="single-message single-message-left">
-                    <p className="message single-message-left">Hello World</p>
-                    <p className="message-metadata message-metadata-left">23:34</p>
-                </div>
-                <div className="single-message single-message-left">
-                    <p className="message">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries</p>
-                    <p className="message-metadata message-metadata-left">23:34</p>
-                </div>
-                <div className="single-message single-message-left">
-                    <p className="message">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here'.</p>
-                    <p className="message-metadata message-metadata-left">23:35</p>
-                </div>
-            </div>
-        </div>
+  let groupedMessages: GroupOfMessages[] = []
 
-        <div className="date-separator">
-            <p>- Monday 23.09.2022 -</p>
-        </div>
+  if (!response.isError && response.data) {
+    groupedMessages = groupMessages(response.data.messages)
+  }
 
-        <div className="message-group-wrapper right">
-            <div className="message-group">
-                <div className="single-message single-message-right">
-                    <p className="message">Hello World</p>
-                    <p className="message-metadata message-metadata-right">23:34</p>
-                </div>
-                <div className="single-message single-message-right">
-                    <p className="message">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries</p>
-                    <p className="message-metadata message-metadata-right">23:34</p>
-                </div>
-                <div className="single-message single-message-right">
-                    <p className="message">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here'.</p>
-                    <p className="message-metadata message-metadata-right">23:35</p>
-                </div>
-            </div>
-            <div className="message-avatar-container">
-                <img alt="contact's avatar" className="contact-avatar-img" src={'/assets/avatar_1.png'} />
-            </div>
-        </div>
+   return (<>
+     { groupedMessages.map((group: GroupOfMessages) => ( 
+         <div className={group.sender === userId ? 'message-group-wrapper left' : 'message-group-wrapper right'}>
 
-        <div className="date-separator">
-            <p>- Monday 23.09.2022 -</p>
-        </div>
+          {group.sender === userId &&
+          <div className="message-avatar-container">
+            <img alt="contact's avatar" className="contact-avatar-img" src={'/assets/avatar_1.png'} />
+          </div>
+          }
 
-        <div className="message-group-wrapper left">
-            <div className="message-avatar-container">
-                <img alt="contact's avatar" className="contact-avatar-img" src={'/assets/avatar_1.png'} />
-            </div>
-            <div className="message-group">
-                <div className="single-message single-message-left">
-                    <p className="message single-message-left">Hello World</p>
-                    <p className="message-metadata message-metadata-left">23:34</p>
+           <div className="message-group">
+             { group.messages.map((message: Message) => (
+              <div>
+                <div className={message.sender === userId ? 'single-message single-message-left' : 'single-message single-message-right'}>
+                  <p className="message">{message.message}</p>
+                  <p className={message.sender === userId ? 'message-metadata message-metadata-left' : 'message-metadata message-metadata-right'}>{message.sentAt.split(' ')[1]}</p>
                 </div>
-                <div className="single-message single-message-left">
-                    <p className="message">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries</p>
-                    <p className="message-metadata message-metadata-left">23:34</p>
-                </div>
-                <div className="single-message single-message-left">
-                    <p className="message">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here'.</p>
-                    <p className="message-metadata message-metadata-left">23:35</p>
-                </div>
-            </div>
+              </div>
+            ))}
+          </div>
+          {group.sender !== userId &&
+          <div className="message-avatar-container">
+              <img alt="contact's avatar" className="contact-avatar-img" src={'/assets/avatar_1.png'} />
+          </div>}
         </div>
-
-        <div className="date-separator">
-            <p>- Monday 23.09.2022 -</p>
-        </div>
-
-        <div className="message-group-wrapper left">
-            <div className="message-avatar-container">
-                <img alt="contact's avatar" className="contact-avatar-img" src={'/assets/avatar_1.png'} />
-            </div>
-            <div className="message-group">
-                <div className="single-message single-message-left">
-                    <p className="message single-message-left">Hello World</p>
-                    <p className="message-metadata message-metadata-left">23:34</p>
-                </div>
-                <div className="single-message single-message-left">
-                    <p className="message">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries</p>
-                    <p className="message-metadata message-metadata-left">23:34</p>
-                </div>
-                <div className="single-message single-message-left">
-                    <p className="message">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here'.</p>
-                    <p className="message-metadata message-metadata-left">23:35</p>
-                </div>
-            </div>
-        </div>
-
+    ))}
     </>
+  )
 }

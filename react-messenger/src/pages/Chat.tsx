@@ -89,7 +89,6 @@ export default function Chat() {
             {state.items.map((i: number, index: number) => (
               <Conversation key={index} index={index} />
             ))}
-
           </InfiniteScroll>
         </div>
       <div className='message-input-box'>
