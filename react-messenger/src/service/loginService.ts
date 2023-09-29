@@ -1,6 +1,7 @@
-
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { Credentials, Tokens } from '../auth/types'
+import { CurrentUser } from '../datamodel/CurrentUser';
+import { getAccessToken } from '../util/userContextManagement';
 
 export const loginApi = createApi({
     reducerPath: 'loginApi',
@@ -17,8 +18,18 @@ export const loginApi = createApi({
                   body: data
                 });
               },
+        }),
+
+        getCurrentUser: builder.query<CurrentUser, void>({
+          query: () => { 
+            return({
+              headers: { Authorization:  `Bearer ${getAccessToken()?.token}`},
+              url: '/users/current',
+              method: 'GET'
+            })
+          }
         })
     })
 })
 
-export const { useLazyGetTokensQuery } = loginApi
+export const { useLazyGetTokensQuery, useGetCurrentUserQuery } = loginApi

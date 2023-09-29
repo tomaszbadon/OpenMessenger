@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+import { useAppSelector } from '../auth/types';
 import { Message, useGetMessagesQuery } from '../service/messageService';
 import './Conversation.sass'
 
@@ -43,6 +45,8 @@ function groupMessages(messages: Message[]): GroupOfMessages[] {
 }
 
 export default function Conversation(prop: ConversationProp) {
+
+  let currentUser = useAppSelector(state => state.currentUserSlice);
 
   const userId = "6511e2afc7ef1c6367748b99"
 

@@ -1,6 +1,7 @@
 import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
 
-import appReducer from '../auth/AuthenticationSlice'
+import currentUserReducer from '../slice/CurrentUserSlice'
+import contactSliceReducer from '../slice/ContactSlice'
 import { loginApi } from "../service/loginService";
 import { contactsApi } from "../service/contactService";
 import { messagesApi } from "../service/messageService";
@@ -10,7 +11,8 @@ export const store = configureStore({
         [loginApi.reducerPath]: loginApi.reducer,
         [contactsApi.reducerPath]: contactsApi.reducer,
         [messagesApi.reducerPath]: messagesApi.reducer,
-        authSlice: appReducer
+        currentUserSlice: currentUserReducer,
+        contactSlice: contactSliceReducer
     },
     middleware: getDefaultMiddleware => getDefaultMiddleware()
                                             .concat(loginApi.middleware)

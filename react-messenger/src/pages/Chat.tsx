@@ -1,12 +1,17 @@
 import { Contact } from '../datamodel/Contact';
 import { ContactComponent } from '../components/Contact';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useGetContactsQuery } from '../service/contactService';
+import { useAppDispatch, useAppSelector } from '../auth/types';
+import { useGetCurrentUserQuery } from '../service/loginService';
+import { setCurrentUser } from '../slice/CurrentUserSlice';
 import Finder from '../components/Finder';
 import Conversation from '../components/Conversation';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import './Chat.sass'
+import { LeftSide } from '../components/LeftSide';
+import { setContacts } from '../slice/ContactSlice';
 
 export interface SelectedContact {
   contact: Contact,
@@ -21,28 +26,29 @@ export default function Chat() {
 
   const navigate = useNavigate();
 
+  const dispatch = useAppDispatch();
+
   let { username } = useParams();
 
-  const [filteredContacts, setFilteredContacts] = useState<Contact[] | null>(null)
+  let currentUser = useAppSelector(state => state.currentUserSlice)
 
-  const { data, isLoading, error } = useGetContactsQuery()
+  let contacts = useAppSelector(state => state.contactSlice)
+
+  const currentUserQuery = useGetCurrentUserQuery()
+
+  const contactsQuery = useGetContactsQuery()
 
   const [state, setState] = useState<TempState>({ items: [1] })
 
-  let selectedContact = data?.contacts.find(contact => contact.userName === username) ?? data?.contacts[0]
-
-  function selectUserOnClick(selectedContact: Contact) {
-    navigate("/chat/" + selectedContact.userName);
-  }
-
-  const filterContacts = (input: string) => {
-    if(input.length === 0) {
-      setFilteredContacts(null)
-    } else {
-      let text = input.toLowerCase();
-      setFilteredContacts(data?.contacts.filter(c => c.firstName.toLocaleLowerCase().startsWith(text) || c.lastName.toLocaleLowerCase().startsWith(text)) ?? [])
+  useEffect(() => {
+    if(typeof currentUserQuery.data !== 'undefined') {
+      dispatch(setCurrentUser(currentUserQuery.data))
     }
-  }
+
+    if(typeof contactsQuery.data !== 'undefined') {
+      dispatch(setContacts(contactsQuery.data))
+    }
+  })
 
   const fetchMoreData = () => {
     setTimeout(() => {
@@ -52,21 +58,9 @@ export default function Chat() {
     }, 250);
   };
 
-  let contacts: Contact[] = filteredContacts ?? data?.contacts ?? []
-
   return (
     <div className='box box-grid box-80-80'>
-      <div className='contact-list-wrapper'>
-        <div className='contact-list'>
-          <Finder onChange={filterContacts} />
-          {contacts.map(c => <ContactComponent
-            key={c.userName}
-            contact={c} selected={selectedContact?.userName === c.userName}
-            hasNewMessage={c.userName === 'claudia.wiliams'}
-            onClick={selectUserOnClick}
-          />)}
-        </div>
-      </div>
+        <LeftSide />
         <div id="scrollableDiv" className='conversation'>
           <InfiniteScroll
             dataLength={state.items.length}
