@@ -7,9 +7,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
 
-@Document
 @Data
 @NoArgsConstructor
+@Document
 public class Message {
 
     public final static String ID = "id";

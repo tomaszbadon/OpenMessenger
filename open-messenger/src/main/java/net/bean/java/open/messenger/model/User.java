@@ -20,14 +20,15 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
+
+    public static final String USER_NAME = "userName";
+
     @Id
     private String id;
 
     @NotNull
-    @Indexed(unique = true)
     @Length(min = 6, max = 20, message = "The username is too short or too long")
     private String userName;
-    public static final String USER_NAME = "userName";
 
     @NotNull
     @Length(min = 2, max = 20, message = "The first name is too short or too long")

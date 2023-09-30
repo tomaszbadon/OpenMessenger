@@ -8,6 +8,7 @@ import net.bean.java.open.messenger.service.CurrentUserService;
 import net.bean.java.open.messenger.service.UserService;
 import net.bean.java.open.messenger.service.implementation.PatchCurrentUserServiceImpl;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -33,6 +34,11 @@ public class UserResource {
     public ResponseEntity<UserInfo> getUser(HttpServletRequest request) {
         return currentUserService.tryToGetUserInfoFromToken(request)
                                  .map(ResponseEntity::ok).get();
+    }
+
+    @GetMapping(value = "/api/users/{userId}/avatar", produces = {MediaType.IMAGE_PNG_VALUE})
+    public ResponseEntity<byte[]> getAvatar(@PathVariable("userId") String userId) {
+        return ResponseEntity.ok(userService.getAvatarByUserId(userId));
     }
 
     @PostMapping(value = "/api/users", consumes = "application/json")
