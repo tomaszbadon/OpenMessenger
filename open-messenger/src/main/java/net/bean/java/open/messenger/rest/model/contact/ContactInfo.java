@@ -7,13 +7,11 @@ import net.bean.java.open.messenger.model.User;
 @RequiredArgsConstructor
 @Data
 public class ContactInfo {
-
     private final String id;
     private final String userName;
     private final String firstName;
     private final String lastName;
     private final String email;
-    private final String avatar;
     private final String status;
 
     public ContactInfo(User user) {
@@ -22,7 +20,6 @@ public class ContactInfo {
         firstName = user.getFirstName();
         lastName = user.getLastName();
         email = user.getEmail();
-        avatar = user.getAvatar();
         status = user.getStatus();
     }
 

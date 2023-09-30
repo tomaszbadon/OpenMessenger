@@ -13,7 +13,6 @@ public class UserInfo {
     private final String firstName;
     private final String lastName;
     private final String email;
-    private final String avatar;
     private final String status;
 
     public UserInfo(User user) {
@@ -22,7 +21,6 @@ public class UserInfo {
         firstName = user.getFirstName();
         lastName = user.getLastName();
         email = user.getEmail();
-        avatar = user.getAvatar();
         status = user.getStatus();
     }
 
