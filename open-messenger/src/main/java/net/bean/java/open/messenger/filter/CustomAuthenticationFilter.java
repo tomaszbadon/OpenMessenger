@@ -13,7 +13,6 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -26,7 +25,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 
     public static final String PASSWORD = "password";
 
-    public static final String FILTER_PROCESSES_URL = "/api/login";
+    public static final String FILTER_PROCESSES_URL = "/api/auth/login";
 
     private final AuthenticationManager authenticationManager;
 
@@ -44,7 +43,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException {
         User user = (User) authentication.getPrincipal();
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        new ObjectMapper().writeValue(response.getOutputStream(), jwtTokenService.createTokensInfo(user, request.getRequestURL().toString()));
+        new ObjectMapper().writeValue(response.getOutputStream(), jwtTokenService.createAccessAndRefreshTokens(user, request.getRequestURL().toString()));
     }
 
 }

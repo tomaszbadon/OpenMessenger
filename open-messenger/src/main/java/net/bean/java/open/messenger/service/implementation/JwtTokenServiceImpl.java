@@ -56,23 +56,37 @@ public class JwtTokenServiceImpl implements JwtTokenService {
     }
 
     @Override
-    public TokensInfo createTokensInfo(User user, String requestUrl) {
+    public TokensInfo createAccessAndRefreshTokens(User user, String requestUrl) {
         List<Token> tokens = List.of(createJwtToken(TokenType.ACCESS_TOKEN, user, requestUrl, Integer.parseInt(accessTokenDuration)),
                 createJwtToken(TokenType.REFRESH_TOKEN, user, requestUrl, Integer.parseInt(refreshTokenDuration)));
         return new TokensInfo(tokens);
     }
 
     @Override
-    public TokensInfo createTokensInfo(net.bean.java.open.messenger.model.User user, String requestUrl) {
+    public TokensInfo createSingleToken(TokenType tokenType, User user, String requestUrl) {
+        List<Token> tokens = List.of(createJwtToken(tokenType, user, requestUrl, Integer.parseInt(accessTokenDuration)));
+        return new TokensInfo(tokens);
+    }
+
+    @Override
+    public TokensInfo createSingleToken(TokenType tokenType, net.bean.java.open.messenger.model.User user, String requestUrl) {
         List<SimpleGrantedAuthority> roles = user.getRoles()
                                                  .stream().map(role -> new SimpleGrantedAuthority(role.name()))
                                                  .collect(Collectors.toList());
-        return createTokensInfo(new User(user.getUserName(), user.getPassword(), roles), requestUrl);
+        return createSingleToken(tokenType, new User(user.getUserName(), user.getPassword(), roles), requestUrl);
     }
 
     @Override
     public Try<String> tryToGetUserName(Try<String> token) {
         return token.flatMap(t -> getUserName(t));
+    }
+
+    @Override
+    public Try<String> getUserName(String token) {
+        return Try.of(() -> {
+            DecodedJWT decodedJWT = verifier.verify(token);
+            return decodedJWT.getSubject();
+        }).onFailure(e -> InvalidTokenException.of(HttpStatus.BAD_REQUEST, e));
     }
 
     @Override
@@ -99,13 +113,6 @@ public class JwtTokenServiceImpl implements JwtTokenService {
                         .collect(Collectors.toList()))
                 .sign(algorithm);
         return new Token(tokenType, token);
-    }
-
-    private Try<String> getUserName(String token) {
-        return Try.of(() -> {
-            DecodedJWT decodedJWT = verifier.verify(token);
-            return decodedJWT.getSubject();
-        }).onFailure(e -> InvalidTokenException.of(HttpStatus.BAD_REQUEST, e));
     }
 
 }

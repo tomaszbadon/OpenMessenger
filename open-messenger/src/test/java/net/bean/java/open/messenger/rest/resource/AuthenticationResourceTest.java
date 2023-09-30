@@ -51,7 +51,7 @@ public class AuthenticationResourceTest {
     public AuthenticationResourceTest(TestRestTemplate restTemplate, UserService userService, JwtTokenService jwtTokenService) {
         this.restTemplate = restTemplate;
         this.jwtTokenService = jwtTokenService;
-        this.user = UserCreator.createUserIfNeeded(userService, "John", "Doe", password);
+        this.user = UserCreator.createUserIfNeeded(userService, "John", "Doe", password, "");
     }
 
     @Test

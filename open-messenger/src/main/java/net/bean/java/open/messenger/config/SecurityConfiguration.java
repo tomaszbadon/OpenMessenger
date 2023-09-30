@@ -40,6 +40,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.cors();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
+        http.authorizeHttpRequests().antMatchers(GET, "/api/auth/accessToken").permitAll();
         http.authorizeHttpRequests().antMatchers(GET, "/api/users/**/avatar").permitAll();
         http.authorizeHttpRequests().antMatchers(POST, "/api/users").permitAll();
         http.authorizeHttpRequests().antMatchers(GET, "/api/**").hasRole("USER");
