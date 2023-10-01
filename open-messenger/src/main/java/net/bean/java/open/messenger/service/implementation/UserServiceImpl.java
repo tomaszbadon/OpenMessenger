@@ -88,6 +88,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
+    public Try<User> tryToGetUserByUserName(String userName) {
+        return getUserByUserName(userName).map(Try::success)
+                                          .orElseGet(() -> Try.failure(UserNotFoundException.withUserName(userName)));
+    }
+
+    @Override
     public Optional<User> getUserById(String id) {
         return userRepository.findById(id);
     }
@@ -95,7 +101,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public Try<User> tryToGetUserById(String id) {
         return getUserById(id).map(Try::success)
-                .orElseGet(() -> Try.failure(UserNotFoundException.withUserId(id)));
+                              .orElseGet(() -> Try.failure(UserNotFoundException.withUserId(id)));
     }
 
     @Override

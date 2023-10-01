@@ -24,9 +24,9 @@ public class CurrentUserServiceImpl implements CurrentUserService {
 
     @Override
     public Try<User> tryToGetUserFromToken(Try<String> token) {
-        return jwtTokenService.tryToGetUserName(token)
-                              .map(userName -> userService.getUserByUserName(userName)
-                                                          .orElseThrow(() -> new UserNotFoundException(ExceptionConstants.CANNOT_GET_USER_FROM_TOKEN)));
+        return token.flatMap(jwtTokenService::getUserName)
+                    .map(userName -> userService.getUserByUserName(userName)
+                            .orElseThrow(() -> new UserNotFoundException(ExceptionConstants.CANNOT_GET_USER_FROM_TOKEN)));
     }
 
     @Override

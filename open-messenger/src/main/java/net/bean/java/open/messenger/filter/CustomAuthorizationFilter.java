@@ -25,12 +25,9 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) {
         HttpServletRequestUtil.getToken(request)
-                .onFailure(t -> filter(request, response, filterChain))
                 .flatMap(jwtTokenService::getUsernamePasswordAuthenticationToken)
-                .andThen(authenticationToken -> {
-                    SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-                    filter(request, response, filterChain);
-                });
+                .andThen(authenticationToken -> SecurityContextHolder.getContext().setAuthentication(authenticationToken))
+                .andFinally(() -> filter(request, response, filterChain));
     }
 
     private void filter(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) {

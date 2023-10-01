@@ -7,6 +7,7 @@ import net.bean.java.open.messenger.repository.MessageRepository;
 import net.bean.java.open.messenger.rest.model.InputMessagePayload;
 import net.bean.java.open.messenger.rest.model.OutputMessagePayload;
 import net.bean.java.open.messenger.rest.model.OutputMessagesPayload;
+import net.bean.java.open.messenger.rest.model.token.TokenType;
 import net.bean.java.open.messenger.rest.model.token.TokensInfo;
 import net.bean.java.open.messenger.service.JwtTokenService;
 import net.bean.java.open.messenger.service.UserService;
@@ -24,6 +25,8 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.*;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import java.util.Optional;
 
 import static net.bean.java.open.messenger.util.UserCreator.createUserIfNeeded;
 
@@ -63,9 +66,9 @@ public class MessageResourceTest {
         this.tokenService = tokenService;
         this.userService = userService;
         this.messageRepository = messageRepository;
-        daniel = createUserIfNeeded(userService, "Daniel", "Silva", PASSWORD);
-        dominica = createUserIfNeeded(userService, "Dominica", "Rosatti", PASSWORD);
-        monica = createUserIfNeeded(userService, "Monica", "Rosatti", PASSWORD);
+        daniel = createUserIfNeeded(userService, "Daniel", "Silva", PASSWORD, "");
+        dominica = createUserIfNeeded(userService, "Dominica", "Rosatti", PASSWORD, "");
+        monica = createUserIfNeeded(userService, "Monica", "Rosatti", PASSWORD, "");
     }
 
     @AfterEach
@@ -80,13 +83,13 @@ public class MessageResourceTest {
         body.setMessage(message);
         body.setRecipient(daniel.getId());
 
-        TokensInfo dominicaTokensInfo = tokenService.createTokensInfo(dominica, null);
+        TokensInfo dominicaTokensInfo = tokenService.createSingleToken(TokenType.ACCESS_TOKEN, dominica, null);
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.AUTHORIZATION, HttpServletRequestUtil.BEARER + dominicaTokensInfo.getTokens().stream().findFirst().orElseThrow().getToken());
         ResponseEntity<OutputMessagePayload> postResponse = restTemplate.exchange("/api/messages", HttpMethod.POST, new HttpEntity<>(body, headers), OutputMessagePayload.class);
         Assertions.assertTrue(postResponse.getStatusCode() == HttpStatus.CREATED);
 
-        TokensInfo danielTokenInfo = tokenService.createTokensInfo(daniel, null);
+        TokensInfo danielTokenInfo = tokenService.createSingleToken(TokenType.ACCESS_TOKEN, daniel, null);
         headers = new HttpHeaders();
         headers.add(HttpHeaders.AUTHORIZATION, HttpServletRequestUtil.BEARER + danielTokenInfo.getTokens().stream().findFirst().orElseThrow().getToken());
         String url = String.format("/api/users/%s/messages/0", dominica.getId());
@@ -108,7 +111,7 @@ public class MessageResourceTest {
         body.setMessage(message);
         body.setRecipient(daniel.getId());
 
-        TokensInfo dominicaTokensInfo = tokenService.createTokensInfo(dominica, null);
+        TokensInfo dominicaTokensInfo = tokenService.createSingleToken(TokenType.ACCESS_TOKEN, dominica, null);
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.AUTHORIZATION, HttpServletRequestUtil.BEARER + dominicaTokensInfo.getTokens().stream().findFirst().orElseThrow().getToken());
         ResponseEntity<OutputMessagePayload> postResponse = restTemplate.exchange("/api/messages", HttpMethod.POST, new HttpEntity<>(body, headers), OutputMessagePayload.class);
@@ -117,7 +120,7 @@ public class MessageResourceTest {
         String messageId = postResponse.getBody().getId();
 
 
-        TokensInfo monicaTokenInfo = tokenService.createTokensInfo(monica, null);
+        TokensInfo monicaTokenInfo = tokenService.createSingleToken(TokenType.ACCESS_TOKEN, monica, null);
         headers = new HttpHeaders();
         headers.add(HttpHeaders.AUTHORIZATION, HttpServletRequestUtil.BEARER + monicaTokenInfo.getTokens().stream().findFirst().orElseThrow().getToken());
         String url = String.format("/api/messages/%s", messageId);

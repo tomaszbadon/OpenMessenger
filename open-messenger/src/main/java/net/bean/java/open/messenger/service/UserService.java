@@ -16,6 +16,8 @@ public interface UserService {
 
     Optional<User> getUserByUserName(String userName);
 
+    Try<User> tryToGetUserByUserName(String userName);
+
     Optional<User> getUserById(String id);
 
     Try<User> tryToGetUserById(String id);

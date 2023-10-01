@@ -91,7 +91,6 @@ public class CustomAuthorizationFilterTest {
             customAuthorizationFilter.doFilterInternal(request, response, filterChain);
 
             verifyNoInteractions(securityContext);
-            verifyNoInteractions(filterChain);
         }
     }
 
