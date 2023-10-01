@@ -6,6 +6,7 @@ import net.bean.java.open.messenger.model.User;
 import net.bean.java.open.messenger.repository.MessageRepository;
 import net.bean.java.open.messenger.rest.model.InitialMessagePagesPayload;
 import net.bean.java.open.messenger.rest.model.OutputMessagesPayload;
+import net.bean.java.open.messenger.rest.model.token.TokenType;
 import net.bean.java.open.messenger.rest.model.token.TokensInfo;
 import net.bean.java.open.messenger.rest.util.DummyMessageCreator;
 import net.bean.java.open.messenger.service.JwtTokenService;
@@ -76,7 +77,7 @@ public class MessageResourceTestWithDummyData {
 
     @Test
     protected void getLatestMessages() {
-        TokensInfo tokensInfo = tokenService.createTokensInfo(dominica, null);
+        TokensInfo tokensInfo = tokenService.createSingleToken(TokenType.ACCESS_TOKEN,dominica, null);
         HttpHeaders headers = new HttpHeaders();
         String url = String.format("/api/users/%s/messages/latest", daniel.getId());
         headers.add(HttpHeaders.AUTHORIZATION, HttpServletRequestUtil.BEARER + tokensInfo.getTokens().stream().findFirst().orElseThrow().getToken());
@@ -90,7 +91,7 @@ public class MessageResourceTestWithDummyData {
 
     @Test
     protected void getMessages() {
-        TokensInfo tokensInfo = tokenService.createTokensInfo(dominica, null);
+        TokensInfo tokensInfo = tokenService.createSingleToken(TokenType.ACCESS_TOKEN,dominica, null);
         HttpHeaders headers = new HttpHeaders();
 
         String url = String.format("/api/users/%s/messages/0", daniel.getId());

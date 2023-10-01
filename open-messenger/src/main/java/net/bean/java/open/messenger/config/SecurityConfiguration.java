@@ -35,9 +35,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.formLogin().disable();
+
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
+        http.authorizeHttpRequests().antMatchers(GET, "/api/auth/accessToken").permitAll();
+        http.authorizeHttpRequests().antMatchers(GET, "/api/users/**/avatar").permitAll();
         http.authorizeHttpRequests().antMatchers(POST, "/api/users").permitAll();
         http.authorizeHttpRequests().antMatchers(GET, "/api/**").hasRole("USER");
         http.authorizeHttpRequests().antMatchers(POST, "/api/**").hasRole("USER");

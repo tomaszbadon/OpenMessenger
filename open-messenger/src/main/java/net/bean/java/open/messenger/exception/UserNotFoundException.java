@@ -17,4 +17,8 @@ public class UserNotFoundException extends ResponseStatusException {
         return new UserNotFoundException(MessageFormat.format(USER_DOES_NOT_EXIST_IN_REPOSITORY, userId));
     }
 
+    public static UserNotFoundException withUserName(String userName) {
+        return new UserNotFoundException(MessageFormat.format(USER_DOES_NOT_EXIST_IN_REPOSITORY, userName));
+    }
+
 }

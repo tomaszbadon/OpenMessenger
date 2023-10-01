@@ -12,7 +12,11 @@ public interface UserService {
 
     Try<UserInfo> tryToCreateUser(NewUserInfo newUserInfo);
 
+    Try<UserInfo> tryToCreateUser(NewUserInfo newUserInfo, String base64EncodedAvatar);
+
     Optional<User> getUserByUserName(String userName);
+
+    Try<User> tryToGetUserByUserName(String userName);
 
     Optional<User> getUserById(String id);
 
@@ -21,5 +25,7 @@ public interface UserService {
     List<User> getUsers();
 
     void changePassword(String id, String password);
+
+    byte[] getAvatarByUserId(String userId);
 
 }
