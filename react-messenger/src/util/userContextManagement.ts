@@ -1,5 +1,4 @@
 import { TokenTypeEnum, UserContext } from "../auth/types";
-import { useLazyGetRefreshTokensQuery } from "../service/loginService";
 
 const userContextKey = 'user-context'
 

@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { useAppSelector } from '../auth/types';
 import { Message, useGetLatestMessagesQuery, useGetMessagesQuery } from '../service/messageService';
 import './Conversation.sass'
@@ -47,6 +46,8 @@ export default function Conversation(prop: ConversationProp) {
 
   let contactContext = useAppSelector(state => state.contactSlice)
 
+  let currentUser = useAppSelector(state => state.currentUserSlice)
+
   const userId = contactContext.selectedContact?.id ?? undefined
 
   const responseWithInitialPages = useGetLatestMessagesQuery(userId!, { skip: typeof userId === 'undefined' })
@@ -66,10 +67,9 @@ export default function Conversation(prop: ConversationProp) {
 
           {group.sender === userId &&
           <div className="message-avatar-container">
-            <img alt="contact's avatar" className="contact-avatar-img" src={'/assets/avatar_1.png'} />
+            <img alt="contact's avatar" className="contact-avatar-img" src={`/api/users/${userId}/avatar`} />
           </div>
           }
-
            <div className="message-group">
              { group.messages.map((message: Message) => (
               <div>
@@ -82,7 +82,7 @@ export default function Conversation(prop: ConversationProp) {
           </div>
           {group.sender !== userId &&
           <div className="message-avatar-container">
-              <img alt="contact's avatar" className="contact-avatar-img" src={'/assets/avatar_1.png'} />
+              <img alt="contact's avatar" className="contact-avatar-img" src={`/api/users/${currentUser.id}/avatar`} />
           </div>}
         </div>
     ))}
