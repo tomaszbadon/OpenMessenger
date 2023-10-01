@@ -1,17 +1,12 @@
 import { Contact } from '../datamodel/Contact';
-import { ContactComponent } from '../components/Contact';
-import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { useGetContactsQuery } from '../service/contactService';
-import { useAppDispatch, useAppSelector } from '../auth/types';
+import { useAppDispatch } from '../auth/types';
 import { useGetCurrentUserQuery } from '../service/loginService';
 import { setCurrentUser } from '../slice/CurrentUserSlice';
-import Finder from '../components/Finder';
+import { LeftSide } from '../components/LeftSide';
 import Conversation from '../components/Conversation';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import './Chat.sass'
-import { LeftSide } from '../components/LeftSide';
-import { setContacts } from '../slice/ContactSlice';
 
 export interface SelectedContact {
   contact: Contact,
@@ -24,29 +19,15 @@ interface TempState {
 
 export default function Chat() {
 
-  const navigate = useNavigate();
-
   const dispatch = useAppDispatch();
 
-  let { username } = useParams();
-
-  let currentUser = useAppSelector(state => state.currentUserSlice)
-
-  let contacts = useAppSelector(state => state.contactSlice)
-
   const currentUserQuery = useGetCurrentUserQuery()
-
-  const contactsQuery = useGetContactsQuery()
 
   const [state, setState] = useState<TempState>({ items: [1] })
 
   useEffect(() => {
     if(typeof currentUserQuery.data !== 'undefined') {
       dispatch(setCurrentUser(currentUserQuery.data))
-    }
-
-    if(typeof contactsQuery.data !== 'undefined') {
-      dispatch(setContacts(contactsQuery.data))
     }
   })
 
@@ -79,7 +60,6 @@ export default function Chat() {
               <div style={{ textAlign: 'center' }}>BBB</div>
             }
           >
-
             {state.items.map((i: number, index: number) => (
               <Conversation key={index} index={index} />
             ))}

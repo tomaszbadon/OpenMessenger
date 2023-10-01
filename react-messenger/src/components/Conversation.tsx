@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useAppSelector } from '../auth/types';
-import { Message, useGetMessagesQuery } from '../service/messageService';
+import { Message, useGetLatestMessagesQuery, useGetMessagesQuery } from '../service/messageService';
 import './Conversation.sass'
 
 interface ConversationProp {
@@ -13,7 +13,6 @@ interface GroupOfMessages {
   messages: Message[]
   date: string
 }
-
 
 function groupMessages(messages: Message[]): GroupOfMessages[] {
 
@@ -46,20 +45,23 @@ function groupMessages(messages: Message[]): GroupOfMessages[] {
 
 export default function Conversation(prop: ConversationProp) {
 
-  let currentUser = useAppSelector(state => state.currentUserSlice);
+  let contactContext = useAppSelector(state => state.contactSlice)
 
-  const userId = "6511e2afc7ef1c6367748b99"
+  const userId = contactContext.selectedContact?.id ?? undefined
 
-  const response = useGetMessagesQuery({ userId: userId, page: 0 });
+  const responseWithInitialPages = useGetLatestMessagesQuery(userId!, { skip: typeof userId === 'undefined' })
+
+  const responseWithMessages = useGetMessagesQuery({ userId: userId!, page: 0 }, {skip: typeof userId === 'undefined'});
 
   let groupedMessages: GroupOfMessages[] = []
 
-  if (!response.isError && response.data) {
-    groupedMessages = groupMessages(response.data.messages)
+  if (!responseWithMessages.isError && responseWithMessages.data) {
+    groupedMessages = groupMessages(responseWithMessages.data.messages)
   }
 
+
    return (<>
-     { groupedMessages.map((group: GroupOfMessages) => ( 
+     { groupedMessages.map((group: GroupOfMessages, index: number) => (
          <div className={group.sender === userId ? 'message-group-wrapper left' : 'message-group-wrapper right'}>
 
           {group.sender === userId &&

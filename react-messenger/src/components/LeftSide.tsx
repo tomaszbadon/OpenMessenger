@@ -1,30 +1,41 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { Contact } from "../datamodel/Contact";
-import Finder from "./Finder";
 import { ContactComponent } from "./Contact";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useAppDispatch, useAppSelector } from "../auth/types";
 import { useGetContactsQuery } from "../service/contactService";
+import { setContacts, setSelectedContact } from "../slice/ContactSlice";
+import Finder from "./Finder";
 import './LeftSide.sass'
-import { useAppSelector } from "../auth/types";
-import { stat } from "fs";
 
 export function LeftSide() {
 
+    let { username } = useParams();
+
+    const dispatch = useAppDispatch();
+
     const navigate = useNavigate();
 
-    let { username } = useParams();
+    const contactsQuery = useGetContactsQuery()
 
     const { selectedContact, contacts } = useAppSelector(state => state.contactSlice)
 
     const [filteredContacts, setFilteredContacts] = useState<Contact[] | null>(null)
 
-    // let selectedContact = contacts.find(contact => contact.userName === username) ?? contacts[0]
+    useEffect(() => {
+        if(typeof contactsQuery.data !== 'undefined') {
+            dispatch(setContacts(contactsQuery.data))
+        }
+        let selectedContact = contacts.find((c) => c.userName === username)
+        if(!selectedContact && contacts.length > 0) {
+            selectedContact = contacts[0]
+        }
+        dispatch(setSelectedContact(selectedContact))
+    })
 
     function selectUserOnClick(selectedContact: Contact) {
         navigate("/chat/" + selectedContact.userName);
     }
-
-    // let contacts: Contact[] = filteredContacts ?? data?.contacts ?? []
 
     const filterContacts = (input: string) => {
         if(input.length === 0) {
@@ -35,13 +46,13 @@ export function LeftSide() {
         }
     }
 
-    console.log(JSON.stringify(contacts))
+    let contactsToDisplay = filteredContacts ?? contacts
 
     return (
         <div className='contact-list-wrapper'>
             <div className='contact-list'>
                 <Finder onChange={filterContacts} />
-                {contacts.map(c => <ContactComponent
+                {contactsToDisplay.map(c => <ContactComponent
                     key={c.userName}
                     contact={c} selected={selectedContact?.userName === c.userName}
                     hasNewMessage={c.userName === 'claudia.wiliams'}

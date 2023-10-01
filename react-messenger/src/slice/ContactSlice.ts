@@ -16,7 +16,7 @@ export const contactSlice = createSlice({
             state.contacts = action.payload.contacts
         },
         
-        setSelectedContact: (state, action: PayloadAction<Contact>) => {
+        setSelectedContact: (state, action: PayloadAction<Contact | undefined>) => {
             state.selectedContact = action.payload
         }   
     }

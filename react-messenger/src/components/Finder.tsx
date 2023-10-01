@@ -5,7 +5,7 @@ function Finder(properties: any) {
 
     return <>
         <div className="finder">
-            <input type="text" onChange={(e) => onChange(e.target.value)} />
+            <input type="text" placeholder='Type a contact name here' onChange={(e) => onChange(e.target.value)} />
         </div>
     </>
 }
