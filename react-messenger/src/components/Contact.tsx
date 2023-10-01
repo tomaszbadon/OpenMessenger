@@ -27,7 +27,7 @@ export function ContactComponent(props: ContactProps) {
 
     return <div onClick={() => props.onClick(props.contact)} className={evaluateStyle(props)} >
         <div className="contact-avatar">
-            <img alt="contact's avatar" className="contact-avatar-img" src={'/assets/avatar_1.png'} />
+            <img alt="contact's avatar" className="contact-avatar-img" src={`/api/users/${props.contact.id}/avatar`} />
         </div>
         <div className="contact-name">
             <p>{props.contact.firstName} {props.contact.lastName}</p>
