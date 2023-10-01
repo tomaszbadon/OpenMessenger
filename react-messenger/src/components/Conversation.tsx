@@ -67,7 +67,7 @@ export default function Conversation(prop: ConversationProp) {
 
           {group.sender === userId &&
           <div className="message-avatar-container">
-            <img alt="contact's avatar" className="contact-avatar-img" src={`/api/users/${userId}/avatar`} />
+            <img alt="contact's avatar" className="contact-avatar-img-min" src={`/api/users/${userId}/avatar`} />
           </div>
           }
            <div className="message-group">
@@ -82,7 +82,7 @@ export default function Conversation(prop: ConversationProp) {
           </div>
           {group.sender !== userId &&
           <div className="message-avatar-container">
-              <img alt="contact's avatar" className="contact-avatar-img" src={`/api/users/${currentUser.id}/avatar`} />
+              <img alt="contact's avatar" className="contact-avatar-img-min" src={`/api/users/${currentUser.id}/avatar`} />
           </div>}
         </div>
     ))}
