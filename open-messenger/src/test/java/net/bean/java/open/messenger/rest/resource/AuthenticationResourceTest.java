@@ -66,10 +66,10 @@ public class AuthenticationResourceTest {
         ResponseEntity<TokensInfo> responseEntity = restTemplate.exchange(CustomAuthenticationFilter.FILTER_PROCESSES_URL, HttpMethod.POST, new HttpEntity<>(map, headers), TokensInfo.class);
         Assertions.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 
-        Try<String> userNameFromToken = jwtTokenService.tryToGetUserName(Try.success(Lists.newArrayList(responseEntity.getBody().getTokens()).get(0).getToken()));
+        Try<String> userNameFromToken = jwtTokenService.getUserName(Lists.newArrayList(responseEntity.getBody().getTokens()).get(0).getToken());
         Assertions.assertEquals(user.getUserName(), userNameFromToken.get());
 
-        userNameFromToken = jwtTokenService.tryToGetUserName(Try.success(Lists.newArrayList(responseEntity.getBody().getTokens()).get(1).getToken()));
+        userNameFromToken = jwtTokenService.getUserName(Lists.newArrayList(responseEntity.getBody().getTokens()).get(1).getToken());
         Assertions.assertEquals(user.getUserName(), userNameFromToken.get());
     }
 
