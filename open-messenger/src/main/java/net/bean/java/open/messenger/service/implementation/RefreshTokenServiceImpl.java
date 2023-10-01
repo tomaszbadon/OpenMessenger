@@ -19,8 +19,8 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 
     @Override
     public Try<TokensInfo> createAccessToken(Try<String> refreshToken, String url) {
-        return jwtTokenService.tryToGetUserName(refreshToken)
-                              .flatMap(userService::tryToGetUserByUserName)
-                              .map(user -> jwtTokenService.createSingleToken(TokenType.ACCESS_TOKEN, user, url));
+        return refreshToken.flatMap(jwtTokenService::getUserName)
+                           .flatMap(userService::tryToGetUserByUserName)
+                           .map(user -> jwtTokenService.createSingleToken(TokenType.ACCESS_TOKEN, user, url));
     }
 }

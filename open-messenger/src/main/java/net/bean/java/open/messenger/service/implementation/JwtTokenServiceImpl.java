@@ -9,6 +9,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import io.vavr.control.Try;
 import lombok.extern.slf4j.Slf4j;
 import net.bean.java.open.messenger.exception.InternalException;
+import net.bean.java.open.messenger.exception.UserAlreadyExistsException;
 import net.bean.java.open.messenger.rest.exception.InvalidTokenException;
 import net.bean.java.open.messenger.rest.model.token.Token;
 import net.bean.java.open.messenger.rest.model.token.TokenType;
@@ -17,6 +18,7 @@ import net.bean.java.open.messenger.service.JwtTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -27,6 +29,9 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static io.vavr.API.$;
+import static io.vavr.API.Case;
+import static io.vavr.Predicates.instanceOf;
 import static java.util.Arrays.stream;
 
 @Service
@@ -77,16 +82,16 @@ public class JwtTokenServiceImpl implements JwtTokenService {
     }
 
     @Override
-    public Try<String> tryToGetUserName(Try<String> token) {
-        return token.flatMap(t -> getUserName(t));
-    }
-
-    @Override
     public Try<String> getUserName(String token) {
+        //noinspection unchecked
         return Try.of(() -> {
             DecodedJWT decodedJWT = verifier.verify(token);
             return decodedJWT.getSubject();
-        }).onFailure(e -> InvalidTokenException.of(HttpStatus.BAD_REQUEST, e));
+        }).mapFailure(
+                Case($(instanceOf(TokenExpiredException.class)), t -> InvalidTokenException.of(HttpStatus.FORBIDDEN, t)),
+                Case($(instanceOf(JWTDecodeException.class)), t -> InvalidTokenException.of(HttpStatus.FORBIDDEN, t)),
+                Case($(instanceOf(TokenExpiredException.class)), t -> InvalidTokenException.of(HttpStatus.BAD_REQUEST, t))
+        );
     }
 
     @Override
@@ -94,7 +99,7 @@ public class JwtTokenServiceImpl implements JwtTokenService {
         try {
             DecodedJWT decodedJWT = verifier.verify(token);
             String user = decodedJWT.getSubject();
-            String[] roles = decodedJWT.getClaim("roles").asArray(String.class);
+            String[] roles = decodedJWT.getClaim(ROLES).asArray(String.class);
             Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
             stream(roles).forEach(role -> authorities.add(new SimpleGrantedAuthority(role)));
             return Try.success(new UsernamePasswordAuthenticationToken(user, null, authorities));
