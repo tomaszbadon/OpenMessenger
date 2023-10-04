@@ -1,10 +1,8 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { Contact } from "../datamodel/Contact";
 import { ContactComponent } from "./Contact";
-import { useEffect, useState } from "react";
-import { useAppDispatch, useAppSelector } from "../auth/types";
+import { useState } from "react";
 import { useGetContactsQuery } from "../service/contactService";
-import { setContacts, setSelectedContact } from "../slice/ContactSlice";
 import Finder from "./Finder";
 import './LeftSide.sass'
 
@@ -12,37 +10,35 @@ export function LeftSide() {
 
     let { username } = useParams();
 
-    const dispatch = useAppDispatch();
+    let selectedContact: Contact | undefined = undefined
+
+    let contacts: Contact[] = []
 
     const navigate = useNavigate();
 
     const contactsQuery = useGetContactsQuery()
 
-    const { selectedContact, contacts } = useAppSelector(state => state.contactSlice)
+    const [filteredContacts, setFilteredContacts] = useState<Contact[] | undefined>(undefined)
 
-    const [filteredContacts, setFilteredContacts] = useState<Contact[] | null>(null)
+    if (contactsQuery.data) {
+        contacts = contactsQuery.data.contacts
+    }
 
-    useEffect(() => {
-        if(typeof contactsQuery.data !== 'undefined') {
-            dispatch(setContacts(contactsQuery.data))
-        }
-        let selectedContact = contacts.find((c) => c.userName === username)
-        if(!selectedContact && contacts.length > 0) {
-            selectedContact = contacts[0]
-        }
-        dispatch(setSelectedContact(selectedContact))
-    })
+    selectedContact = contacts.find((c) => c.userName === username)
+    if (!selectedContact && contacts.length > 0) {
+        selectedContact = contacts[0]
+    }
 
     function selectUserOnClick(selectedContact: Contact) {
         navigate("/chat/" + selectedContact.userName);
     }
 
     const filterContacts = (input: string) => {
-        if(input.length === 0) {
-          setFilteredContacts(null)
+        if (input.length === 0) {
+            setFilteredContacts(undefined)
         } else {
-          let text = input.toLowerCase();
-          setFilteredContacts(contacts.filter(c => c.firstName.toLocaleLowerCase().startsWith(text) || c.lastName.toLocaleLowerCase().startsWith(text)) ?? [])
+            let text = input.toLowerCase();
+            setFilteredContacts(contacts.filter(c => c.firstName.toLocaleLowerCase().startsWith(text) || c.lastName.toLocaleLowerCase().startsWith(text)) ?? [])
         }
     }
 

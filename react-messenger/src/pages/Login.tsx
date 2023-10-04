@@ -3,11 +3,13 @@ import { useNavigate } from "react-router-dom";
 import { Credentials, UserContext } from '../auth/types';
 import { useLazyGetTokensQuery } from '../service/loginService';
 import './Login.sass'
-import { saveUserContext } from '../util/userContextManagement';
+import { getUserContext, saveUserContext } from '../util/userContextManagement';
 
 const Login = () => {
 
   const navigate = useNavigate()
+
+  let user = getUserContext().user
 
   const localFormReducer = (formData: Credentials, newItems: any) => {
     return { ...formData, ...newItems }
@@ -15,7 +17,7 @@ const Login = () => {
 
   const [formData, setFormData] = useReducer(localFormReducer, { username: "dominica.rosatti", password: "my_password" } )
 
-  const [trigger] = useLazyGetTokensQuery();
+  const [trigger] = useLazyGetTokensQuery();  
 
   const handleLoginForm = async () => {
     let payload = await trigger({ username: formData.username, password: formData.password }).unwrap();

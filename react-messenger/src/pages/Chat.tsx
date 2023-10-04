@@ -1,11 +1,11 @@
 import { Contact } from '../datamodel/Contact';
 import { useEffect, useState } from 'react';
 import { useAppDispatch } from '../auth/types';
-import { useGetCurrentUserQuery } from '../service/loginService';
 import { setCurrentUser } from '../slice/CurrentUserSlice';
 import { LeftSide } from '../components/LeftSide';
 import Conversation from '../components/Conversation';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import { useGetCurrentUserQuery } from '../service/currentUserService';
 import './Chat.sass'
 
 export interface SelectedContact {

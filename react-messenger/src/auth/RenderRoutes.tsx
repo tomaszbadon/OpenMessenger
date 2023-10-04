@@ -1,11 +1,20 @@
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
 import { navigationItems } from "./Navigation";
 import Layout from "../pages/_layout";
 import { getUserContext } from '../util/userContextManagement';
+import { useEffect } from 'react';
 
 export const RenderRoutes = () => {
 
      let user = getUserContext().user
+
+     const navigate = useNavigate()
+
+     useEffect(() => {
+          if(user?.isAuthenticated && window.location.href.endsWith('/login')) {
+              navigate("/chat")
+          }
+      })
      
      return (
           <Routes>
@@ -18,6 +27,7 @@ export const RenderRoutes = () => {
                          } else return false
                     })}
                     <Route path='*' element={<Navigate to='/login' />} />
+                    <Route path='' element={<Navigate to='/login' />} />
                </Route>
           </Routes>
      )
