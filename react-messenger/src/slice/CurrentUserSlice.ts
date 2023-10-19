@@ -1,7 +1,7 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { CurrentUser } from "../datamodel/CurrentUser";
 
-export const initialState: CurrentUser = { }
+const initialState: CurrentUser = { }
 
 export const currentUserSlice = createSlice({
     name: 'currentUserSlice',

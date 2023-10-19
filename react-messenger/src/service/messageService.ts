@@ -1,6 +1,7 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import { getAccessToken } from '../util/userContextManagement';
+import { FetchBaseQueryError, createApi } from '@reduxjs/toolkit/query/react'
 import { baseQueryWithReauth } from './base';
+import { QueryReturnValue } from '@reduxjs/toolkit/dist/query/baseQueryTypes';
+import { setMessagePages, setMessagePage, reset } from '../slice/ConversationSlice';
 
 export interface MessageApiParams {
     userId: String | undefined,
@@ -16,8 +17,9 @@ export interface Message {
     read: boolean
 }
 
-export interface Messages {
-    messages: Message[]
+export interface MessagePage {
+    messages: Message[],
+    page: number
 }
 
 export interface InitialMessagePagesPayload {
@@ -28,16 +30,57 @@ export const messagesApi = createApi({
     reducerPath: 'messagesApi',
     baseQuery: baseQueryWithReauth,
     endpoints: builder => ({
-        getMessages: builder.query<Messages, MessageApiParams>({
-            query: (params: MessageApiParams) => {
-                return ({
-                    url: `/users/${params.userId}/messages/${params.page}`,
-                    method: 'GET',
-                    headers: { Authorization:  `Bearer ${getAccessToken()?.token}`}
-                });
-              }
+        // getMessages: builder.query<MessagePage, MessageApiParams>({
+        //     query: (params: MessageApiParams) => {
+        //         return ({
+        //             url: `/users/${params.userId}/messages/${params.page}`,
+        //             method: 'GET'
+        //         });
+        //     },
+        getMessages: builder.query<MessagePage, MessageApiParams>({
+            queryFn: async (params: MessageApiParams, api, extraOptions) => {
+                const result = await baseQueryWithReauth(`/users/${params.userId}/messages/${params.page}`, api, extraOptions)
+                if(result.error) {
+                    return { error: result.error }
+                } else {
+                    api.dispatch(setMessagePage(result.data as MessagePage))
+                    return {data: result.data as MessagePage }
+                }
+            }
+        }),
+
+        getInitialMessages: builder.query<MessagePage[], string | undefined>({
+            queryFn: async (userId: string | undefined, api, extraOptions) => {
+                // const result = await baseQueryWithReauth(`/users/${userId}/messages/latest`, api, extraOptions);
+                // const initialPages = result.data as InitialMessagePagesPayload
+                // if (result.error) {
+                //     return { error: result.error }
+                // }
+
+                api.dispatch(reset())
+                console.log("Executing Query");
+
+                const initialPages = { pagesToLoad: [ 4, 5] }
+
+                const resultWithMessages = await Promise.all(initialPages.pagesToLoad.map(
+                    page => baseQueryWithReauth(`/users/${userId}/messages/${page}`, api, extraOptions)
+                )) as QueryReturnValue<MessagePage, FetchBaseQueryError, {}>[]
+
+                let arrayOfMessages: MessagePage[] = []
+
+                resultWithMessages.forEach((returnValue) => {
+                    if (returnValue.error) {
+                        return { error: returnValue.error }
+                    }
+                    arrayOfMessages.push(returnValue.data)
+                })
+
+                api.dispatch(setMessagePages(arrayOfMessages))
+
+                return { data: arrayOfMessages }
+            }
         })
     })
 })
 
-export const { useGetMessagesQuery } = messagesApi
+export const { useLazyGetMessagesQuery, useGetInitialMessagesQuery, useLazyGetInitialMessagesQuery } = messagesApi

@@ -29,13 +29,12 @@ export const baseQuery = fetchBaseQuery({
 
   export const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = async (args, api, extraOptions) => {
     let accessToken = getAccessToken()?.token;
-    if (typeof accessToken !== 'undefined' && isExpired(accessToken)) {
+    if (typeof accessToken === 'undefined' || isExpired(accessToken)) {
       const refreshTokenResult = await refreshTokenQuery("/accessToken", api, extraOptions);
       if (!refreshTokenResult.error && refreshTokenResult.data) {
         let tokens = refreshTokenResult.data as Tokens;
         let refreshedAccessToken = tokens.tokens[0];
         updateAccessToken(refreshedAccessToken);
-        alert('Access Token has been refreshed')
       } else {
         removeUserContext();
         api.dispatch(unSetCurrentUser());
