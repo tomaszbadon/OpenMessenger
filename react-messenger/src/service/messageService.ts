@@ -1,7 +1,7 @@
 import { FetchBaseQueryError, createApi } from '@reduxjs/toolkit/query/react'
 import { baseQueryWithReauth } from './base';
 import { QueryReturnValue } from '@reduxjs/toolkit/dist/query/baseQueryTypes';
-import { setMessagePages, setMessagePage, reset } from '../slice/ConversationSlice';
+import { addMessagePage, setInitialMessages } from '../slice/CurrentUserSlice';
 
 export interface MessageApiParams {
     userId: String | undefined,
@@ -30,20 +30,14 @@ export const messagesApi = createApi({
     reducerPath: 'messagesApi',
     baseQuery: baseQueryWithReauth,
     endpoints: builder => ({
-        // getMessages: builder.query<MessagePage, MessageApiParams>({
-        //     query: (params: MessageApiParams) => {
-        //         return ({
-        //             url: `/users/${params.userId}/messages/${params.page}`,
-        //             method: 'GET'
-        //         });
-        //     },
+
         getMessages: builder.query<MessagePage, MessageApiParams>({
             queryFn: async (params: MessageApiParams, api, extraOptions) => {
                 const result = await baseQueryWithReauth(`/users/${params.userId}/messages/${params.page}`, api, extraOptions)
                 if(result.error) {
                     return { error: result.error }
                 } else {
-                    api.dispatch(setMessagePage(result.data as MessagePage))
+                    api.dispatch(addMessagePage(result.data as MessagePage))
                     return {data: result.data as MessagePage }
                 }
             }
@@ -56,9 +50,6 @@ export const messagesApi = createApi({
                 // if (result.error) {
                 //     return { error: result.error }
                 // }
-
-                api.dispatch(reset())
-                console.log("Executing Query");
 
                 const initialPages = { pagesToLoad: [ 4, 5] }
 
@@ -75,8 +66,9 @@ export const messagesApi = createApi({
                     arrayOfMessages.push(returnValue.data)
                 })
 
-                api.dispatch(setMessagePages(arrayOfMessages))
+                api.dispatch(setInitialMessages(arrayOfMessages))
 
+                console.log("Executing Query");
                 return { data: arrayOfMessages }
             }
         })

@@ -3,30 +3,25 @@ import { Contact } from "../datamodel/Contact";
 import { ContactComponent } from "./Contact";
 import { useState } from "react";
 import { useGetContactsQuery } from "../service/contactService";
+import { useAppSelector } from "../auth/types";
 import Finder from "./Finder";
 import './LeftSide.sass'
 
 export function LeftSide() {
 
-    let { username } = useParams();
-
-    let selectedContact: Contact | undefined = undefined
+    const navigate = useNavigate();
 
     let contacts: Contact[] = []
 
-    const navigate = useNavigate();
-
-    const contactsQuery = useGetContactsQuery()
+    const { selectedContact } = useAppSelector(state => state.applicationContextSlice)
 
     const [filteredContacts, setFilteredContacts] = useState<Contact[] | undefined>(undefined)
 
+    const contactsQuery = useGetContactsQuery()
+
+
     if (contactsQuery.data) {
         contacts = contactsQuery.data.contacts
-    }
-
-    selectedContact = contacts.find((c) => c.userName === username)
-    if (!selectedContact && contacts.length > 0) {
-        selectedContact = contacts[0]
     }
 
     function selectUserOnClick(selectedContact: Contact) {
