@@ -28,30 +28,10 @@ export const applicationContextSlice = createSlice({
         unSetCurrentUser: (state) => {
             state.currentUser = undefined
         },
-
-        setSelectedUser: (state, action: PayloadAction<Contact | undefined>) => {
-            state.selectedContact = action.payload
-        },
-
-        setInitialMessages: (state, action: PayloadAction<MessagePage[]>) => {
-            if(state.selectedContact) {
-                let messages: MessagesPerContact = { messages: action.payload, theMinimalPage: action.payload.length > 0 ? Math.min(...action.payload.map(m => m.page)) : 0 }
-                state.messages.set(state.selectedContact.id, messages);
-            }
-        },
-
-        addMessagePage: (state, action: PayloadAction<MessagePage>) => {
-            if(state.selectedContact) {
-                let messagesPerUser = state.messages.get(state.selectedContact.id);
-                if(messagesPerUser) {
-                    messagesPerUser.messages?.push(action.payload)
-                    messagesPerUser.theMinimalPage = action.payload.page
-                }
-            }
-        }
+        
     }
 });
 
-export const { setCurrentUser, unSetCurrentUser, setSelectedUser, setInitialMessages, addMessagePage } = applicationContextSlice.actions
+export const { setCurrentUser, unSetCurrentUser } = applicationContextSlice.actions
 
 export default applicationContextSlice.reducer

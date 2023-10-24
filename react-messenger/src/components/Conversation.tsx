@@ -1,29 +1,23 @@
-import { Message, useLazyGetMessagesQuery, MessagePage, useGetInitialMessagesQuery } from '../service/messageService';
+import { Message } from '../service/messageService';
 import { DateSeparator } from './DateSeparator';
 import { GroupOfMessages, groupMessages } from '../util/messagesUtil';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { useAppSelector } from '../auth/types';
+import useContactList from '../hooks/useContactList';
 import './Conversation.sass'
+import useMessage from '../hooks/useMessage';
+import { useState } from 'react';
 
-export default function Conversation() {
+export function Conversation() {
 
-  const { messages, selectedContact } = useAppSelector(state => state.applicationContextSlice)
+  const { selectedContact } = useContactList()
 
-  const lazyGetMessagesQuery = useLazyGetMessagesQuery();
+  const [ page, setPage ] = useState<number | undefined>(undefined);
 
-  let messagesForContact: MessagePage[] | undefined
-
-  let theMinimalPage: number | undefined = undefined
-
-  if (selectedContact) {
-    messagesForContact = messages.get(selectedContact.id)?.messages
-    theMinimalPage = messages.get(selectedContact.id)?.theMinimalPage
-  }
+  const { messages, firstPage } = useMessage(selectedContact, page)
 
   function fetchMoreData() {
-    const [trigger] = lazyGetMessagesQuery;
-    if (theMinimalPage && theMinimalPage > -1) {
-      trigger({ userId: selectedContact?.id ?? "0", page: theMinimalPage - 1 })
+    if(firstPage && firstPage > 0) {
+      setPage(firstPage - 1)
     }
   }
 
@@ -31,15 +25,15 @@ export default function Conversation() {
     <div id="scrollableDiv" className='conversation'>
 
       <InfiniteScroll
-        dataLength={(messagesForContact ?? []).length}
+        dataLength={(messages).length}
         next={fetchMoreData}
-        hasMore={typeof theMinimalPage !== 'undefined' && theMinimalPage > 0}
+        hasMore={typeof firstPage !== 'undefined' && firstPage > 0}
         loader={''}
         scrollableTarget="scrollableDiv"
         refreshFunction={fetchMoreData}
         inverse={true}
       >
-        {groupMessages((messagesForContact ?? []).reduce((accumulator: Message[], value) => accumulator.concat(value.messages), [])).map((group: GroupOfMessages, index: number, array: GroupOfMessages[]) => (
+        {groupMessages((messages ?? []).reduce((accumulator: Message[], value) => accumulator.concat(value.messages), [])).map((group: GroupOfMessages, index: number, array: GroupOfMessages[]) => (
           <>
             <DateSeparator condition={index === 0 || array[index - 1].date !== group.date} date={group.date} />
             <div className={group.sender === selectedContact?.id ? 'message-group-wrapper left' : 'message-group-wrapper right'}>

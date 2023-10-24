@@ -1,13 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
 
-import applicationReducer from '../slice/CurrentUserSlice'
 import { contactsApi } from "../service/contactService";
 import { messagesApi } from "../service/messageService";
 import { currentUserApi } from "../service/currentUserService";
 import { loginApi } from "../service/loginService";
-import { enableMapSet } from 'immer';
-
-enableMapSet();
 
 export const store = configureStore({
     reducer: {
@@ -15,7 +11,6 @@ export const store = configureStore({
         [currentUserApi.reducerPath]: currentUserApi.reducer,
         [contactsApi.reducerPath]: contactsApi.reducer,
         [messagesApi.reducerPath]: messagesApi.reducer,
-        applicationContextSlice: applicationReducer,
     },
     middleware: getDefaultMiddleware => getDefaultMiddleware({ serializableCheck: false })
                                             .concat(loginApi.middleware)

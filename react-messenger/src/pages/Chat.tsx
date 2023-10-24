@@ -1,34 +1,8 @@
 import { LeftSide } from '../components/LeftSide';
-import Conversation from '../components/Conversation';
-import { useParams } from 'react-router-dom';
-import { useGetContactsQuery } from '../service/contactService';
-import { useAppDispatch, useAppSelector } from '../auth/types';
-import { setSelectedUser } from '../slice/CurrentUserSlice';
-import { useGetInitialMessagesQuery } from '../service/messageService';
-import { useEffect } from 'react';
+import { Conversation } from '../components/Conversation';
 import './Chat.sass'
 
-
 export default function Chat() {
-
-  const dispatch = useAppDispatch();
-
-  let { username } = useParams();
-
-  const { selectedContact } = useAppSelector(state => state.applicationContextSlice)
-
-  const contactQueryResult = useGetContactsQuery()
-
-  useGetInitialMessagesQuery(selectedContact?.id, { skip: !selectedContact })
-
-  useEffect(() => {
-    if (contactQueryResult.data && contactQueryResult.data.contacts.length > 0) {
-      let newSelection = contactQueryResult.data?.contacts.find(contact => contact.userName === username) ?? contactQueryResult.data?.contacts[0]
-      if (newSelection != selectedContact) {
-        dispatch(setSelectedUser(newSelection))
-      }
-    }
-  });
 
   return (
     <div className='box box-grid box-80-80'>
@@ -40,4 +14,5 @@ export default function Chat() {
       </div>
     </div>
   );
+  
 }

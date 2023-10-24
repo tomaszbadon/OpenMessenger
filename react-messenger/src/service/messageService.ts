@@ -1,7 +1,6 @@
 import { FetchBaseQueryError, createApi } from '@reduxjs/toolkit/query/react'
 import { baseQueryWithReauth } from './base';
 import { QueryReturnValue } from '@reduxjs/toolkit/dist/query/baseQueryTypes';
-import { addMessagePage, setInitialMessages } from '../slice/CurrentUserSlice';
 
 export interface MessageApiParams {
     userId: String | undefined,
@@ -37,7 +36,6 @@ export const messagesApi = createApi({
                 if(result.error) {
                     return { error: result.error }
                 } else {
-                    api.dispatch(addMessagePage(result.data as MessagePage))
                     return {data: result.data as MessagePage }
                 }
             }
@@ -65,10 +63,6 @@ export const messagesApi = createApi({
                     }
                     arrayOfMessages.push(returnValue.data)
                 })
-
-                api.dispatch(setInitialMessages(arrayOfMessages))
-
-                console.log("Executing Query");
                 return { data: arrayOfMessages }
             }
         })

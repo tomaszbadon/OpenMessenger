@@ -1,9 +1,8 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Contact } from "../datamodel/Contact";
 import { ContactComponent } from "./Contact";
 import { useState } from "react";
-import { useGetContactsQuery } from "../service/contactService";
-import { useAppSelector } from "../auth/types";
+import useContactList from "../hooks/useContactList";
 import Finder from "./Finder";
 import './LeftSide.sass'
 
@@ -11,18 +10,9 @@ export function LeftSide() {
 
     const navigate = useNavigate();
 
-    let contacts: Contact[] = []
-
-    const { selectedContact } = useAppSelector(state => state.applicationContextSlice)
+    const { selectedContact, contacts } = useContactList()
 
     const [filteredContacts, setFilteredContacts] = useState<Contact[] | undefined>(undefined)
-
-    const contactsQuery = useGetContactsQuery()
-
-
-    if (contactsQuery.data) {
-        contacts = contactsQuery.data.contacts
-    }
 
     function selectUserOnClick(selectedContact: Contact) {
         navigate("/chat/" + selectedContact.userName);
