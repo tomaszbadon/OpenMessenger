@@ -1,10 +1,10 @@
 import { useNavigate } from "react-router-dom";
 import { Contact } from "../datamodel/Contact";
 import { ContactComponent } from "./Contact";
-import { useState } from "react";
+import { useCallback, useState } from "react";
+import './LeftSide.sass'
 import useContactList from "../hooks/useContactList";
 import Finder from "./Finder";
-import './LeftSide.sass'
 
 export function LeftSide() {
 
@@ -18,14 +18,14 @@ export function LeftSide() {
         navigate("/chat/" + selectedContact.userName);
     }
 
-    const filterContacts = (input: string) => {
+    const filterContacts = useCallback((input: string) => {
         if (input.length === 0) {
             setFilteredContacts(undefined)
         } else {
             let text = input.toLowerCase();
             setFilteredContacts(contacts.filter(c => c.firstName.toLocaleLowerCase().startsWith(text) || c.lastName.toLocaleLowerCase().startsWith(text)) ?? [])
         }
-    }
+    }, [filteredContacts]);
 
     let contactsToDisplay = filteredContacts ?? contacts
 

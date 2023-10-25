@@ -1,9 +1,11 @@
 import { FetchBaseQueryError, createApi } from '@reduxjs/toolkit/query/react'
 import { baseQueryWithReauth } from './base';
 import { QueryReturnValue } from '@reduxjs/toolkit/dist/query/baseQueryTypes';
+import { Contact } from '../datamodel/Contact';
+import { addMessagesToPage, setInitialChatState } from '../slice/ChatSlice';
 
 export interface MessageApiParams {
-    userId: String | undefined,
+    contact: Contact
     page: number
 }
 
@@ -32,17 +34,19 @@ export const messagesApi = createApi({
 
         getMessages: builder.query<MessagePage, MessageApiParams>({
             queryFn: async (params: MessageApiParams, api, extraOptions) => {
-                const result = await baseQueryWithReauth(`/users/${params.userId}/messages/${params.page}`, api, extraOptions)
+                console.log("Query with page: " + params.page)
+                const result = await baseQueryWithReauth(`/users/${params.contact.id}/messages/${params.page}`, api, extraOptions)
                 if(result.error) {
                     return { error: result.error }
                 } else {
+                    api.dispatch(addMessagesToPage({ messages: result.data as MessagePage, page: params.page }))
                     return {data: result.data as MessagePage }
                 }
             }
         }),
 
-        getInitialMessages: builder.query<MessagePage[], string | undefined>({
-            queryFn: async (userId: string | undefined, api, extraOptions) => {
+        getInitialMessages: builder.query<MessagePage[], Contact>({
+            queryFn: async (contact: Contact, api, extraOptions) => {
                 // const result = await baseQueryWithReauth(`/users/${userId}/messages/latest`, api, extraOptions);
                 // const initialPages = result.data as InitialMessagePagesPayload
                 // if (result.error) {
@@ -52,7 +56,7 @@ export const messagesApi = createApi({
                 const initialPages = { pagesToLoad: [ 4, 5] }
 
                 const resultWithMessages = await Promise.all(initialPages.pagesToLoad.map(
-                    page => baseQueryWithReauth(`/users/${userId}/messages/${page}`, api, extraOptions)
+                    page => baseQueryWithReauth(`/users/${contact?.id}/messages/${page}`, api, extraOptions)
                 )) as QueryReturnValue<MessagePage, FetchBaseQueryError, {}>[]
 
                 let arrayOfMessages: MessagePage[] = []
@@ -63,6 +67,9 @@ export const messagesApi = createApi({
                     }
                     arrayOfMessages.push(returnValue.data)
                 })
+
+                api.dispatch(setInitialChatState({ contact: contact, messages: arrayOfMessages }))
+
                 return { data: arrayOfMessages }
             }
         })

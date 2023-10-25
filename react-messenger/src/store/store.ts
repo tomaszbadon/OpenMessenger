@@ -4,6 +4,8 @@ import { contactsApi } from "../service/contactService";
 import { messagesApi } from "../service/messageService";
 import { currentUserApi } from "../service/currentUserService";
 import { loginApi } from "../service/loginService";
+import applicationReducer from '../slice/CurrentUserSlice'
+import chatReducer from '../slice/ChatSlice'
 
 export const store = configureStore({
     reducer: {
@@ -11,6 +13,8 @@ export const store = configureStore({
         [currentUserApi.reducerPath]: currentUserApi.reducer,
         [contactsApi.reducerPath]: contactsApi.reducer,
         [messagesApi.reducerPath]: messagesApi.reducer,
+        applicationContextSlice: applicationReducer,
+        chatSlice: chatReducer
     },
     middleware: getDefaultMiddleware => getDefaultMiddleware({ serializableCheck: false })
                                             .concat(loginApi.middleware)

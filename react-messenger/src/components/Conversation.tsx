@@ -5,7 +5,8 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import useContactList from '../hooks/useContactList';
 import './Conversation.sass'
 import useMessage from '../hooks/useMessage';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useAppSelector } from '../auth/types';
 
 export function Conversation() {
 
