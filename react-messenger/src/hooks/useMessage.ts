@@ -16,19 +16,15 @@ const useMessage = (contact: Contact | undefined, page: number | undefined): Use
 
     const lazyGetMessagesQuery = useLazyGetMessagesQuery()
 
-    async function refresh() {
+    useEffect(() => {
         if (contact && savedContact !== contact) {
             const [ trigger ] = lazyGetInitialMessagesQuery
-            await trigger(contact).unwrap()
+            trigger(contact).unwrap()
 
         } else if (firstPage && page && contact && savedContact && contact == savedContact && page < firstPage) {
             const [ trigger ] = lazyGetMessagesQuery
-            await trigger({contact: contact, page: page}).unwrap()
+            trigger({contact: contact, page: page}).unwrap()
         }
-    }
-
-    useEffect(() => {
-        refresh()
     });
 
     return { messages: messages, firstPage: firstPage }

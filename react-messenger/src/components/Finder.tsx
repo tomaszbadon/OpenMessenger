@@ -1,7 +1,14 @@
 import './Finder.sass'
-function Finder(properties: any) {
+
+type Callback =  ((arg: string) => void)
+
+interface FinderProp {
+    onChange: Callback
+}
+
+function Finder(prop: FinderProp) {
     
-    let onChange = properties.onChange as ((arg: string) => void);
+    const onChange = prop.onChange
 
     return <>
         <div className="finder">

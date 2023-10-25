@@ -9,8 +9,6 @@ const Login = () => {
 
   const navigate = useNavigate()
 
-  let user = getUserContext().user
-
   const localFormReducer = (formData: Credentials, newItems: any) => {
     return { ...formData, ...newItems }
   }

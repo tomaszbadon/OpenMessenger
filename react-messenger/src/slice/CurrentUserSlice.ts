@@ -1,20 +1,11 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { CurrentUser } from "../datamodel/CurrentUser";
-import { MessagePage } from "../service/messageService";
-import { Contact } from "../datamodel/Contact";
-
-export interface MessagesPerContact {
-    messages: MessagePage[] | undefined
-    theMinimalPage: number | undefined
-}
 
 export interface ApplicationContext {
     currentUser: CurrentUser | undefined
-    selectedContact: Contact | undefined
-    messages: Map<string, MessagesPerContact>
 }
 
-const initialState: ApplicationContext = { currentUser: undefined, selectedContact: undefined, messages: new Map() }
+const initialState: ApplicationContext = { currentUser: undefined }
 
 export const applicationContextSlice = createSlice({
     name: 'applicationContextSlice',

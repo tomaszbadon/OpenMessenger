@@ -34,7 +34,6 @@ export const messagesApi = createApi({
 
         getMessages: builder.query<MessagePage, MessageApiParams>({
             queryFn: async (params: MessageApiParams, api, extraOptions) => {
-                console.log("Query with page: " + params.page)
                 const result = await baseQueryWithReauth(`/users/${params.contact.id}/messages/${params.page}`, api, extraOptions)
                 if(result.error) {
                     return { error: result.error }
@@ -53,7 +52,7 @@ export const messagesApi = createApi({
                 //     return { error: result.error }
                 // }
 
-                const initialPages = { pagesToLoad: [ 4, 5] }
+                const initialPages = { pagesToLoad: [4, 5] }
 
                 const resultWithMessages = await Promise.all(initialPages.pagesToLoad.map(
                     page => baseQueryWithReauth(`/users/${contact?.id}/messages/${page}`, api, extraOptions)
