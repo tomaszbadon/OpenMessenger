@@ -46,13 +46,11 @@ export const messagesApi = createApi({
 
         getInitialMessages: builder.query<MessagePage[], Contact>({
             queryFn: async (contact: Contact, api, extraOptions) => {
-                // const result = await baseQueryWithReauth(`/users/${userId}/messages/latest`, api, extraOptions);
-                // const initialPages = result.data as InitialMessagePagesPayload
-                // if (result.error) {
-                //     return { error: result.error }
-                // }
-
-                const initialPages = { pagesToLoad: [4, 5] }
+                const result = await baseQueryWithReauth(`/users/${contact?.id}/messages/latest`, api, extraOptions);
+                const initialPages = result.data as InitialMessagePagesPayload
+                if (result.error) {
+                    return { error: result.error }
+                }
 
                 const resultWithMessages = await Promise.all(initialPages.pagesToLoad.map(
                     page => baseQueryWithReauth(`/users/${contact?.id}/messages/${page}`, api, extraOptions)
@@ -75,4 +73,4 @@ export const messagesApi = createApi({
     })
 })
 
-export const { useLazyGetMessagesQuery, useGetInitialMessagesQuery, useLazyGetInitialMessagesQuery } = messagesApi
+export const { useLazyGetMessagesQuery, useLazyGetInitialMessagesQuery } = messagesApi

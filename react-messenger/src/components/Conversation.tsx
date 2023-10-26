@@ -36,7 +36,7 @@ export function Conversation() {
         refreshFunction={fetchMoreData}
         inverse={true}
       >
-        {groupedMessages.map((group: GroupOfMessages, index: number, array: GroupOfMessages[]) => (
+        { groupedMessages.map((group: GroupOfMessages, index: number, array: GroupOfMessages[]) => (
           <>
             <DateSeparator condition={index === 0 || array[index - 1].date !== group.date} date={group.date} />
             <MessageGroup group={group} selectedContact={selectedContact} />

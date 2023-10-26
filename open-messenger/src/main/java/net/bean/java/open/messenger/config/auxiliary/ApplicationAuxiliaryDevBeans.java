@@ -54,31 +54,50 @@ public class ApplicationAuxiliaryDevBeans {
             User claudia = createUserIfNeeded(userService, "Claudia", "Wiliams", myPassword, CLAUDIAS_AVATAR);
             User monica = createUserIfNeeded(userService, "Monica", "Rosatti", myPassword, MONICAS_AVATAR);
 
-            createConversation(messageService, "21-08-2022 17:32:34", chris, dominica, "Hi there");
-            createConversation(messageService, "21-08-2022 17:32:50", chris, dominica, "Do you want to go for a coffee with me?");
-            createConversation(messageService, "21-08-2022 17:34:34", dominica, chris, "When?");
-            createConversation(messageService, "21-08-2022 17:33:34", chris, dominica, "Today at 6pm?");
-            createConversation(messageService, "21-08-2022 17:35:34", dominica, chris, "Sure, Let's meet next to the lobby.");
+            createConversation(messageService, "21-05-2021 08:32:34", chris, dominica, "Hello, Are you going to join the meeting?", true);
+            createConversation(messageService, "21-05-2021 08:33:02", dominica, chris, "Which meeting?", true);
+            createConversation(messageService, "21-05-2021 08:33:02", dominica, chris, "Ooo...I fortgot. Give me a minute!", true);
 
-            createConversation(messageService, "23-08-2021 09:32:34", chris, dominica, "Hi Dominica, How are you?");
-            createConversation(messageService, "23-08-2021 09:34:23", dominica, chris, "Hi");
-            createConversation(messageService, "23-08-2021 09:34:53", dominica, chris, "Everything is fine. Thank you.");
-            createConversation(messageService, "23-08-2021 09:35:34", chris, dominica, "I want to ask about the revenue report for Q1");
-            createConversation(messageService, "23-08-2021 09:35:45", chris, dominica, "Where can I find it?");
-            createConversation(messageService, "24-08-2021 11:08:05", dominica, chris, "Let me check this.");
-            createConversation(messageService, "24-08-2021 11:09:17", dominica, chris, "It seems that I haven't uploaded it yet to the server?");
-            createConversation(messageService, "25-08-2021 14:12:54", dominica, chris, "Could you give me some minutes to check finish it?");
-            createConversation(messageService, "25-08-2021 15:34:34", chris, dominica, "Sure");
-            createConversation(messageService, "25-08-2021 08:04:55", dominica, chris, "I will make it in 10 minutes.");
+
+            createConversation(messageService, "21-05-2022 17:32:34", chris, dominica, "Hi Dominca", true);
+            createConversation(messageService, "21-05-2022 17:32:34", chris, dominica, "I heard, that you have change your jon?", true);
+            createConversation(messageService, "21-05-2022 17:32:34", chris, dominica, "What are you doing now?", true);
+            createConversation(messageService, "22-05-2022 17:32:34", dominica, chris, "Hi :)", true);
+            createConversation(messageService, "22-05-2022 17:32:34", dominica, chris, "It's a long story.", true);
+            createConversation(messageService, "21-08-2022 17:32:34", dominica, chris, "The previous job was very stressful.", true);
+            createConversation(messageService, "21-08-2022 17:32:34", dominica, chris, "I am an accountant now", true);
+            createConversation(messageService, "21-08-2022 17:32:34", chris, dominica, "That's great. I hope you are enjoying.", true);
+            createConversation(messageService, "21-08-2022 17:32:34", dominica, chris, "kind of... it's boring, but I don't have many deadlines", true);
+            createConversation(messageService, "21-08-2022 17:32:34", chris, dominica, "Maybe, we can go for a dinner, tomorrow? You will tell me everything in details.", true);
+            createConversation(messageService, "21-08-2022 17:32:34", dominica, chris, "sounds great", true);
+            createConversation(messageService, "21-08-2022 17:32:34", dominica, chris, "1 pm, the same place as lsat time?", true);
+
+
+            createConversation(messageService, "21-08-2022 17:32:34", chris, dominica, "Hi there", true);
+            createConversation(messageService, "21-08-2022 17:32:50", chris, dominica, "Do you want to go for a coffee with me?", true);
+            createConversation(messageService, "21-08-2022 17:34:34", dominica, chris, "When?", true);
+            createConversation(messageService, "21-08-2022 17:33:34", chris, dominica, "Today at 6pm?", true);
+            createConversation(messageService, "21-08-2022 17:35:34", dominica, chris, "Sure, Let's meet next to the lobby.", true);
+
+            createConversation(messageService, "23-08-2021 09:32:34", chris, dominica, "Hi Dominica, How are you?", true);
+            createConversation(messageService, "23-08-2021 09:34:23", dominica, chris, "Hi", true);
+            createConversation(messageService, "23-08-2021 09:34:53", dominica, chris, "Everything is fine. Thank you.", true);
+            createConversation(messageService, "23-08-2021 09:35:34", chris, dominica, "I want to ask about the revenue report for Q1", true);
+            createConversation(messageService, "23-08-2021 09:35:45", chris, dominica, "Where can I find it?", true);
+            createConversation(messageService, "24-08-2021 11:08:05", dominica, chris, "Let me check this.", true);
+            createConversation(messageService, "24-08-2021 11:09:17", dominica, chris, "It seems that I haven't uploaded it yet to the server?", true);
+            createConversation(messageService, "25-08-2021 14:12:54", dominica, chris, "Could you give me some minutes to check finish it?", true);
+            createConversation(messageService, "25-08-2021 15:34:34", chris, dominica, "Sure", true);
+            createConversation(messageService, "25-08-2021 08:04:55", dominica, chris, "I will make it in 10 minutes.", true);
         };
     }
 
-    private void createConversation(MessageService messageService, String sentAt, User sender, User recipient, String message) throws ParseException {
+    private void createConversation(MessageService messageService, String sentAt, User sender, User recipient, String message, boolean isRead) throws ParseException {
         SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
         InputMessagePayload messageDTO = new InputMessagePayload();
         messageDTO.setMessage(message);
         messageDTO.setRecipient(recipient.getId());
-        messageService.handleNewMessage(messageDTO, format.parse(sentAt), sender);
+        messageService.handleNewMessage(messageDTO, format.parse(sentAt), sender, isRead);
     }
 
 }

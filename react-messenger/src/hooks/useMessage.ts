@@ -21,7 +21,7 @@ const useMessage = (contact: Contact | undefined, page: number | undefined): Use
             const [ trigger ] = lazyGetInitialMessagesQuery
             trigger(contact).unwrap()
 
-        } else if (firstPage && page && contact && savedContact && contact == savedContact && page < firstPage) {
+        } else if (typeof firstPage !== 'undefined' && typeof page !== 'undefined' && contact && savedContact && contact === savedContact && page < firstPage) {
             const [ trigger ] = lazyGetMessagesQuery
             trigger({contact: contact, page: page}).unwrap()
         }
