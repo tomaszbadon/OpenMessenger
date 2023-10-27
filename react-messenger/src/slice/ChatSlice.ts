@@ -24,11 +24,17 @@ export const chatSlice = createSlice({
     name: 'chatSlice',
     initialState,
     reducers: {
+
+        setInitialEmptyState: (state, action: PayloadAction<void>) => {
+            state.firstPage = undefined
+            state.messages = []
+            state.savedContact = undefined
+        },
         
         setInitialChatState: (state, action: PayloadAction<InitialChatState>) => {
             state.savedContact = action.payload.contact
             state.messages = action.payload.messages
-            state.firstPage = Math.min(...action.payload.messages.map(m => m.page))
+            state.firstPage = action.payload.messages.length > 0 ? Math.min(...action.payload.messages.map(m => m.page)) : undefined
         },
 
         addMessagesToPage: (state, action: PayloadAction<AdditionalMessages>) => {
@@ -39,6 +45,6 @@ export const chatSlice = createSlice({
     }
 })
 
-export const { setInitialChatState, addMessagesToPage } = chatSlice.actions
+export const { setInitialEmptyState, setInitialChatState, addMessagesToPage } = chatSlice.actions
 
 export default chatSlice.reducer

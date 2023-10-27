@@ -14,6 +14,7 @@
     grid-template-rows: auto auto
     cursor: pointer
     border-radius: 5px
+    animation: fade-in 0.5s cubic-bezier(0.390, 0.575, 0.565, 1.000) both
 
 .contact-unselected:hover
     background-color: $contact-hover-color
@@ -21,14 +22,14 @@
 .contact-selected
     background-color: $contact-selected-color
 
-.contact-with-unread-message
-    //animation-name: example
-    animation-duration: 1s
-    animation-iteration-count: infinite
+// .contact-with-unread-message
+//     //animation-name: example
+//     animation-duration: 1s
+//     animation-iteration-count: infinite
 
-@keyframes example 
-  to 
-    background-color: $contact-new-message
+// @keyframes example 
+//   to 
+//     background-color: $contact-new-message
 
 
 .contact-avatar

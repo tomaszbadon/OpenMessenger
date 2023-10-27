@@ -19,14 +19,18 @@ const useContactList = (): ContactListResult => {
     let { username } = useParams();
 
     useEffect(() => {
-        if (data && data.contacts.length > 0) {
+
+        if(data && data.contacts.length > 0 && contacts.length === 0) {
             setContacts(data.contacts);
+        }
+
+        if (data && data.contacts.length > 0) {
             let newSelection = data.contacts.find(contact => contact.userName === username) ?? data.contacts[0]
             if (newSelection != selectedContact) {
                 setSelectedContact(newSelection)
             }
         }
-    });
+    },[data, username]);
 
     return { contacts, selectedContact }
 }

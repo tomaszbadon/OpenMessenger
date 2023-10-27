@@ -10,7 +10,6 @@ export default function Chat() {
       <Conversation />
       <div className='message-input-box'>
         <input type='text' placeholder='Type a message...' />
-        <button><img src='/assets/envelope.png' height='16px' alt='send' /></button>
       </div>
     </div>
   );
